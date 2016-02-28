@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="The world's best freelancer designers and developers, available for hire.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="theme-color" content="#fd6666">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1 , user-scalable=no"/>
+        <title>
+            YunoJuno - Have a conversation with us
+        </title>
+
+        <script>
+            window.YJ = {};
+
+            function buildMessageHTML() {}
+            function displayNewAlert() {}
+            function initButtonSpinners() {}
+        </script>
+        <link rel="stylesheet" media="screen" href="css/styles.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="Chrome Chrome--noSidebar Chrome--light">
+            <div class="Wrapper Wrapper--wide">
+                <div class="Wrapper-inner">
+                    <header class="Chrome-header" id="header" role="banner">
+                        <div class="Chrome-headerInner">
+                            <div class="Chrome-nav">
+                                <div class="Chrome-navLogo">
+                                    <a href="/" class="YJLogo YJLogo--small icon-yj-logo-black">
+                                        YunoJuno
+                                    </a>
+                                </div>
+                                <ul class="Chrome-navItems">
+                                    <li class="Chrome-navItem">
+                                        <a href="http://blog.yunojuno.com">Blog</a>
+                                    </li>
+                                    <li class="Chrome-navItem">
+                                        <a href="mailto:hello@yunojuno.com">Contact</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+            </div>
+            <div class="Chrome-content" role="main">
+                <div class="Chrome-contentInner">   
+                    <div class="Container Container--signIn">
+                        <div class="Container-body">
+                            <h1>The front-end developer test</h1>      
+                            <p>Hi there, thanks for taking part.&nbsp;</p>
+                            
+                            <p>What you will find below is an isolated piece of functionality from our platform. This is how freelancers and employers communicate with each other.</p>
+
+                            <p>You will need NodeJS installed on your system. In addition to that you will also need Gulp, which if you haven't already needs to be installed via <code>npm install -g gulp-cli</code>.</p><p>In the yunojuno-conversations directory you will see a package.json, run <code>npm install</code> from this directory to install the required packages.</p>
+
+                            <p>We use karma test-runner and the jasmine test framework, you will find a starter test in <code>js/tests/</code></p>
+
+                            <p>To compile the conversations into the dist folder run <code>gulp scripts</code></p>
+
+                            <p>To run the tests run <code>gulp test</code></p>
+
+                            <p>Once you have ran the above command once it will generate a coverage directory with your current coverage.<br>Use this to guide your tests. Or don't, your choice.</p>
+
+                            <p>We would like you to two things:</p>
+                            <ol>
+                                <li>Write tests for the code in <code>js/components/Conversations.js</code>.</li>
+                                <li>Add validation to the form</li>
+                                <li>Add clear button to remove attachment</li>
+                            </ol>
+
+                            <p>Submission of the test will only be accepted via pull-request.</p>
+
+                            <p>Godspeed,<br> YJ Dev team.</p>
+                        </div>
+                    </div>
+                    <div class="Container Container--signIn">
+                        <div id="messages" class="Alert">
+                            <noscript>
+                                <div class="Alert-item Alert-item--warning">
+                                    <div class="Notification Notification--warning">
+                                        <div class="Alert-item-message">
+                                            To use YunoJuno properly, you will need to enable JavaScript. <a href="https://www.google.co.uk/search?q=enable%20javascript">(Here's how)</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </noscript>
+                        </div>
+                        <div class="Container-body">
+                            <h1>
+                                Conversations
+                            </h1>
+
+                            <div class="Conversation js-conversationPartial">
+                                <!-- entity conversation form -->
+                                <form class="Form Form--chat Conversation-form js-conversationForm" method="post" action="/conversations/availabilityrequest/28818/">
+                                    <input type="hidden" name="csrfmiddlewaretoken" value="QxnqWdU3WbHXbcm6nHeCAnGiLiKFS4bK">
+                                    <div class="Grid">
+                                        <div class="Grid-cell u-size3of12 u-md-size2of12 u-lg-size2of12">
+                                            <div class="Form-avatar">
+                                                <div class="Avatar Avatar--noImage Avatar--chatMessage ">
+                                                    <div class="Avatar-inner">
+                                                        <div class="Avatar-body">YOU</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="Grid-cell u-size9of12 u-md-size10of12 u-lg-size10of12">
+                                            <div class="Form-itemGroup Form-item-section-message">
+                                                <label class="Form-label Form-label-for-message" for="id_message">
+                                                        Send private message
+                                                </label>
+                                                <div class="Form-item">
+                                                    <textarea class="js-activateMessage" cols="40" id="id_message" maxlength="2000" name="message" placeholder="Click here to add a message or attach a file..."></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="Form-item-wrapper--controlGroup">
+                                                <div class="Form-item-wrapper">
+                                                    <div class="Form-item--fileInputWrapper">
+                                                        <a class="js-uploadFile-trigger" href="#">Add an attachment</a>
+                                                        <input class="js-uploadFile-trigger" id="id_attachment" name="attachment" type="file">
+                                                    </div>
+                                                    <div class="Form-item--fileInputWrapper js-clearableFileInput Form-item--fileInputWrapper--status u-textMuted js-uploadFile-name"></div><div class="Form-item--fileInputWrapper Form-item--fileInputWrapper--status Form-item--fileInputWrapper--clear"><a href="#" class="js-clearableFileInput-trigger" style="display: none;"> Clear</a></div>
+                                                </div>
+                                            </div>
+                                            <div class="Form-button">
+                                                <button class="Button Button--primary js-spinnerButton" type="submit">
+                                                    <span class="Button-inner">
+                                                        Send message
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="Conversation-body js-conversationBody">
+                                    <div class="ChatMessage">
+                                        <div class="ChatMessage-content">
+                                            <p>There are no messages in this conversation. Add one above.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+            <div class="Chrome-footer">    
+                <footer id="footer" class="Footer Footer--noSidebar">
+                    <div class="Footer-inner">
+                        <div class="Grid Grid--withGutter">
+                            <div class="Grid-cell u-md-size1of4 u-lg-size1of10 u-textCenter">
+                                <div class="u-island u-island--vert u-island--xSmall--short">
+                                    <div class="YJLogo YJLogo--small icon-yj-logo-white">YunoJuno</div>
+                                </div>
+                            </div>
+                            <div class="Footer-body Grid-cell u-lg-size3of10">
+                                
+                                    <p>Connecting the world's most innovative companies with the best freelancers in town. Minus the middleman.</p>
+                                
+                            </div>
+                            <div id="contact" class="Grid-cell u-md-size2of4 u-lg-size6of10">
+                                <h2 class="Footer-title">Get in touch</h2>
+                                <ul>
+                                    <li class="Footer-socialLink">
+                                        <a class="Footer-socialLinkInner" href="mailto:hello@yunojuno.com">
+                                            Email
+                                        </a>
+                                    </li>
+                                    <li class="Footer-socialLink">
+                                        <a class="Footer-socialLinkInner" target="_blank" href="http://www.twitter.com/iheartyunojuno">
+                                            Twitter
+                                        </a>
+                                    </li>
+                                    <li class="Footer-socialLink">
+                                        <a class="Footer-socialLinkInner" target="_blank" href="https://www.linkedin.com/company/2667237">
+                                            LinkedIn
+                                        </a>
+                                    </li>
+                                    <li class="Footer-socialLink">
+                                        <a class="Footer-socialLinkInner" target="_blank" href="https://plus.google.com/100762290578701547526" rel="publisher">
+                                            Google+
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="./dist/core.browserify.js"></script>
+    </body>
+</html> 
