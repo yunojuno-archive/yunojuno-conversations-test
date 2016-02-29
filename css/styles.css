@@ -5784,10 +5784,12 @@ input.Button--register {
   max-width: 800px;
 }
 
-.Container--signIn h1,
+.Container--signIn h1 {
+  text-align: center;
+}
 .Container--signIn h2,
 .Container--signIn h3 {
-  text-align: center;
+  text-align: left;
 }
 
 @media (min-width: 64em) {
