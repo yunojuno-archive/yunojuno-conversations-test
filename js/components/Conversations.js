@@ -20,21 +20,31 @@ function ConversationModel() {
 }
 
 ConversationModel.prototype = {
+    /**
+     * Add message to top of stack to order in DESC.
+     */
     addItem: function(message) {
         this._messages.unshift(message);
         this.messageAdded.notify(message);
     },
 
+    /**
+     * Get single item from local store. This is an unused helper function
+     */ 
     getItem: function(index) {
         return this._messages[index];
     },
 
+    /**
+     * Get all messages from our local store.
+     */
     getItems: function() {
         return this._messages;
     }
 };
 
 function ConversationView(model, partial) {
+    // Set accessors for the partial.
     this.view = partial;
     this.identifier = gen_uuid();
     this.textarea = $(this.view).find('textarea');
@@ -54,15 +64,18 @@ function ConversationView(model, partial) {
     // Set uuid on form
     $(this.view).attr('id', this.identifier);
 
-    this.totalConversationMessages = this.conversationMessages.count;
-
+    // Make global event for other parts of the platform to subscribe to.
     YJ.Conversation.conversationUpdated = new YJEvent(this);
 
+    // Add local evnets for controller to subscribe to
     this.eventAddMessage = new YJEvent(this);
     this.eventSubmitMessage = new YJEvent(this);
 }
 
 ConversationView.prototype = {
+    /**
+     * Chat message template with variables replaced by buildTemplate()
+     */
     template: `
         <div class="ChatMessage">
             <div class="ChatMessage-inner">
@@ -93,7 +106,21 @@ ConversationView.prototype = {
             </div>
         </div>
     `,
+    /**
+     * Template for showing an attachment within a conversation message,
+     * replaces CHAT_MESSAGE_ATTACHMENT above.
+     */
     attachmentTemplate: '<p><a class="ChatMessage-attachment" target="_blank" href="#">{{ ATTACHMENT }}</a></p>',
+    /**
+     * All the bindings to our document happen here
+     * 
+     * - onSubmitForm() stops sync form submit
+     * - onExpandForm() shows the attachment field
+     * - onKeyDown() determines if use has used form submit shortcuts
+     * - onClickSubmitButton() submits our form over AJAX
+     * - onChangeFilePicker() gives user UI feedback on which file they picked
+     *
+     */
     bindEventListeners: function() {
         $(document)
             .off('submit', '#' + this.identifier +' .js-conversationForm')
@@ -112,6 +139,11 @@ ConversationView.prototype = {
             .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
     },
 
+    /**
+     * The global function canUseAjaxFileUploads() determines whether we can send file data through AJAX.
+     * It is unsupported in < IE9
+     * Remove it if necessary
+     */
     detectAndRemoveAttachment: function() {
         if(!YJ.canUseAjaxFileUploads()) {
             // Remove attachment
@@ -119,12 +151,21 @@ ConversationView.prototype = {
         }
     },
 
+    /**
+     * Tell anyone attached to our events
+     * about all our messages.
+     */
     buildMessages: function() {
-        for(var i=0; i < this.totalConversationMessages; i++) {
+        for(var i=0; i < this.conversationMessages.items.length; i++) {
             this.eventAddMessage.notify(this.conversationMessages.items[i]);
         }
     },
 
+    /**
+     * Take our template strings and replace
+     * the vars with our dynamic data.
+     * Returns the resulting template
+     */
     buildTemplate: function(avatar, chat_message, datetime, attachment = false) {
         // Replace avatar initials
 
@@ -147,13 +188,20 @@ ConversationView.prototype = {
         return tpl;
     },
 
+    /**
+     * Clear textarea, filepicker and remove class which expands
+     * the form to show the attachment.
+     */
     emptyForm: function() {
-        // Clear textarea, filepicker and remove class which expands the form to show the attachment.
         this.textarea.val('');
         this.form.find('input[type=file]').val('');
         $(this.view).removeClass('expand');
     },
 
+    /**
+     * Loop through items and build a template, 
+     * eventually replacing the contents with our template string.
+     */
     renderTemplate: function(items) {
         var item,
             html = '';
@@ -169,13 +217,19 @@ ConversationView.prototype = {
         document.getElementsByClassName('js-conversationBody')[0].innerHTML = html;
     },
 
+    /**
+     * Initialise the Conversations view. Integral to tests.
+     */
     init: function() {
-        // Controller driven initialisation function
         this.buildMessages();
         this.bindEventListeners();
         this.detectAndRemoveAttachment();
     },
 
+    /**
+     * When user clicks our filepicker and chooses a file, take 
+     * the filename and place in an element next to the picker.
+     */
     onChangeFilepicker: function(ev) {
         var $relevantStatus = $(this).parent().next('.js-uploadFile-name').first(),
             summaryString = "File selected: " + $(this).val().split('\\').pop();
@@ -189,8 +243,11 @@ ConversationView.prototype = {
         }
     },
 
-    // User Event driven methods
+    /**
+     * Submit form over ajax
+     */
     onClickSubmitButton: function(ev) {
+        // TODO - Add validation to form.
         return this.triggerSubmitForm(ev.currentTarget.form);
     },
     /**
@@ -214,24 +271,17 @@ ConversationView.prototype = {
             return this.triggerSubmitForm(ev.target.form);
         }
     },
-
-    /*
-     * Bind jquery.form.js to the form. HOWEVER, don't do it simply the way
-     * the jquery.form.js docs say, because we are using the js-spinnerButton
-     * behaviour here, which disables the button after first click,
-     * which in turn blocks $form.submit from really happening. So, instead
-     * we make sure that form.submit is blocked (as per recommended way,
-     * which turns out to be a bit belt-and-braces as it's not triggered)
-     * and bind a separate click handler to the submit button to ensure
-     * our call to ajaxSubmit happens,
+    /**
+     *  Catch to deny standard POST
      */
     onSubmitForm: function() {
-        // token safety catch to deny standard POST -- though this
-        // won't get called due to the spinner button being made disabled.
         return false;
     },
 
-    // View driven form submit. Actually an AJAX request
+    /**
+     * View driven form submit. Normally an AJAX request, in our case this is bypassed.
+     * Notify the controller event to store our message in localStorage.
+     */
     triggerSubmitForm: function(form) {
         this.eventSubmitMessage.notify(form);
     }
@@ -245,6 +295,9 @@ function ConversationController(model, view, init = true) {
 }
 
 ConversationController.prototype = {
+    /**
+     * Initialise the Conversations controller. Integral to tests.
+     */
     init: function() {
         var controller = this;
 
@@ -264,9 +317,12 @@ ConversationController.prototype = {
         this._view.init();
     },
 
+    /*
+     * Performs the action of sending a message to another user. 
+     * In this case we are only sending a single strand from ourselves. 
+     * So another party will never 'receive' a message.
+     */
     sendMessage: function(callee, conversationForm) {
-        $(this._view.view).find('button[type="submit"]').trigger('spin');
-
         var key,
             data = {
                 avatar: 'YOU',
@@ -297,15 +353,21 @@ ConversationController.prototype = {
 
         localStorage.setItem('messages', JSON.stringify(messages));
     },
+    /**
+     * Proxies the submitSuccess function as jQuery returns different arguments to our 'qwest' AJAX package.
+     * Is not used for this implementation.
+     */
     submitJquerySuccess: function(responseObj, statusText, xhr, $wrappedForm) {
       // Reshuffle the arguments
       this.submitSuccess(xhr, responseObj);
     },
+    /**
+     * On a successful post the responseObj will be packaged with
+     * - status(obj)
+     *  - success: (true/false)
+     *  - feedback: (string/null)
+     */ 
     submitSuccess: function(xhr, responseObj) {
-        // responseObj is a payload with two keys:
-        // 'html' is intended to replace the entire conversation panel
-        // 'status' is a dict of {'success':true|false, 'feedback_message': "..."}
-
         var wasSuccessful = responseObj.status.success,
             feedbackMessage = responseObj.status.feedback_message,
             alertState = (wasSuccessful === true) ? 'success' : 'error',
@@ -326,12 +388,19 @@ ConversationController.prototype = {
         // Notify global listeners that the conversation has updated.
         YJ.Conversation.conversationUpdated.notify(responseObj);
     },
+    /**
+     * In a real world scenario we get instances of failed requests.
+     * This handles the failure gracefully and notifies the user.
+     */
     submitFail: function() {
         displayNewAlert(defaultError);
     }
 };
 
-// The initialiser that ties them together
+/**
+ * Conversation.
+ * This is the constructor used to initialise our Conversations application.
+ */
 function Conversation(conversationPartial) {
     // Check localStorage exists, if not. Create it.
     if(localStorage.getItem('messages') === null) localStorage.setItem('messages', JSON.stringify({count: 0, items: []}));
@@ -342,11 +411,11 @@ function Conversation(conversationPartial) {
     return new ConversationController(model, view);
 }
 
-YJ.Conversation.constructor = Conversation;
-
 module.exports = {
+    // Individual exports are made for testing
     ConversationModel: ConversationModel,
     ConversationView: ConversationView,
     ConversationController: ConversationController,
+    // Constructor is invoked on the platform.
     constructor: Conversation
 };

@@ -2,14 +2,13 @@
 
 What you will find below is an isolated piece of functionality from our platform. This is how freelancers and employers communicate with each other.
 
-## Taking part
+As with most modern front-end systems we require Node to be installed on your system.
 
-You will need NodeJS installed on your system. In addition to that 
 ## Sources
 In the `yunojuno-conversations` directory you will see a package.json, run `npm install` from this directory to install the required packages.
 
 ## Tooling
-You will also need Gulp, which if you haven’t already needs to be installed via `nam install -g gulp-cli`.
+You will also need Gulp, which if you haven’t already needs to be installed via `npm install -g gulp-cli`.
 
 We use karma test-runner and the jasmine test framework, you will find a starter test in `js/tests/`
 
