@@ -8,7 +8,7 @@ A conversation thread is made of many messages. Each message contains the messag
 
 The form is also replaced, which with it brings validation from the server.
 
-What you will find when you checkout the source is an isolated piece of functionality from our platform. This is how freelancers and employers communicate with each other.
+What you will find when you checkout the source is an isolated piece of functionality from our platform.
 
 On the platform, conversations take place with multiple parties. In this scenario there is only one participant. You. 
 
@@ -27,10 +27,11 @@ We use karma test-runner and the jasmine test framework, you will find a starter
 To compile the conversations component into the `dist` folder run `gulp scripts`
 
 ## Running the tests
-To run the tests run `gulp test`
+To run the tests run `gulp karma`
+There is also `gulp karma_watch` which will watch for your tests being updated and run karma (it is a little faster).
 
 ### Test coverage
-Once you have ran the above command once it will generate a coverage directory with your current coverage.
+Once you have run the above command once it will generate a coverage directory with your current coverage.
 Use this to guide your tests. Or don’t, your choice.
 
 ## Issue
