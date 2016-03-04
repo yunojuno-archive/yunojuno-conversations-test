@@ -13,9 +13,9 @@ module.exports = function(karma) {
         frameworks: [ 'jasmine', 'browserify' ],
 
         files: [
-            {pattern: src_path+'/test_libs/jquery.js', watched: false, served: true, included: false},
-            {pattern: src_path+'components/**/*.js', watched: false, served: true, included: false},
-            src_path+'/tests/**/*.js',
+            {pattern: src_path+'/test_libs/*.js', watched: false, served: true, included: true},
+            {pattern: src_path+'/components/**/*.js', watched: false, served: true, included: false},
+            src_path+'/tests/**/*.js'
             //'test_libs/**/*.js'
         ],
 

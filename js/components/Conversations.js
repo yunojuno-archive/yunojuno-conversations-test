@@ -40,6 +40,11 @@ ConversationModel.prototype = {
      */
     getItems: function() {
         return this._messages;
+    },
+
+    destroy: function() {
+        this.messageAdded = null;
+        this._messages = null;
     }
 };
 
@@ -186,6 +191,11 @@ ConversationView.prototype = {
         tpl = tpl.replace('{{ CHAT_MESSAGE_ATTACHMENT }}', attachTpl);
 
         return tpl;
+    },
+
+    destroy: function() {
+        this.eventAddMessage = null;
+        this.eventSubmitMessage = null;
     },
 
     /**
