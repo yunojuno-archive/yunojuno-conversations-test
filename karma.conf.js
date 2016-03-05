@@ -8,6 +8,9 @@ module.exports = function(karma) {
     preprocessors[src_path+'/components/*.js'] = ['browserify'];
     preprocessors[src_path+'/tests/*.js'] = ['browserify'];
 
+    var babelIstanbul = require('browserify-babel-istanbul'),
+        isparta = require('isparta');
+
     karma.set({
 
         frameworks: [ 'jasmine', 'browserify' ],
@@ -36,7 +39,15 @@ module.exports = function(karma) {
         // browserify configuration
         browserify: {
             debug: true,
-            transform: [ ['babelify', {presets: ['babel-preset-es2015']}], 'browserify-istanbul' ]
+            transform: [
+                babelIstanbul({
+                    defaultIgnore: false,
+                    instrumenter: isparta,
+                    instrumenterConfig: { babel: { presets: ["es2015"] } },
+                    ignore: ['**/test_libs/**', '**/node_modules/**', '**/bower_components/**', '**/test/**', '**/tests/**', '**/*.json']
+                }),
+                ['babelify', {presets: ['babel-preset-es2015']}]
+            ]
         },
 
         coverageReporter: {
@@ -45,5 +56,17 @@ module.exports = function(karma) {
                 {type: 'text-summary'}
             ]
         }
+
+        //coverageReporter: {
+        //    // configure the reporter to use isparta for JavaScript coverage
+        //    // Only on { "karma-coverage": "douglasduteil/karma-coverage#next" }
+        //    instrumenters: { isparta : require('isparta') },
+        //    instrumenter: {
+        //        '**/*.js': 'isparta'
+        //    },
+        //    instrumenterOptions: {
+        //        isparta: { babel : { presets: 'es2015' } }
+        //    }
+        //}
     });
 };

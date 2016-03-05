@@ -40,11 +40,6 @@ ConversationModel.prototype = {
      */
     getItems: function() {
         return this._messages;
-    },
-
-    destroy: function() {
-        this.messageAdded = null;
-        this._messages = null;
     }
 };
 
@@ -56,10 +51,12 @@ function ConversationView(model, partial) {
     this.form = $(this.view).find('form');
     this.submitButton = $(this.view).find('button[type="submit"]');
 
+    var messages = JSON.parse(localStorage.getItem('messages'));
+
     // Detect messages
-    try {
-        this.conversationMessages = JSON.parse(localStorage.getItem('messages'));
-    } catch (e) {
+    if(messages !== null) {
+        this.conversationMessages = messages;
+    } else {
         this.conversationMessages = {
             count: 0,
             items: []
@@ -193,11 +190,6 @@ ConversationView.prototype = {
         return tpl;
     },
 
-    destroy: function() {
-        this.eventAddMessage = null;
-        this.eventSubmitMessage = null;
-    },
-
     /**
      * Clear textarea, filepicker and remove class which expands
      * the form to show the attachment.
@@ -245,12 +237,6 @@ ConversationView.prototype = {
             summaryString = "File selected: " + $(this).val().split('\\').pop();
         $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
         $relevantStatus.html(summaryString);
-
-        if($(this).parent().hasClass('js-clearableFileInput')) {
-            $(this).parent().hide();
-            $(this).parent().parent().find('.js-clearableFileInput-trigger').show();
-            $(this).parent().parent().find('.js-uploadFile-trigger').hide();
-        }
     },
 
     /**

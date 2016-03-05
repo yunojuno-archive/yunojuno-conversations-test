@@ -52,7 +52,7 @@ var Conversations = require('../components/Conversations.js'),
                     <div class="Form-item-wrapper">
                         <div class="Form-item--fileInputWrapper">
                             <a class="js-uploadFile-trigger" href="#">Add an attachment</a>
-                            <input class="js-uploadFile-trigger" id="id_attachment" name="attachment" type="file" onchange="updateUploaderStatusMessage(this)">
+                            <input class="js-uploadFile-trigger" id="id_attachment" name="attachment" type="file">
                         </div>
                         <div class="Form-item--fileInputWrapper js-clearableFileInput Form-item--fileInputWrapper--status u-textMuted js-uploadFile-name"></div><div class="Form-item--fileInputWrapper Form-item--fileInputWrapper--status Form-item--fileInputWrapper--clear"><a href="#" class="js-clearableFileInput-trigger" style="display: none;"> Clear</a></div>
                     </div>
@@ -114,6 +114,7 @@ describe('Load conversations', function () {
 		spyOn(view, 'onClickSubmitButton').and.callThrough();
 		spyOn(view, 'onKeyDown').and.callThrough();
 		spyOn(view, 'onSubmitForm').and.callThrough();
+		spyOn(view, 'onChangeFilepicker').and.callThrough();
 		spyOn(view, 'onExpandForm').and.callThrough();
 		spyOn(view, 'init').and.callThrough();
 		spyOn(view, 'triggerSubmitForm').and.callThrough();
@@ -134,10 +135,6 @@ describe('Load conversations', function () {
 
 	afterAll(function () {
 		document.removeChild($conversationObj);
-
-        model.destroy();
-        view.destroy();
-
         controller = null;
         view = null;
         model = null;
@@ -205,6 +202,15 @@ describe('Load conversations', function () {
 
 		expect(view.onKeyDown).toHaveBeenCalled();
 	});
+
+    // We can only trigger the change event, it is impossible to set a value.
+    // That would be a huge security hole in browsers.
+    it('triggers the onchange event for filepicker', function() {
+        $(view.view).find('input[type="file"]').trigger('change');
+
+        expect(view.onChangeFilepicker).toHaveBeenCalled();
+        expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');
+    });
 
 	it('triggers the keydown event (which causes a submit through ctrlKey)', function () {
 		var e = $.Event('keydown');
@@ -330,9 +336,6 @@ describe('Load conversations in a client which doesn\'t support ajax file upload
 
 	afterAll(function () {
 		document.removeChild($conversationObj);
-
-        model.destroy();
-        view.destroy();
 	});
 
 	it('has the correct amount of messages', function () {
@@ -358,4 +361,42 @@ describe('Load conversations in a client which doesn\'t support ajax file upload
 		view.textarea.focus();
 		expect($(view.view).attr('class')).toContain('expand');
 	});
+});
+
+describe('Load conversations with empty localStorage', function () {
+    var controller, model, view, $conversationObj;
+
+    beforeAll(function () {
+        $(conversationHTML).find('.js-conversationBody').html('');
+        $conversationObj = $(conversationHTML).get(0);
+        document.body.appendChild($conversationObj);
+
+
+        // Clear local storage
+        localStorage.clear();
+
+        model = new Conversations.ConversationModel();
+        view = new Conversations.ConversationView(model, $conversationObj);
+        controller = new Conversations.ConversationController(model, view);
+    });
+
+    afterAll(function () {
+        document.removeChild($conversationObj);
+    });
+
+    it('Will catch the try and set conversationMessages to count: 0, items: []', function() {
+        expect(view.conversationMessages.count).toBe(0);
+        expect(view.conversationMessages.items.length).toBe(0);
+    });
+
+    it('Will empty the form', function() {
+        view.textarea.val("Oh, I can't take him like that -- it's against regulations.");
+        view.textarea.trigger('focus');
+
+        expect($(view.view).attr('class')).toContain('expand');
+
+        view.emptyForm();
+        expect($(view.view).attr('class')).not.toContain('expand');
+        expect(view.textarea.val()).toBe('');
+    });
 });
