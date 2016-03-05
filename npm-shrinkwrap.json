@@ -244,6 +244,33 @@
       "from": "babel-helpers@>=6.4.5 <7.0.0",
       "resolved": "https://registry.npmjs.org/babel-helpers/-/babel-helpers-6.5.0.tgz"
     },
+    "babel-istanbul": {
+      "version": "0.6.1",
+      "from": "babel-istanbul@latest",
+      "resolved": "https://registry.npmjs.org/babel-istanbul/-/babel-istanbul-0.6.1.tgz",
+      "dependencies": {
+        "esprima": {
+          "version": "2.5.0",
+          "from": "esprima@>=2.5.0 <2.6.0",
+          "resolved": "https://registry.npmjs.org/esprima/-/esprima-2.5.0.tgz"
+        },
+        "source-map": {
+          "version": "0.4.4",
+          "from": "source-map@>=0.4.0 <0.5.0",
+          "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.4.4.tgz"
+        },
+        "supports-color": {
+          "version": "3.1.2",
+          "from": "supports-color@>=3.1.0 <3.2.0",
+          "resolved": "https://registry.npmjs.org/supports-color/-/supports-color-3.1.2.tgz"
+        },
+        "wordwrap": {
+          "version": "1.0.0",
+          "from": "wordwrap@>=1.0.0 <1.1.0",
+          "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-1.0.0.tgz"
+        }
+      }
+    },
     "babel-messages": {
       "version": "6.5.0",
       "from": "babel-messages@>=6.3.13 <7.0.0",
@@ -513,6 +540,11 @@
       "version": "1.0.6",
       "from": "browserify-aes@>=1.0.4 <2.0.0",
       "resolved": "https://registry.npmjs.org/browserify-aes/-/browserify-aes-1.0.6.tgz"
+    },
+    "browserify-babel-istanbul": {
+      "version": "0.4.0",
+      "from": "browserify-babel-istanbul@latest",
+      "resolved": "https://registry.npmjs.org/browserify-babel-istanbul/-/browserify-babel-istanbul-0.4.0.tgz"
     },
     "browserify-cipher": {
       "version": "1.0.0",
@@ -2014,6 +2046,11 @@
       "from": "has-binary@0.1.7",
       "resolved": "https://registry.npmjs.org/has-binary/-/has-binary-0.1.7.tgz"
     },
+    "has-color": {
+      "version": "0.1.7",
+      "from": "has-color@>=0.1.0 <0.2.0",
+      "resolved": "https://registry.npmjs.org/has-color/-/has-color-0.1.7.tgz"
+    },
     "has-cors": {
       "version": "1.1.0",
       "from": "has-cors@1.1.0",
@@ -2745,6 +2782,28 @@
       "version": "1.4.7",
       "from": "node-uuid@>=1.4.7 <1.5.0",
       "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
+    },
+    "nomnomnomnom": {
+      "version": "2.0.1",
+      "from": "nomnomnomnom@>=2.0.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/nomnomnomnom/-/nomnomnomnom-2.0.1.tgz",
+      "dependencies": {
+        "ansi-styles": {
+          "version": "1.0.0",
+          "from": "ansi-styles@>=1.0.0 <1.1.0",
+          "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-1.0.0.tgz"
+        },
+        "chalk": {
+          "version": "0.4.0",
+          "from": "chalk@>=0.4.0 <0.5.0",
+          "resolved": "https://registry.npmjs.org/chalk/-/chalk-0.4.0.tgz"
+        },
+        "strip-ansi": {
+          "version": "0.1.1",
+          "from": "strip-ansi@>=0.1.0 <0.2.0",
+          "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-0.1.1.tgz"
+        }
+      }
     },
     "nopt": {
       "version": "3.0.6",
@@ -3599,6 +3658,11 @@
       "from": "umd@>=3.0.0 <4.0.0",
       "resolved": "https://registry.npmjs.org/umd/-/umd-3.0.1.tgz"
     },
+    "underscore": {
+      "version": "1.6.0",
+      "from": "underscore@>=1.6.0 <1.7.0",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
+    },
     "unique-stream": {
       "version": "1.0.0",
       "from": "unique-stream@>=1.0.0 <2.0.0",
@@ -3690,7 +3754,8 @@
         },
         "readable-stream": {
           "version": "1.0.33",
-          "from": "readable-stream@>=1.0.26 <1.1.0"
+          "from": "readable-stream@1.0.33",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz"
         },
         "through2": {
           "version": "0.6.5",
