@@ -22,6 +22,7 @@ var conversationMessages = {
 };
 
 var Conversations = require('../components/Conversations.js'),
+    defaultError = 'THIS IS A DEFAULT ERROR MESSAGE',
     conversationMockResponse = {"status": {"feedback_message": false, "success": true}, "html": "", "meta": {"total_messages": conversationMessages.count}},
     conversationHTML = `
 <div class="Conversation js-conversationPartial" id="conversation">
@@ -118,6 +119,8 @@ describe('Load conversations', function () {
 		spyOn(view, 'onExpandForm').and.callThrough();
 		spyOn(view, 'init').and.callThrough();
 		spyOn(view, 'triggerSubmitForm').and.callThrough();
+        spyOn(view, 'emptyForm').and.callThrough();
+        spyOn(view, 'detectAndRemoveAttachment').and.callThrough();
 
 		callableFunc.eventViewCallback = function() {};
 		callableFunc.eventModelMessageAddedCallback = function() {};
@@ -257,6 +260,42 @@ describe('Load conversations', function () {
 		expect(controller.sendMessage).toHaveBeenCalled();
 	});
 
+    it('simulates a built template without an attachment', function() {
+        var items = conversationMessages.items,
+            sampleTemplate = `
+        <div class="ChatMessage">
+            <div class="ChatMessage-inner">
+                <div class="Grid">
+                    <div class="Grid-cell u-size3of12 u-md-size2of12 u-lg-size2of12">
+                        <div class="ChatMessage-avatar">
+                            <div class="Avatar Avatar--noImage Avatar--chatMessage ">
+                                <div class="Avatar-inner">
+                                    <div class="Avatar-body">${items[0].avatar}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Grid-cell u-size9of12 u-md-size10of12 u-lg-size10of12">
+                        <div class="ChatMessage-content">
+                            <div class="ChatMessage-body">
+                                <p>${items[0].message}</p>
+
+                            </div>
+
+                            <div class="ChatMessage-meta">
+                                ${items[0].date}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`,
+            template = view.buildTemplate(items[0].avatar, items[0].message, items[0].date, false);
+
+        expect(template.replace(/\s/g, "")).toBe(sampleTemplate.replace(/\s/g, ""));
+    });
+
 	it('simulates a success response and adds message to the stack', function() {
 		// Splurge fake response into conversation response and check responseObj performs correctly.
 		displayNewAlert.calls.reset();
@@ -265,6 +304,9 @@ describe('Load conversations', function () {
 
 		expect(model.getItems().length).toBe(16);
 		expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
+
+        expect(view.emptyForm).toHaveBeenCalled();
+        expect(view.detectAndRemoveAttachment).toHaveBeenCalled();
 
 		expect(buildMessageHTML).not.toHaveBeenCalled();
 		expect(displayNewAlert).not.toHaveBeenCalled();
@@ -298,6 +340,34 @@ describe('Load conversations', function () {
 		expect(displayNewAlert).toHaveBeenCalled();
 	});
 
+    it('simulates a unsuccessful response with a feeback message', function() {
+        conversationMockResponse.status.success = false;
+        conversationMockResponse.status.feedback_message = "Clever girl.";
+
+        buildMessageHTML.calls.reset();
+
+        // Splurge fake response into conversation response and check responseObj performs correctly.
+        controller.submitSuccess({}, conversationMockResponse);
+
+        expect(model.getItems().length).toBe(16);
+        expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
+
+        expect(buildMessageHTML).toHaveBeenCalled();
+        expect(displayNewAlert).toHaveBeenCalled();
+    });
+
+    it('simulates an undefined feedbackMessage response', function() {
+        conversationMockResponse.status.feedback_message = undefined;
+
+        displayNewAlert.calls.reset();
+
+        // Splurge fake response into conversation response and check responseObj performs correctly.
+        controller.submitSuccess({}, conversationMockResponse);
+
+        expect(buildMessageHTML).toHaveBeenCalled();
+        expect(displayNewAlert).not.toHaveBeenCalled();
+    });
+
 	it('simulates a fail response', function() {
 		conversationMockResponse.status.feedback_message = null;
 
@@ -326,11 +396,11 @@ describe('Load conversations in a client which doesn\'t support ajax file upload
         localStorage.clear();
 
         // Add some fake items to localStorage.
-        localStorage.setItem('messages', JSON.stringify({count: 0, items: []}));
         localStorage.setItem('messages', JSON.stringify(conversationMessages));
 
 		model = new Conversations.ConversationModel();
 		view = new Conversations.ConversationView(model, $conversationObj);
+        spyOn(view, 'detectAndRemoveAttachment').and.callThrough();
 		controller = new Conversations.ConversationController(model, view);
 	});
 
@@ -344,6 +414,7 @@ describe('Load conversations in a client which doesn\'t support ajax file upload
 
 	it('has no attachment field', function () {
 		expect(view.form[0].querySelector('input[type=file]')).toBe(null);
+        expect(view.detectAndRemoveAttachment).toHaveBeenCalled();
 	});
 
 	it('Getting the first message returns the correct fixture', function () {
@@ -398,5 +469,79 @@ describe('Load conversations with empty localStorage', function () {
         view.emptyForm();
         expect($(view.view).attr('class')).not.toContain('expand');
         expect(view.textarea.val()).toBe('');
+    });
+});
+
+describe('Load conversations with empty localStorage', function () {
+    var controller, model, view, $conversationObj;
+
+    beforeAll(function () {
+        $(conversationHTML).find('.js-conversationBody').html('');
+        $conversationObj = $(conversationHTML).get(0);
+        document.body.appendChild($conversationObj);
+
+
+        // Clear local storage
+        localStorage.clear();
+
+        localStorage.setItem('messages', JSON.stringify(conversationMessages));
+
+        model = new Conversations.ConversationModel();
+        view = new Conversations.ConversationView(model, $conversationObj);
+        controller = new Conversations.ConversationController(model, view, false);
+        spyOn(controller, 'sendMessage').and.callThrough(); // Stop it calling through
+        controller.init();
+
+    });
+
+    afterAll(function () {
+        document.removeChild($conversationObj);
+    });
+
+    it('triggers a submit and detects attachment value', function() {
+
+        //conversationForm.elements.message.value,
+        var fakeFormValues = {
+            elements: {
+                attachment: {
+                    value: 'C:\\fakepath\\unmovable_black_knight.pdf'
+                },
+                message: {
+                    value: 'I command you as King of the Britons to stand aside!'
+                }
+            }
+        };
+
+        view.triggerSubmitForm(fakeFormValues);
+
+        expect(controller.sendMessage).toHaveBeenCalled();
+        expect(model.getItems().length).toBe(13);
+        expect(model.getItem(0).attachment).toBe('unmovable_black_knight.pdf');
+    });
+});
+
+describe('Load conversations using constructor', function () {
+    var controller, model, view, $conversationObj;
+
+    beforeAll(function () {
+        $(conversationHTML).find('.js-conversationBody').html('');
+        $conversationObj = $(conversationHTML).get(0);
+        document.body.appendChild($conversationObj);
+
+
+        // Clear local storage
+        localStorage.clear();
+    });
+
+    afterAll(function () {
+        document.removeChild($conversationObj);
+    });
+
+    it('initialise constructor and check default localStorage', function() {
+        //localStorage.setItem('messages', JSON.stringify(conversationMessages));
+
+        controller = new Conversations.constructor($conversationObj);
+
+        expect(localStorage.getItem('messages')).toBe(JSON.stringify({count: 0, items: []}));
     });
 });

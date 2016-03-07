@@ -168,7 +168,7 @@ ConversationView.prototype = {
      * the vars with our dynamic data.
      * Returns the resulting template
      */
-    buildTemplate: function(avatar, chat_message, datetime, attachment = false) {
+    buildTemplate: function(avatar, chat_message, datetime, attachment) {
         // Replace avatar initials
 
         // Make copy of template.
@@ -366,8 +366,9 @@ ConversationController.prototype = {
     submitSuccess: function(xhr, responseObj) {
         var wasSuccessful = responseObj.status.success,
             feedbackMessage = responseObj.status.feedback_message,
-            alertState = (wasSuccessful === true) ? 'success' : 'error',
             alertMessage;
+
+        var alertState = (wasSuccessful === true) ? 'success' : 'error';
 
         // Empty for as we have now submitted
         this._view.emptyForm();
@@ -377,7 +378,7 @@ ConversationController.prototype = {
 
         // also set an alert based on the results
         if (feedbackMessage) {
-            alertMessage = (feedbackMessage === undefined) ? defaultError : buildMessageHTML(feedbackMessage, alertState);
+            alertMessage = buildMessageHTML(feedbackMessage, alertState);
             displayNewAlert(alertMessage);
         }
 
