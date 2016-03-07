@@ -2,11 +2,11 @@
 
 At YunoJuno we have a conversations application which enables freelancers and employers to talk to each other, whether that be  about a brief, a contract or a catch up. It all goes through conversations.
 
-The platform backend runs on Django (which isn’t required for this test). The application talks to an ajax endpoint and returns HTML which we replace the contents of the conversation with.
+The platform backend runs on Django (which isn’t required for this test). The application talks to an ajax endpoint and returns HTML which we replace the contents of the conversation with (this has been replaced with a localStorage solution to negate the need for endpoints).
 
 A conversation thread is made of many messages. Each message contains the message (obviously), possibly an attachment and the date/time it was sent. 
 
-The form is also replaced, which with it brings validation from the server.
+In practice, the form is also replaced, which with it brings validation from the server. However as we are using localStorage the form isn't replaced and instead is only emptied.
 
 What you will find when you checkout the source is an isolated piece of functionality from our platform.
 
@@ -38,8 +38,7 @@ Use this to guide your tests. Or don’t, your choice.
 
 We would like you to do three things:
 
-- Write tests for the code in `js/components/Conversations.js`.
-- Add validation to the form
-- Add clear button to remove attachment
+- Add validation to the form (and associated tests)
+- Add clear button to remove attachment (and associated tests)
 
 Submission of the test will only be accepted via pull-request.

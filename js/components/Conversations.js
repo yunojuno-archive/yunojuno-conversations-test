@@ -229,6 +229,14 @@ ConversationView.prototype = {
     },
 
     /**
+     * When a user clicks the 'clear attachment' link after adding an
+     * attachment it should trigger this and clear the value.
+     */
+    onClearFileAttachment: function() {
+
+    },
+
+    /**
      * When user clicks our filepicker and chooses a file, take 
      * the filename and place in an element next to the picker.
      */
