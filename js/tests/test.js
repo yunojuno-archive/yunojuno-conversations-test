@@ -3,6 +3,7 @@ window.YJ = {};
 // and jQuery
 window.$ = require('../test_libs/jquery.js');
 
+// Sample conversation messages populated within tests.
 var conversationMessages = {
     "count":12,
     "items":[
@@ -32,11 +33,7 @@ var Conversations = require('../components/Conversations.js'),
             <div class="Grid-cell u-size3of12 u-md-size2of12 u-lg-size1of12">
                 <div class="Form-avatar">
                     <div class="Avatar Avatar--chatMessage " title="Gerry Moss">
-                        <div class="Avatar-inner" style="
-
-                              background-image: url('/media/images/static_pages/biff_tannen.jpg');
-
-                        "></div>
+                        <div class="Avatar-inner"></div>
                     </div>
                 </div>
             </div>
@@ -85,21 +82,21 @@ window.displayNewAlert = jasmine.createSpy();
 // Stub ajaxSubmit
 $.fn.ajaxSubmit = function() {};
 
-describe('Load conversations', function () {
-	var model,
-		view,
-		controller,
-		$conversationObj,
-		callableFunc = {},
-		conversationInitialiser;
+describe('Test conversations (load, event binds and submission calls)', function () {
+    var model,
+        view,
+        controller,
+        $conversationObj,
+        callableFunc = {},
+        conversationInitialiser;
 
-	beforeAll(function () {
-		$conversationObj = $(conversationHTML).get(0);
-		document.body.appendChild($conversationObj);
+    beforeAll(function () {
+        $conversationObj = $(conversationHTML).get(0);
+        document.body.appendChild($conversationObj);
 
-		YJ.canUseAjaxFileUploads = function () {
-			return true;
-		};
+        YJ.canUseAjaxFileUploads = function () {
+            return true;
+        };
 
         // Clear local storage
         localStorage.clear();
@@ -107,160 +104,159 @@ describe('Load conversations', function () {
         // Add some fake items to localStorage.
         localStorage.setItem('messages', JSON.stringify(conversationMessages));
 
-		conversationInitialiser = Conversations.constructor($conversationObj);
+        conversationInitialiser = Conversations.constructor($conversationObj);
 
-		model = new Conversations.ConversationModel();
-		view = new Conversations.ConversationView(model, $conversationObj);
+        model = new Conversations.ConversationModel();
+        view = new Conversations.ConversationView(model, $conversationObj);
 
-		spyOn(view, 'onClickSubmitButton').and.callThrough();
-		spyOn(view, 'onKeyDown').and.callThrough();
-		spyOn(view, 'onSubmitForm').and.callThrough();
-		spyOn(view, 'onChangeFilepicker').and.callThrough();
-		spyOn(view, 'onExpandForm').and.callThrough();
-		spyOn(view, 'init').and.callThrough();
-		spyOn(view, 'triggerSubmitForm').and.callThrough();
+        spyOn(view, 'onClickSubmitButton').and.callThrough();
+        spyOn(view, 'onKeyDown').and.callThrough();
+        spyOn(view, 'onSubmitForm').and.callThrough();
+        spyOn(view, 'onChangeFilepicker').and.callThrough();
+        spyOn(view, 'onExpandForm').and.callThrough();
+        spyOn(view, 'init').and.callThrough();
+        spyOn(view, 'triggerSubmitForm').and.callThrough();
         spyOn(view, 'emptyForm').and.callThrough();
         spyOn(view, 'detectAndRemoveAttachment').and.callThrough();
 
-		callableFunc.eventViewCallback = function() {};
-		callableFunc.eventModelMessageAddedCallback = function() {};
+        callableFunc.eventViewCallback = function () {
+        };
+        callableFunc.eventModelMessageAddedCallback = function () {
+        };
 
-		spyOn(callableFunc, 'eventViewCallback').and.callThrough();
-		spyOn(callableFunc, 'eventModelMessageAddedCallback').and.callThrough();
-		view.eventSubmitMessage.attach(callableFunc.eventViewCallback);
-		model.messageAdded.attach(callableFunc.eventModelMessageAddedCallback);
-		controller = new Conversations.ConversationController(model, view, false);
-		spyOn(controller, 'sendMessage').and.callThrough(); // Stop it calling through
-		controller.init();
+        spyOn(callableFunc, 'eventViewCallback').and.callThrough();
+        spyOn(callableFunc, 'eventModelMessageAddedCallback').and.callThrough();
+        view.eventSubmitMessage.attach(callableFunc.eventViewCallback);
+        model.messageAdded.attach(callableFunc.eventModelMessageAddedCallback);
+        controller = new Conversations.ConversationController(model, view, false);
+        spyOn(controller, 'sendMessage').and.callThrough(); // Stop it calling through
+        controller.init();
 
-		buildMessageHTML.calls.reset();
-	});
+        buildMessageHTML.calls.reset();
+    });
 
-	afterAll(function () {
-		document.removeChild($conversationObj);
+    afterAll(function () {
+        document.removeChild($conversationObj);
         controller = null;
         view = null;
         model = null;
-	});
+    });
 
-	beforeEach(function () {
-		jasmine.Ajax.install();
-	});
+    beforeEach(function () {
+        jasmine.Ajax.install();
+    });
 
-	afterEach(function () {
-		jasmine.Ajax.uninstall();
-	});
+    afterEach(function () {
+        jasmine.Ajax.uninstall();
+    });
 
-	it('checks our instances are as expected', function() {
-		expect(model instanceof Conversations.ConversationModel).toBe(true);
-		expect(view instanceof Conversations.ConversationView).toBe(true);
-		expect(controller instanceof Conversations.ConversationController).toBe(true);
-	});
+    it('checks our instances are as expected', function () {
+        expect(model instanceof Conversations.ConversationModel).toBe(true);
+        expect(view instanceof Conversations.ConversationView).toBe(true);
+        expect(controller instanceof Conversations.ConversationController).toBe(true);
+    });
 
-	it('calls the function initialiser', function() {
-		expect(conversationInitialiser instanceof Conversations.ConversationController).toBe(true);
-	});
+    it('calls the function initialiser', function () {
+        expect(conversationInitialiser instanceof Conversations.ConversationController).toBe(true);
+    });
 
-	it('expects controller to have called view.init', function () {
-		expect(view.init).toHaveBeenCalled();
-	});
+    it('expects controller to have called view.init', function () {
+        expect(view.init).toHaveBeenCalled();
+    });
 
-	it('has the correct amount of messages', function () {
-		expect(model.getItems().length).toBe(12);
-	});
+    it('has the correct amount of messages', function () {
+        expect(model.getItems().length).toBe(12);
+    });
 
-	it('has an attachment field', function () {
-		expect(view.form[0].querySelector('input[type=file]').name).toBe('attachment');
-	});
+    it('has an attachment field', function () {
+        expect(view.form[0].querySelector('input[type=file]').name).toBe('attachment');
+    });
 
-	it('Getting the first message returns the correct fixture', function () {
-        var fixture = conversationMessages.items[conversationMessages.items.length-1];
+    it('Getting the first message returns the correct fixture', function () {
+        var fixture = conversationMessages.items[conversationMessages.items.length - 1];
 
         expect(model.getItem(0).avatar).toBe(fixture.avatar);
         expect(model.getItem(0).message).toBe(fixture.message);
         expect(model.getItem(0).date).toBe(fixture.date);
-	});
+    });
 
-	it('has emitted message added events', function () {
+    it('expects clicking button to trigger onClickSubmitButton', function () {
+        $(view.form).find('button[type=submit]').trigger('click');
 
-	});
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+    });
 
-	it('expects clicking button to trigger triggerSubmitForm', function () {
-		$(view.form).find('button[type=submit]').trigger('click');
+    it('triggers the submitForm spy', function () {
+        view.form.submit();
+        expect(view.onSubmitForm).toHaveBeenCalled();
+    });
 
-		expect(view.onClickSubmitButton).toHaveBeenCalled();
-	});
+    it('triggers the keydown event', function () {
+        var e = $.Event('keydown');
+        e.keyCode = 65; // Character 'A'
+        e.which = 65;
 
-	it('triggers the submitForm spy', function () {
-		view.form.submit();
-		expect(view.onSubmitForm).toHaveBeenCalled();
-	});
+        view.textarea.trigger(e);
 
-	it('triggers the keydown event', function () {
-		var e = $.Event('keydown');
-		e.keyCode = 65; // Character 'A'
-		e.which = 65;
-
-		view.textarea.trigger(e);
-
-		expect(view.onKeyDown).toHaveBeenCalled();
-	});
+        expect(view.onKeyDown).toHaveBeenCalled();
+    });
 
     // We can only trigger the change event, it is impossible to set a value.
     // That would be a huge security hole in browsers.
-    it('triggers the onchange event for filepicker', function() {
+    it('triggers the onchange event for filepicker', function () {
         $(view.view).find('input[type="file"]').trigger('change');
 
         expect(view.onChangeFilepicker).toHaveBeenCalled();
         expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');
     });
 
-	it('triggers the keydown event (which causes a submit through ctrlKey)', function () {
-		var e = $.Event('keydown');
-		e.keyCode = 10; // Character 'A'
-		e.ctrlKey = true;
+    it('triggers the keydown event (which causes a submit through ctrlKey)', function () {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        e.ctrlKey = true;
 
-		view.textarea.trigger(e);
+        view.textarea.trigger(e);
 
-		expect(view.onKeyDown).toHaveBeenCalled();
-		expect(view.triggerSubmitForm).toHaveBeenCalled();
-	});
+        expect(view.onKeyDown).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).toHaveBeenCalled();
+    });
 
 
-	it('triggers the keydown event (which causes a submit through metaKey)', function () {
-		var e = $.Event('keydown');
-		e.keyCode = 10; // Character 'A'
-		e.metaKey = true;
+    it('triggers the keydown event (which causes a submit through metaKey)', function () {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        // Meta key in this case is cmd key on a mac (for example)
+        e.metaKey = true;
 
-		view.textarea.trigger(e);
+        view.textarea.trigger(e);
 
-		expect(view.onKeyDown).toHaveBeenCalled();
-		expect(view.triggerSubmitForm).toHaveBeenCalled();
-	});
+        expect(view.onKeyDown).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).toHaveBeenCalled();
+    });
 
-	it('has added a class to the partial on textarea focus', function () {
-		view.textarea.focus();
+    it('has added a class to the partial on textarea focus', function () {
+        view.textarea.focus();
 
-		expect($(view.view).attr('class')).toContain('expand');
-	});
+        expect($(view.view).attr('class')).toContain('expand');
+    });
 
-	it('triggers a submit which in turn triggers to submit form YJ event', function() {
-		// Set spy to also callthrough.
-		view.triggerSubmitForm.calls.reset(); // Reset Mock calls.
+    it('triggers a submit which in turn triggers to submit form YJ event', function () {
+        // Set spy to also callthrough.
+        view.triggerSubmitForm.calls.reset(); // Reset Mock calls.
 
-		var e = $.Event('keydown');
-		e.keyCode = 10; // Character 'A'
-		e.ctrlKey = true;
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        e.ctrlKey = true;
 
-		view.textarea.trigger(e);
+        view.textarea.trigger(e);
 
-		expect(view.onKeyDown).toHaveBeenCalled();
-		expect(view.triggerSubmitForm).toHaveBeenCalled();
-		expect(callableFunc.eventViewCallback).toHaveBeenCalled();
-		expect(controller.sendMessage).toHaveBeenCalled();
-	});
+        expect(view.onKeyDown).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).toHaveBeenCalled();
+        expect(callableFunc.eventViewCallback).toHaveBeenCalled();
+        expect(controller.sendMessage).toHaveBeenCalled();
+    });
 
-    it('simulates a built template without an attachment', function() {
+    it('simulates a built template without an attachment', function () {
         var items = conversationMessages.items,
             sampleTemplate = `
         <div class="ChatMessage">
@@ -295,14 +291,80 @@ describe('Load conversations', function () {
 
         expect(template.replace(/\s/g, "")).toBe(sampleTemplate.replace(/\s/g, ""));
     });
+});
 
+describe('Test conversations (submitting messages to the stack)', function () {
+    var model,
+        view,
+        controller,
+        $conversationObj,
+        callableFunc = {},
+        conversationInitialiser;
+
+    beforeAll(function () {
+        $conversationObj = $(conversationHTML).get(0);
+        document.body.appendChild($conversationObj);
+
+        YJ.canUseAjaxFileUploads = function () {
+            return true;
+        };
+
+        // Clear local storage
+        localStorage.clear();
+
+        // Add some fake items to localStorage.
+        localStorage.setItem('messages', JSON.stringify(conversationMessages));
+
+        conversationInitialiser = Conversations.constructor($conversationObj);
+
+        model = new Conversations.ConversationModel();
+        view = new Conversations.ConversationView(model, $conversationObj);
+
+        spyOn(view, 'onClickSubmitButton').and.callThrough();
+        spyOn(view, 'onKeyDown').and.callThrough();
+        spyOn(view, 'onSubmitForm').and.callThrough();
+        spyOn(view, 'onChangeFilepicker').and.callThrough();
+        spyOn(view, 'onExpandForm').and.callThrough();
+        spyOn(view, 'init').and.callThrough();
+        spyOn(view, 'triggerSubmitForm').and.callThrough();
+        spyOn(view, 'emptyForm').and.callThrough();
+        spyOn(view, 'detectAndRemoveAttachment').and.callThrough();
+
+        callableFunc.eventViewCallback = function() {};
+        callableFunc.eventModelMessageAddedCallback = function() {};
+
+        spyOn(callableFunc, 'eventViewCallback').and.callThrough();
+        spyOn(callableFunc, 'eventModelMessageAddedCallback').and.callThrough();
+        view.eventSubmitMessage.attach(callableFunc.eventViewCallback);
+        model.messageAdded.attach(callableFunc.eventModelMessageAddedCallback);
+        controller = new Conversations.ConversationController(model, view, false);
+        spyOn(controller, 'sendMessage').and.callThrough(); // Stop it calling through
+        controller.init();
+
+        buildMessageHTML.calls.reset();
+    });
+
+    afterAll(function () {
+        document.removeChild($conversationObj);
+        controller = null;
+        view = null;
+        model = null;
+    });
+
+    beforeEach(function () {
+        jasmine.Ajax.install();
+    });
+
+    afterEach(function () {
+        jasmine.Ajax.uninstall();
+    });
 	it('simulates a success response and adds message to the stack', function() {
 		// Splurge fake response into conversation response and check responseObj performs correctly.
 		displayNewAlert.calls.reset();
 		buildMessageHTML.calls.reset();
 		controller.submitSuccess({}, conversationMockResponse);
 
-		expect(model.getItems().length).toBe(16);
+		expect(model.getItems().length).toBe(12);
 		expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
 
         expect(view.emptyForm).toHaveBeenCalled();
@@ -318,7 +380,7 @@ describe('Load conversations', function () {
 		// Splurge fake response into conversation response and check responseObj performs correctly.
 		controller.submitJquerySuccess(conversationMockResponse, '', {}, false);
 
-		expect(model.getItems().length).toBe(16);
+		expect(model.getItems().length).toBe(12);
 		expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
 
 		expect(buildMessageHTML).not.toHaveBeenCalled();
@@ -333,7 +395,7 @@ describe('Load conversations', function () {
 		// Splurge fake response into conversation response and check responseObj performs correctly.
 		controller.submitSuccess({}, conversationMockResponse);
 
-		expect(model.getItems().length).toBe(16);
+		expect(model.getItems().length).toBe(12);
 		expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
 
 		expect(buildMessageHTML).toHaveBeenCalled();
@@ -349,7 +411,7 @@ describe('Load conversations', function () {
         // Splurge fake response into conversation response and check responseObj performs correctly.
         controller.submitSuccess({}, conversationMockResponse);
 
-        expect(model.getItems().length).toBe(16);
+        expect(model.getItems().length).toBe(12);
         expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
 
         expect(buildMessageHTML).toHaveBeenCalled();
