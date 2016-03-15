@@ -199,6 +199,18 @@ ConversationView.prototype = {
         this.form.find('input[type=file]').val('');
         $(this.view).removeClass('expand');
     },
+    
+    /**
+     * Validate form
+     * - Ensure message has length
+     */
+    validateForm: function() {
+        if (!this.textarea.val().trim().length) {
+            return false;
+        }
+
+        return true;
+    },
 
     /**
      * Loop through items and build a template, 
@@ -251,9 +263,11 @@ ConversationView.prototype = {
      * Submit form over ajax
      */
     onClickSubmitButton: function(ev) {
-        // TODO - Add validation to form.
-        return this.triggerSubmitForm(ev.currentTarget.form);
+        if (this.validateForm()) {
+            return this.triggerSubmitForm(ev.currentTarget.form);
+        }
     },
+
     /**
      * Clicking on textarea adds class of expand which shows the controls
      * and expands the textarea.
@@ -271,8 +285,10 @@ ConversationView.prototype = {
     onKeyDown: function(ev) {
         var keyCode = ev.keyCode;
         if ((keyCode === 10 || keyCode === 13) && (ev.ctrlKey || ev.metaKey)) {
-            ev.target.blur();
-            return this.triggerSubmitForm(ev.target.form);
+            if (this.validateForm()) {
+                ev.target.blur();
+                return this.triggerSubmitForm(ev.target.form);
+            }
         }
     },
     /**
