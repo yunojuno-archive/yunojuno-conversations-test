@@ -40,7 +40,7 @@ We would like you to do four things:
 
 - Add validation to the form (and associated tests)
 - Add clear button to remove attachment (and associated tests)
-- Demonstrate the ability to add a javascript trigger to the CSS animation
-- Add commentary to CSS go guide on best practice
+- (an alert or console.log() is enough)
+- Add commentary to our CSS to advise on best practices
 
 Submission of the test will only be accepted via pull-request.
