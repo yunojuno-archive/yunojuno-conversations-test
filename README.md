@@ -36,7 +36,7 @@ Use this to guide your tests. Or don’t, your choice.
 
 ## Issue
 
-We would like you to do three things:
+We would like you to do two things:
 
 - Add validation to the form (and associated tests)
 - Add clear button to remove attachment (and associated tests)
