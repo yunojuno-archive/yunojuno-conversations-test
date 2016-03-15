@@ -185,6 +185,41 @@ describe('Test conversations (load, event binds and submission calls)', function
 
         expect(view.onClickSubmitButton).toHaveBeenCalled();
     });
+    
+    it('prevents submission of an empty textarea', function () {
+        $(view.form).find('button[type=submit]').trigger('click');
+
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+        expect(controller.sendMessage).not.toHaveBeenCalled();
+    });
+    
+    it('prevents submission of an empty textarea via key combo', function () {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        e.ctrlKey = true;
+
+        view.textarea.trigger(e);
+
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+        expect(controller.sendMessage).not.toHaveBeenCalled();
+    });
+    
+    it('prevents submission of a textarea with only whitespace content', function () {
+        view.textarea.val("       ");
+        $(view.form).find('button[type=submit]').trigger('click');
+        
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled()
+    });
+    
+    it('allows submission of a textarea with non-whitespace content', function () {
+        view.textarea.val("Oh, I can't take him like that -- it's against regulations.");
+        $(view.form).find('button[type=submit]').trigger('click');
+
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).toHaveBeenCalled()
+    });
 
     it('triggers the submitForm spy', function () {
         view.form.submit();
@@ -243,6 +278,7 @@ describe('Test conversations (load, event binds and submission calls)', function
     it('triggers a submit which in turn triggers to submit form YJ event', function () {
         // Set spy to also callthrough.
         view.triggerSubmitForm.calls.reset(); // Reset Mock calls.
+        view.textarea.val("Oh, I can't take him like that -- it's against regulations.");
 
         var e = $.Event('keydown');
         e.keyCode = 10; // Enter
