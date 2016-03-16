@@ -37,7 +37,7 @@ gulp.task('scripts', function browserify_components() {
         .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('styls', function (done) {
+gulp.task('css', function (done) {
 
     var args = require('yargs').argv;
     var postcss = require('gulp-postcss');

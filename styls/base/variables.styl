@@ -1,0 +1,184 @@
+/**
+* Variables
+*
+* These are global colour, font and media queries properties
+*/
+
+:root {
+
+  /**
+   * Media Queries
+   */
+
+  @css {
+
+    @custom-media --viewport-sm (max-width: 39.999em);
+    @custom-media --viewport-md (min-width: 40em);
+    @custom-media --viewport-lg (min-width: 64em);
+
+    /* SUIT CSS preprocessor vars */
+    @custom-media --sm-viewport (max-width: 39.999em);
+    @custom-media --md-viewport (min-width: 40em);
+    @custom-media --lg-viewport (min-width: 64em);
+  }
+
+  /**
+   * Colors
+   */
+
+  --color-marine: #242c34; // ideally use var-marine as as dark text colour
+
+  --color-black: rgb(0, 0, 0);
+  --color-white: rgb(255, 255, 255);
+
+  --color-grey-light: #f5f9fc;
+  --color-grey: #e6ebef;
+  --color-grey-dark: #b2bdcf;
+  --color-grey-darker: #747f91;
+  --color-grey-darkest: #354052;
+
+  --color-coral-lighter: #fcabab;
+  --color-coral-light: #ff7b7b;
+  --color-coral: #fd6666;
+  --color-coral-dark: #ec5757;
+  --color-coral-darker: #ce4c4c;
+
+  --color-green-light: #89e2c4;
+  --color-green: #6acaa9;
+  --color-green-dark: #4faa8b;
+  --color-green-darker: #398f71;
+
+  --color-red-light: #de5345;
+  --color-red: #c0392b;
+  --color-red-dark: #a42a1e;
+  --color-red-darker: #871b0f;
+
+  --color-yellow-light: #ffc454;
+  --color-yellow: #fbb123;
+  --color-yellow-dark: #dc9409;
+  --color-yellow-darker: #b97a00;
+
+  --color-blue-light: #5df2fd;
+  --color-blue: #38dce8;
+  --color-blue-dark: #30bfc9;
+  --color-blue-darker: #1ba5af;
+
+  // Pale Green
+  --color-laurel: #a3c6b2;
+  --color-laurel-dark: #89ab97;
+
+  // Alt Blue
+  --color-teal-light: #7ba9a3;
+  --color-teal: #5f8c86;
+  --color-teal-dark: #4a736e;
+
+
+  // 2016 Updated CTAs
+  --color-hotpink: #fa1861;
+  --color-hotpink-hover: #e90c54;
+  --color-hotpink-active: #c50e4a;
+
+  --color-ctaflat-hover:#f3f5f7;
+
+  --color-secondarytext: #354052;
+  --color-secondaryborder: #747f91;
+  --color-secondaryborder-hover: #babfc8;
+  --color-secondarybg-hover: #f8fafb;
+  --color-secondarybg-active: #e6ebef;
+
+  
+
+
+  /**
+   * Fonts
+   */
+
+  --font-family-sans-serif: proxima-nova, sans-serif;
+  --font-family-monospace: courier-prime, monospace;
+
+  /**
+   *  Font sizes
+   */
+
+  --font-size-base: 14px; // (html base)
+
+  --font-size-micro-smaller: 0.8571rem; // 12px
+  --font-size-micro-small: 1rem; // 14px
+  --font-size-micro: 1.071rem; // 15px
+  --font-size-micro-large: 1.143rem; // 16px
+  --font-size-micro-larger: 1.286rem; // 18px
+
+  --font-size-macro-smaller: 1.429rem; // 20px
+  --font-size-macro-small: 1.571rem; // 22px
+  --font-size-macro: 2rem; // 28px
+  --font-size-macro-large: 2.143rem; // 30px
+  --font-size-macro-larger: 2.429rem; // 34px
+
+  /**
+   *  Font Weight
+   */
+
+  --font-weight-thin: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /**
+   *  Letter Spacing
+   */
+
+  --letter-spacing-normal: normal;
+  --letter-spacing-loose: 0.02em;
+  --letter-spacing-looser: 0.05em;
+  --letter-spacing-loosest: .1em;
+
+  /**
+   *  Line Height Scale
+   */
+
+  --line-height-tightest: 1;
+  --line-height-tighter: 1.1;
+  --line-height-tight: 1.3;
+  --line-height-base: 1.5;
+  --line-height-loose: 1.6;
+  --line-height-looser: 2;
+  --line-height-loosest: 3;
+
+  /**
+   *  Border thickness
+   */
+
+  --border-width-thinnest: 1px;
+  --border-width-thinner: 2px;
+  --border-width-thin: 4px;
+  --border-width: 7px;
+  --border-width-thick: 10px;
+  --border-width-thicker: 12px;
+  --border-width-thickest: 15px;
+
+  /**
+   *  Spacing
+   */
+
+  --space-micro-smallest: 1px;
+  --space-micro-smaller: 7px;
+  --space-micro: 14px;
+  --space-micro-large: 21px;
+  --space-micro-larger: 35px;
+  --space-micro-largest: 49px;
+
+  /**
+   *  Depth Scale
+   */
+
+  --depth-1: 100;
+  --depth-2: 200;
+  --depth-3: 300;
+  --depth-4: 400;
+  --depth-5: 500;
+  --depth-6: 600;
+  --depth-7: 700;
+  // --depth-9: 900; // kill all
+
+}
