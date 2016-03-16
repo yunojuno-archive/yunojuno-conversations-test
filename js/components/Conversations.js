@@ -51,6 +51,7 @@ function ConversationView(model, partial) {
     this.fileinput = $(this.view).find('input[type="file"]');
     this.form = $(this.view).find('form');
     this.submitButton = $(this.view).find('button[type="submit"]');
+    this.fileInputClearTrigger = $(this.view).find('.js-clearableFileInput-trigger');
 
     var messages = JSON.parse(localStorage.getItem('messages'));
 
