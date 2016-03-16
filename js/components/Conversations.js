@@ -139,6 +139,12 @@ ConversationView.prototype = {
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
             .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+        $(document)
+            .off('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger')
+            .on('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger', this.onClearFileAttachment);
+        $(document)
+            .off('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', '#' + this.identifier +' .js-conversationForm .Form-item-wrapper--controlGroup')
+            .on('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', '#' + this.identifier +' .js-conversationForm .Form-item-wrapper--controlGroup', this.onControlGroupAnimateIn);
     },
 
     /**
@@ -244,8 +250,22 @@ ConversationView.prototype = {
      * When a user clicks the 'clear attachment' link after adding an
      * attachment it should trigger this and clear the value.
      */
-    onClearFileAttachment: function() {
+    onClearFileAttachment: function(ev) {
+        $('.js-conversationForm .js-clearableFileInput').empty();
+        $('.js-conversationForm input[type="file"]').val('');
+        $('.js-conversationForm .js-clearableFileInput-trigger').hide();
+    },
 
+    /**
+     * When any control group (containing multiple elements) has 
+     * finished fading in
+     */
+    onControlGroupAnimateIn: function(ev) {
+        // transitionend/animationend events bubble from child elements too.
+        // It's assumed we don't want to handle those.
+        if( ev.target == ev.currentTarget ) {
+            console.log('Control group Has finished animating in');
+        }
     },
 
     /**
@@ -255,6 +275,8 @@ ConversationView.prototype = {
     onChangeFilepicker: function(ev) {
         var $relevantStatus = $(this).parent().next('.js-uploadFile-name').first(),
             summaryString = "File selected: " + $(this).val().split('\\').pop();
+            
+        $(this).closest('.Form-item-wrapper').find('.js-clearableFileInput-trigger').show();
         $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
         $relevantStatus.html(summaryString);
     },
