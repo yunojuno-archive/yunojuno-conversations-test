@@ -26,6 +26,8 @@ We use karma test-runner and the jasmine test framework, you will find a starter
 
 To compile the conversations component into the `dist` folder run `gulp scripts`
 
+To compile the CSS into the `css` folder run `gulp css`
+
 ## Running the tests
 To run the tests run `gulp karma`
 There is also `gulp karma_watch` which will watch for your tests being updated and run karma (it is a little faster).
