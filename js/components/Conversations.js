@@ -48,8 +48,10 @@ function ConversationView(model, partial) {
     this.view = partial;
     this.identifier = gen_uuid();
     this.textarea = $(this.view).find('textarea');
+    this.fileinput = $(this.view).find('input[type="file"]');
     this.form = $(this.view).find('form');
     this.submitButton = $(this.view).find('button[type="submit"]');
+    this.fileInputClearTrigger = $(this.view).find('.js-clearableFileInput-trigger');
 
     var messages = JSON.parse(localStorage.getItem('messages'));
 
@@ -127,6 +129,8 @@ ConversationView.prototype = {
         $(document)
             .off('submit', '#' + this.identifier +' .js-conversationForm')
             .on('submit', '#' + this.identifier +' .js-conversationForm', this.onSubmitForm.bind(this));
+
+        // TODO: The following 4 input selectors seem unnecessary, if this.textarea, this.fileinput and this.submitButton already point to them.
         $(document)
             .off('focus', '#' + this.identifier +' .js-conversationForm textarea')
             .on('focus', '#' + this.identifier +' .js-conversationForm textarea', this.onExpandForm.bind(this));
@@ -139,6 +143,13 @@ ConversationView.prototype = {
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
             .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+
+        $(document)
+            .off('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger')
+            .on('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger', this.onClearFileAttachment);
+        $(document)
+            .off('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', '#' + this.identifier +' .js-conversationForm .Form-item-wrapper--controlGroup')
+            .on('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', '#' + this.identifier +' .js-conversationForm .Form-item-wrapper--controlGroup', this.onControlGroupAnimateIn);
     },
 
     /**
@@ -196,8 +207,20 @@ ConversationView.prototype = {
      */
     emptyForm: function() {
         this.textarea.val('');
-        this.form.find('input[type=file]').val('');
+        this.fileinput.val('');
         $(this.view).removeClass('expand');
+    },
+    
+    /**
+     * Validate form
+     * - Ensure message or file input has length
+     */
+    validateForm: function() {
+        if (!this.textarea.val().trim().length && !this.fileinput.val().trim().length) {
+            return false;
+        }
+
+        return true;
     },
 
     /**
@@ -232,8 +255,22 @@ ConversationView.prototype = {
      * When a user clicks the 'clear attachment' link after adding an
      * attachment it should trigger this and clear the value.
      */
-    onClearFileAttachment: function() {
+    onClearFileAttachment: function(ev) {
+        $('.js-conversationForm .js-clearableFileInput').empty();
+        $('.js-conversationForm input[type="file"]').val('');
+        $('.js-conversationForm .js-clearableFileInput-trigger').hide();
+    },
 
+    /**
+     * When any control group (containing multiple elements) has 
+     * finished fading in
+     */
+    onControlGroupAnimateIn: function(ev) {
+        // transitionend/animationend events bubble from child elements too.
+        // It's assumed we don't want to handle those.
+        if( ev.target == ev.currentTarget ) {
+            console.log('Control group Has finished animating in');
+        }
     },
 
     /**
@@ -243,6 +280,8 @@ ConversationView.prototype = {
     onChangeFilepicker: function(ev) {
         var $relevantStatus = $(this).parent().next('.js-uploadFile-name').first(),
             summaryString = "File selected: " + $(this).val().split('\\').pop();
+            
+        $(this).closest('.Form-item-wrapper').find('.js-clearableFileInput-trigger').show();
         $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
         $relevantStatus.html(summaryString);
     },
@@ -251,9 +290,11 @@ ConversationView.prototype = {
      * Submit form over ajax
      */
     onClickSubmitButton: function(ev) {
-        // TODO - Add validation to form.
-        return this.triggerSubmitForm(ev.currentTarget.form);
+        if (this.validateForm()) {
+            return this.triggerSubmitForm(ev.currentTarget.form);
+        }
     },
+
     /**
      * Clicking on textarea adds class of expand which shows the controls
      * and expands the textarea.
@@ -271,8 +312,10 @@ ConversationView.prototype = {
     onKeyDown: function(ev) {
         var keyCode = ev.keyCode;
         if ((keyCode === 10 || keyCode === 13) && (ev.ctrlKey || ev.metaKey)) {
-            ev.target.blur();
-            return this.triggerSubmitForm(ev.target.form);
+            if (this.validateForm()) {
+                ev.target.blur();
+                return this.triggerSubmitForm(ev.target.form);
+            }
         }
     },
     /**

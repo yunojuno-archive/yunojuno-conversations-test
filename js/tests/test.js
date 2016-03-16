@@ -52,7 +52,7 @@ var Conversations = require('../components/Conversations.js'),
                             <a class="js-uploadFile-trigger" href="#">Add an attachment</a>
                             <input class="js-uploadFile-trigger" id="id_attachment" name="attachment" type="file">
                         </div>
-                        <div class="Form-item--fileInputWrapper js-clearableFileInput Form-item--fileInputWrapper--status u-textMuted js-uploadFile-name"></div><div class="Form-item--fileInputWrapper Form-item--fileInputWrapper--status Form-item--fileInputWrapper--clear"><a href="#" class="js-clearableFileInput-trigger" style="display: none;"> Clear</a></div>
+                        <div class="Form-item--fileInputWrapper js-clearableFileInput Form-item--fileInputWrapper--status u-textMuted js-uploadFile-name"></div><div class="Form-item--fileInputWrapper Form-item--fileInputWrapper--status Form-item--fileInputWrapper--clear"><button class="Button Button--link js-clearableFileInput-trigger" style="display: none;">Clear</button></div>
                     </div>
                 </div>
                 <div class="Form-button">
@@ -171,6 +171,38 @@ describe('Test conversations (load, event binds and submission calls)', function
     it('has an attachment field', function () {
         expect(view.form[0].querySelector('input[type=file]').name).toBe('attachment');
     });
+    
+    it('expects clicking attachment clear button to wipe attachment name', function () {
+        $(view.view).find('input[type="file"]').trigger('change');
+
+        expect(view.onChangeFilepicker).toHaveBeenCalled();
+        expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');
+
+        // Now empty it and check it empties the corresponding .js-uploadFile-name elem
+        view.fileInputClearTrigger.trigger('click');
+        expect($(view.view).find('.js-uploadFile-name').html()).toBe('');
+    });
+    
+    it('expects clicking attachment clear button, to prevent empty form submit', function () {
+        //...and therefore to fail to pass validation if the textarea is also blank
+        var file = {
+            name: "test.png",
+            size: 500001,
+            type: "image/png"
+        };
+
+        var fileList = {
+            0: file,
+            length: 1,
+            item: function (index) { return file; }
+        };
+
+        view.fileinput.files = fileList;
+        view.fileInputClearTrigger.trigger('click');
+        view.submitButton.trigger('click');
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
 
     it('Getting the first message returns the correct fixture', function () {
         var fixture = conversationMessages.items[conversationMessages.items.length - 1];
@@ -184,6 +216,61 @@ describe('Test conversations (load, event binds and submission calls)', function
         $(view.form).find('button[type=submit]').trigger('click');
 
         expect(view.onClickSubmitButton).toHaveBeenCalled();
+    });
+    
+    it('prevents submission of an empty form', function () {
+        $(view.form).find('button[type=submit]').trigger('click');
+
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+        expect(controller.sendMessage).not.toHaveBeenCalled();
+    });
+    
+    it('prevents submission of an empty form via key combo', function () {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        e.ctrlKey = true;
+
+        view.textarea.trigger(e);
+
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+        expect(controller.sendMessage).not.toHaveBeenCalled();
+    });
+    
+    it('prevents submission of a textarea with only whitespace content', function () {
+        view.textarea.val("       ");
+        $(view.form).find('button[type=submit]').trigger('click');
+        
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled()
+    });
+    
+    it('allows submission of a textarea with non-whitespace content', function () {
+        view.textarea.val("Oh, I can't take him like that -- it's against regulations.");
+        $(view.form).find('button[type=submit]').trigger('click');
+
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).toHaveBeenCalled()
+    });
+    
+    it('allows submission of a fileinput with a value', function () {
+        var file = {
+           name: "test.png",
+           size: 500001,
+           type: "image/png"
+       };
+
+       var fileList = {
+           0: file,
+           length: 1,
+           item: function (index) { return file; }
+       };
+
+        view.fileinput.files = fileList;
+        $(view.form).find('button[type=submit]').trigger('click');
+
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).toHaveBeenCalled()
     });
 
     it('triggers the submitForm spy', function () {
@@ -243,6 +330,7 @@ describe('Test conversations (load, event binds and submission calls)', function
     it('triggers a submit which in turn triggers to submit form YJ event', function () {
         // Set spy to also callthrough.
         view.triggerSubmitForm.calls.reset(); // Reset Mock calls.
+        view.textarea.val("Oh, I can't take him like that -- it's against regulations.");
 
         var e = $.Event('keydown');
         e.keyCode = 10; // Enter
