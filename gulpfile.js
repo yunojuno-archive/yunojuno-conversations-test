@@ -37,6 +37,40 @@ gulp.task('scripts', function browserify_components() {
         .pipe(gulp.dest('./dist/'));
 });
 
+gulp.task('styls', function (done) {
+
+    var args = require('yargs').argv;
+    var postcss = require('gulp-postcss');
+    var sourcemaps = require('gulp-sourcemaps');
+    var minifyCss = require('gulp-minify-css');
+    var rename = require('gulp-rename');
+    var stylus = require('gulp-stylus');
+
+    var processors = [
+        //require('postcss-import')(),
+        require('autoprefixer')({browsers: 'last 2 version'}),
+        require('postcss-custom-properties')(),
+        require('postcss-calc')(),
+        require('postcss-custom-media')(),
+        require('postcss-media-minmax')()
+    ];
+
+    return individualTask = gulp.src('./styls/core.styl')
+        .pipe(sourcemaps.init())
+        .pipe(stylus({
+            compress: false,
+            'include css': true
+        }))
+        .pipe(postcss(processors))
+        .pipe(sourcemaps.write('.', {includeContent: false}))
+        .pipe(gulp.dest('./css/'))
+        .pipe(minifyCss())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('./css/'));
+});
+
 gulp.task('karma', function karma(done){
     new karmaServer({
         configFile: __dirname + '/karma.conf.js',

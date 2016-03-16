@@ -1,0 +1,64 @@
+/**
+ * Rule
+ *
+ * @requires suit-grid
+ *
+ * border-top solution to styled horizontal rules
+ */
+
+.Rule {
+  border-top: var(--border-width-thinnest) solid var(--color-grey);
+  height: 1px;
+  width: 100%;
+}
+
+
+/**
+ *  grey
+ *
+ *  Appears in DirectBooking (seek employer view)
+ */
+
+.Rule--grey {
+  border-top-color: var(--color-grey);
+}
+
+
+/**
+ *  heavier
+ *
+ *  Appears in freelancer signin/profile pages
+ */
+
+.Rule--heavier {
+  border-top-width: 2px;
+  height: 2px;
+}
+
+
+/**
+ *  white
+ *
+ *  Appears in freelancer dashboard / directbooking pages
+ */
+
+.Rule--white {
+  // background: var(--color-white);
+  border-top-color: var(--color-white);
+}
+
+
+/**
+ *  withSpace
+ *
+ *  Displays Rule with vertical spacing
+ */
+
+.Rule--withSpace {
+  border-top: var(--border-width-thinnest) solid var(--color-grey);
+  margin: var(--space-micro-large) 0;
+}
+
+.Rule--withSpaceTop {
+  margin: 21px 0 0;
+}

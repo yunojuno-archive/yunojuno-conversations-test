@@ -1,0 +1,171 @@
+/**
+* Expander
+*
+* Toggles hidden content when a trigger is clicked.
+*
+* Has no dependencies, but does require a particular DOM structure - see templates/design_system/components.html
+* At its most basic, Expander consists of a trigger and collapsible content
+*/
+
+.Expander {}
+
+.Expander-trigger {
+  cursor: pointer;
+}
+
+.Expander-opener,
+.Expander-closer {
+  display: block;
+  margin-top: 5px;
+  min-height: 20px;
+  min-width: 20px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.Expander-closer {
+  line-height: var(--line-height-tightest);
+}
+
+.js-caret {
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.Expander-icon {
+  margin-left: 5px;
+}
+
+
+/**
+* Expander-header uses FlexBox CSS to display
+* text and expander button. Not required.
+*/
+
+.Expander-header {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  .Expander-trigger {
+    float: right;
+  }
+}
+
+.Expander-title {}
+
+/**
+* Expander-content
+*
+* Wraps the hidden content
+* 1. No JS version simply shows the content
+*/
+
+.Expander-content {
+  display: block !important;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.25s ease-in-out;
+  width: auto !important;
+
+  .no-js & { /* 1 */
+    height: auto;
+    overflow: visible;
+  }
+
+  &.is-expanded {
+    height: auto;
+  }
+}
+
+
+/**
+* --preOpened
+*
+* For content that is expanded by default
+* TODO: Deprecate, should use &.is-expanded (state classes)
+*/
+
+.Expander-content--preOpened {
+  height: auto;
+}
+
+
+/**
+* --WorkHistory
+*
+* Special colours/positioning for WorkHistory item expanders
+*/
+
+.Expander--workHistory {
+
+  .Expander-trigger {
+    align-items: center;
+    display: flex;
+    float: none;
+    margin: 0 0 var(--space-micro);
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .Expander-icon {
+    color: var(--color-black);
+    font-size: 140%;
+    margin-left: var(--space-micro-smaller);
+  }
+
+  p {
+    margin-bottom: var(--space-micro) !important;
+  }
+}
+
+
+/**
+* --contract
+*
+* Expander for buttons on a Freelancer Contract page
+*/
+
+.Expander--contract {
+
+  .Expander-header {
+    justify-content: center;
+  }
+
+  .Expander-content {
+    width: 100% !important;
+  }
+}
+
+
+/**
+* TODO: create Expander--blackBook modifier for below custom styles
+*/
+
+.BlackBookFreelancer .Expander-content.is-expanded {
+  border-top: var(--border-width-thinnest) solid var(--color-grey);
+}
+
+/**
+* --conversation
+*
+* Expander for buttons on a Freelancer Contract page
+*/
+
+.Expander--conversation {
+
+  p{margin:var(--space-micro) 0 0 0}
+
+  .Expander-header {
+    justify-content: center;
+  }
+
+  .Expander-content {
+    width: 100% !important;
+  }
+}

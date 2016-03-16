@@ -1,0 +1,86 @@
+//  Styles for tables
+
+.Table {
+  background-color: var(--color-white);
+  border: var(--border-width-thinnest) solid var(--color-grey);
+
+  & th,
+  & td {
+    border-right: var(--border-width-thinnest) solid var(--color-grey);
+  }
+
+  & td {
+    padding: 10px 15px;
+  }
+
+  & th {
+    @extend h4;
+    padding: 15px 15px;
+  }
+
+  & tbody {
+    border-top: var(--border-width-thinnest) solid var(--color-grey);
+    border-bottom: var(--border-width-thinnest) solid var(--color-grey);
+  }
+
+  & tfoot td {
+    border-right: none;
+  }
+}
+
+.Table--fullWidth {
+  width: 100%
+}
+
+
+/*
+  To enable a table to scroll in the y axis on mobile add Chrome-app-Table--scroll-y class via
+  "chrome_app_extra_css" block and add Table--scroll-y class to the table.
+*/
+@media (--viewport-sm) {
+  .Chrome-app-Table--scroll-y {
+    display: block;
+
+    .Table--scroll-y {
+      display:block;
+      overflow-y:scroll;
+
+      th, td {
+        min-width: 210px;
+        padding:10px;
+      }
+    }
+  }
+}
+
+tr.Table--sectionBreak td {
+    border-top: var(--border-width-thinnest) solid var(--color-grey);
+}
+
+th.Table-Header--small {
+  font-size: var-fs-normal !important;
+  font-weight: var-fw-semibold !important;
+  padding: 12px 12px;
+  text-transform: none !important;
+}
+
+tr.adjustmentRow {
+    min-height: 70px;
+
+    .ConfirmableButton.Button--form {
+        bottom:0;
+        margin-bottom: -3px;
+    }
+
+    /*
+      TODO. Get rid of this firefox hack.
+        margin-bottom:-3px fixes the "remove" button in safari but breaks in firefox.
+        bottom:-3px fixes the "remove" button in firefox but breaks in safari
+    */
+    @-moz-document url-prefix() {
+      .ConfirmableButton.Button--form {
+         bottom:-3px;
+         margin-bottom: 0;
+      }
+    }
+}

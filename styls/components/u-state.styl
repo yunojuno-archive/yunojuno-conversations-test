@@ -1,0 +1,209 @@
+/*
+ * Responsive utility classes
+ */
+
+
+.u-sm-hidden {
+  display: none;
+  visibility: none;
+
+  @media (--viewport-md) {
+    display: inline-block;
+    visibility: visible;
+  }
+
+  @media (--viewport-lg) {
+    display: inline-block;
+    visibility: visible;
+  }
+}
+
+.u-sm-hidden--flex {
+    display: none;
+    visibility: none;
+
+    @media (--viewport-md) {
+        display: flex;
+        visibility: visible;
+    }
+
+    @media (--viewport-lg) {
+        display: flex;
+        visibility: visible;
+    }
+}
+
+.u-md-hidden {
+  display: inline-block;
+  visibility: visible;
+
+  @media (--viewport-md) {
+    display: none;
+    visibility: none;
+  }
+
+  @media (--viewport-lg) {
+    display: inline-block;
+    visibility: visible;
+  }
+}
+
+.u-md-hidden--flex {
+    display: flex;
+    visibility: none;
+
+    @media (--viewport-md) {
+        display: none;
+        visibility: visible;
+    }
+
+    @media (--viewport-lg) {
+        display: flex;
+        visibility: visible;
+    }
+}
+
+.u-lg-hidden {
+  display: inline-block;
+  visibility: visible;
+
+  @media (--viewport-md) {
+    display: inline-block;
+    visibility: visible;
+  }
+
+  @media (--viewport-lg) {
+    display: none;
+    visibility: none;
+  }
+}
+
+.u-lg-hidden--flex {
+    display: flex;
+    visibility: visible;
+
+    @media (--viewport-md) {
+        display: flex;
+        visibility: visible;
+    }
+
+    @media (--viewport-lg) {
+        display: none;
+        visibility: none;
+    }
+}
+
+/*
+ * Only display element on small viewports
+ */
+
+.u-md-hidden.u-lg-hidden {
+  display: inline-block;
+  visibility: visible;
+
+  @media (--viewport-md) {
+    display: none;
+    visibility: none;
+  }
+
+  @media (--viewport-lg) {
+    display: none;
+    visibility: none;
+  }
+}
+
+.u-md-hidden--flex.u-lg-hidden--flex {
+    display: flex;
+    visibility: visible;
+
+    @media (--viewport-md) {
+        display: none;
+        visibility: none;
+    }
+
+    @media (--viewport-lg) {
+        display: none;
+        visibility: none;
+    }
+}
+
+
+/*
+ * Only display element on medium viewports
+ */
+
+.u-sm-hidden.u-lg-hidden {
+  display: none;
+  visibility: none;
+
+  @media (--viewport-md) {
+    display: inline-block;
+    visibility: visible;
+  }
+
+  @media (--viewport-lg) {
+    display: none;
+    visibility: none;
+  }
+}
+
+.u-sm-hidden--flex.u-lg-hidden--flex {
+    display: none;
+    visibility: none;
+
+    @media (--viewport-md) {
+        display: flex;
+        visibility: visible;
+    }
+
+    @media (--viewport-lg) {
+        display: none;
+        visibility: none;
+    }
+}
+
+/*
+ * Only display element on large viewports
+ */
+
+.u-sm-hidden.u-md-hidden {
+  display: none;
+  visibility: none;
+
+  @media (--viewport-md) {
+    display: none;
+    visibility: none;
+  }
+
+  @media (--viewport-lg) {
+    display: inline-block;
+    visibility: visible;
+  }
+}
+
+.u-sm-hidden--flex.u-md-hidden--flex {
+    display: none;
+    visibility: none;
+
+    @media (--viewport-md) {
+        display: none;
+        visibility: none;
+    }
+
+    @media (--viewport-lg) {
+        display: flex;
+        visibility: visible;
+    }
+}
+
+
+.u-hidden {
+  display: none !important;
+}
+
+.u-pointer {
+
+  &:hover {
+    cursor: pointer;
+  }
+}

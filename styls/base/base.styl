@@ -1,0 +1,368 @@
+/**
+ * Default styles
+ *
+ * @requires normalise.css
+ *
+ * Defines the project-specifc styling of HTML elements and their attributes selectors only.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color: var(--color-marine);
+  font-family: var(--font-family-sans-serif);
+  font-size: var(--font-size-base); // fixed base
+  line-height: var(--line-height-base);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background: var(--color-grey);
+  text-shadow: none;
+}
+
+a {
+  color: var(--color-coral);
+  text-decoration: underline;
+  word-wrap: break-word;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:active,
+  &:hover {
+    color: var(--color-coral-light);
+    text-decoration: none;
+  }
+
+  &[disabled] {
+      color: var(--color-grey-dark);
+      text-decoration: none;
+  }
+}
+
+h1, .h1 {
+  font-family: var(--font-family-sans-serif);
+  font-size: var(--font-size-macro);
+  font-weight: var(--font-weight-light);
+  line-height: 150%;
+
+  @media (--viewport-lg) {
+    font-size: var(--font-size-macro-larger);
+    line-height: 124%;
+  }
+}
+
+h2, .h2 {
+  font-family: var(--font-family-sans-serif);
+  font-size: var(--font-size-micro-larger);
+  font-weight: var(--font-weight-semibold);
+  line-height: 117%;
+
+  @media (--viewport-lg) {
+    font-size: var(--font-size-macro-smaller);
+    line-height: 140%;
+  }
+}
+
+h3, .h3 {
+  font-family: var(--font-family-sans-serif);
+  font-size: var(--font-size-micro-large);
+  font-weight: var(--font-weight-regular);
+  line-height: 132%;
+
+  @media (--viewport-lg) {
+    font-size: var(--font-size-micro-larger);
+    line-height: 123%;
+  }
+
+  a{font-size: 1em;}
+}
+
+h4, .h4 {
+  font-family: var(--font-family-sans-serif);
+  font-size: var(--font-size-micro);
+  font-weight: var(--font-weight-bold);
+  line-height: 100%;
+
+  @media (--viewport-lg) {
+    font-size: var(--font-size-micro-small);
+    line-height: 100%;
+  }
+}
+
+p {
+  font-family: var(--font-family-sans-serif);
+  font-size: var(--font-size-micro);
+  font-weight: var(--font-weight-light);
+  line-height: 140%;
+  margin-top: 0;
+
+  @media (--viewport-lg) {
+    font-size: var(--font-size-micro-small);
+    line-height: 150%;
+  }
+}
+
+/**
+ *  standfirst
+ *  Special large type for intro paragraphs
+ */
+
+.standfirst {
+  font-size: var(--font-size-macro-small);
+  font-weight: var(--font-weight-thin);
+  line-height: 128%;
+
+  @media (--viewport-lg) {
+    font-size: 2.05rem;
+    font-weight: var(--font-weight-thin);
+    // font-size: var(--font-size-macro-large);
+    line-height: 117%;
+  }
+}
+
+small {
+  color: var(--color-grey-darker);
+  display: inline-block; // Allows us to set lineheight
+  font-family: var(--font-family-sans-serif);
+  font-size: var(--font-size-micro-smaller);
+  font-weight: var(--font-weight-regular);
+  line-height: 117%;
+}
+
+small strong {
+    color: var(--color-marine);
+}
+
+address {
+    font-style: normal;
+    font-weight: var(--font-weight-light);
+}
+
+blockquote {
+  margin: 0;
+  padding: 0;
+
+  p {
+    font-family: var(--font-family-sans-serif);
+    font-size: var(--font-size-macro-smaller);
+    font-weight: var(--font-weight-regular);
+    line-height: 1.4;
+  }
+
+  @media (--viewport-lg) {}
+}
+
+q {
+  font-family: var(--font-family-sans-serif);
+  font-size: var(--font-size-macro-smaller);
+  font-weight: var(--font-weight-regular);
+  quotes: "\201C" "\201D" "\2018" "\2019";
+  line-height: 1.4;
+
+  @media (--viewport-lg) {}
+}
+
+cite {
+  font-style: normal;
+}
+
+code {
+  font-family: var(--font-family-monospace);
+}
+
+tt,
+code,
+kbd,
+samp {
+  font-family: var(--font-family-monospace);
+}
+
+kbd {
+  background: var(--color-grey);
+  border-radius: 0.3em;
+  padding: 0.5em 0.5em 0.4em;
+}
+
+hr {
+  box-sizing: content-box;
+  height: 0;
+}
+
+pre {
+  overflow-y: hidden;
+}
+
+ul,
+ol {
+  margin: 0;
+}
+
+dl {
+  margin: 0;
+  padding: 0;
+}
+
+dt {
+  @extend h4;
+  line-height: var(--line-height-base);
+}
+
+dd {
+  @extend p;
+  margin: 0 0 var(--space-micro);
+}
+
+.tightheader{
+  margin: 0 0 var(--space-micro-large);
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td,
+th {
+  padding: 0;
+}
+
+figure {
+  margin: 0;
+}
+
+iframe {
+  border: none;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+label {
+  display: block;
+  font-size: var(--font-size-micro-small);
+  font-weight: var(--font-weight-bold);
+}
+
+input[type="color"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="file"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="range"],
+input[type="search"],
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+input[type="week"],
+textarea,
+select {
+  background: var(--color-white);
+  border: var(--border-width-thinnest) solid var(--color-grey-darker);
+  font-size: var(--font-size-micro-small);
+  max-width: 100%;
+  padding: 0.5em 0.6em;
+  width: 100%;
+  //min-width: 15em;
+
+  &:disabled {
+    background: var(--color-grey);
+    color: var(--color-grey-dark);
+    cursor: not-allowed;
+  }
+
+  &:focus {
+    border-color: var(--color-coral-lighter);
+    // box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(252,171,171,.6);
+    outline: 0;
+  }
+
+  &:read-only {
+    user-select: none;
+  }
+
+  &:read-write {
+    user-select: text;
+  }
+
+  &.nowrap {
+      white-space: nowrap;
+      overflow-x: hidden;
+  }
+}
+
+button {
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+input[type="file"] {
+  // width: 180px;
+}
+
+input[type="range"] {
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+select {
+  -webkit-appearance: none;
+  background-image: url("../images/icons/arrow-down-black.svg");
+  background-position: 95% 60%;
+  background-repeat: no-repeat;
+  border-radius: 0;
+  border: var(--border-width-thinnest) solid var(--color-grey-dark);
+  color: var(--color-grey-darkest);
+  padding-right: .5em;
+  width: 100%
+
+  line-height: normal;
+
+  // Tweaks to hide the default down arrow in FF.
+  // See https://gist.github.com/joaocunha/6273016
+  -moz-appearance: none;
+  text-indent: 0.01px;
+  text-overflow: '';
+
+  &:focus {
+    border-color: var(--color-coral-lighter);
+    // box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(252,171,171,.6);
+    outline: 0;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+select[multiple] {
+  background-image: none;
+}

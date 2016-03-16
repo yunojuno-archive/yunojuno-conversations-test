@@ -1,0 +1,644 @@
+/**
+ * Card
+ *
+ * Designed to be 'subclassed' into various other cards (eg Task, Freelancer summary card)
+ * but things which are nominally known as a 'card' are also defined here
+ */
+
+
+.Container {
+  background: var(--color-white);
+  margin-bottom: var(--space-micro-larger);
+}
+
+.Container-header {
+  border-bottom: var(--border-width-thinnest) solid var(--color-grey);
+  border-top: var(--border-width-thinnest) solid var(--color-grey);
+  color: var(--color-marine);
+  padding: var(--space-micro);
+
+  @media (--viewport-lg) {
+    padding: var(--space-micro-large);
+  }
+
+  .icon-lock,
+  .icon-lock-white {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+  }
+}
+
+.Container-headerTitle {
+  color: var(--color-marine);
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.Container-headerSubTitle {
+  @extend h2;
+  margin: 0;
+}
+
+.Container-headerBody {
+  color: var(--color-marine);
+  margin: 0;
+}
+
+.Container-body {
+  padding: var(--space-micro);
+
+  ol, ul {
+    @extend p;
+    margin-bottom: var(--space-micro-smaller);
+    padding-left: 1rem;
+  }
+
+  ul.Form-errors {
+    padding-left: 0;
+  }
+
+
+  @media (--viewport-lg) {
+    padding: var(--space-micro-large);
+  }
+}
+
+.Container-previewTab {
+    @extend h2;
+
+    background: transparent;
+    color: var(--color-green-dark);
+    margin-right: var(--space-micro-smaller);
+    margin-bottom: var(--space-micro-smaller);
+
+    &:after {
+        content: ':';
+    }
+
+    @media(--viewport-lg) {
+
+        background: var(--color-green-dark);
+        color: var(--color-white);
+        font-size: var(--font-size-base);
+        font-weight: normal;
+        line-height: calc(67px - (var(--space-micro)*2));
+
+        margin-right: var(--space-micro-large);
+        margin-bottom: 0;
+        margin-left: -var(--space-micro);
+
+        padding: var(--space-micro);
+        position: absolute;
+
+        top: 0;
+
+
+
+        &:after {
+            content: '';
+            border: 10px solid var(--color-green-dark);
+            border-right-color: transparent;
+            border-top-color: transparent;
+            border-top-width: 34px;
+            border-bottom-color: transparent;
+            border-bottom-width: 34px;
+            display: block;
+            position: absolute;
+            top: 0;
+            right: -20px;
+        }
+    }
+}
+
+.Container-body ul.Container-list {
+    list-style: none;
+    line-height: var(--line-height-looser);
+    padding: 0;
+}
+
+.Container--freelancerDirectBooking.Container-body {
+  @media (--viewport-lg) {
+    padding: 0;
+    padding-top: 0;
+  }
+}
+
+.Container-subheader {
+  background: var(--color-white);
+  border-bottom: var(--border-width-thinnest) solid var(--color-grey);
+  border-top: var(--border-width-thinnest) solid var(--color-grey);
+  color: var(--color-marine);
+  padding: var(--space-micro);
+
+  @media (--viewport-lg) {
+    padding: var(--space-micro-smaller) var(--space-micro-large);
+  }
+}
+
+.Container-title {
+  @extend h3;
+  margin-top: 0;
+}
+
+.Container-subtitle {
+  @extend h4;
+}
+
+
+/*
+ * Appears on Employer's manage setting pages.
+ * TODO: remove when Forms are redesigned
+ */
+
+.Container-formItem {
+  border-top: var(--border-width-thinnest) solid var(--color-grey);
+  padding: var(--space-micro);
+
+  h3 {
+    margin-top: 0;
+  }
+
+  @media (--viewport-lg) {
+    padding: var(--space-micro-large);
+  }
+}
+
+/*
+ * Appears on Help pages.
+ * TODO: remove and refactor into Assets component
+ */
+
+.Container-media {
+  display: flex;
+  margin: var(--space-micro) auto;
+  max-height: 200px;
+  max-width: 200px;
+  text-align: center;
+
+  @media (--viewport-lg) {
+    max-height: 400px;
+    max-width: none;
+  }
+}
+
+.Container-mediaInner {
+  margin: auto;
+
+  @media (--viewport-lg) {
+    max-width: 80%;
+
+  }
+}
+
+.Container-footer {
+  border-top: var(--border-width-thinnest) solid var(--color-grey);
+  padding: var(--space-micro);
+
+  @media (--viewport-lg) {
+    padding: var(--space-micro-large);
+  }
+}
+
+.Container-footerButton {
+  text-align: right;
+}
+
+
+/*
+ * darkHeader
+ *
+ * Marine background, white text
+ * Appears on timesheets
+ */
+
+.Container--darkHeader {
+
+  > .Container-header {
+    background: var(--color-grey-darkest);
+    color: var(--color-white);
+  }
+
+  .Container-headerTitle,
+  .Container-headerBody {
+    color: var(--color-white);
+  }
+
+  .Container-subheader {
+    background: var(--color-white);
+    border-bottom: var(--border-width-thinnest) solid var(--color-grey);
+    border-top: var(--border-width-thinnest) solid var(--color-grey);
+    color: var(--color-marine);
+  }
+}
+
+.Container--turquoiseHeader {
+
+    > .Container-header {
+        background: var(--color-blue-dark);
+        color: var(--color-white);
+    }
+
+    .Container-headerTitle,
+    .Container-headerBody {
+        color: var(--color-white);
+    }
+
+    .Container-subheader {
+        background: var(--color-white);
+        border-bottom: var(--border-width-thinnest) solid var(--color-blue-dark);
+        border-top: var(--border-width-thinnest) solid var(--color-blue-dark);
+        color: var(--color-marine);
+    }
+}
+
+/**
+ * Show maps on large devices, show link to maps on small devices.
+ *
+ */
+
+.Container-sm-maps {
+    display: block;
+    @media(--viewport-lg) {
+        display: none;
+    }
+}
+.Container-lg-maps {
+    display: none;
+    @media(--viewport-lg) {
+        display: block;
+    }
+}
+
+/*
+ * signIn
+ *
+ * Marine background, white text
+ * Appears on signin page
+ */
+
+.Container--signIn {
+  margin: var(--space-micro);
+  max-width: 800px;
+
+  @media (--viewport-lg) {
+    margin: 5em auto;
+  }
+
+  .Container-footer {
+    background: var(--color-grey-darkest);
+    color: var(--color-white);
+    padding: var(--space-micro);
+
+    a {
+      color: var(--color-white);
+    }
+
+    @media (--viewport-lg) {
+      padding: var(--space-micro-large);
+    }
+  }
+}
+
+
+/*
+ * noSidebar
+ *
+ * Marine background, white text
+ * Appears on signin page
+ */
+
+.Container--noSidebar {
+  margin: var(--space-micro) auto;
+  max-width: 480px;
+  text-align: left;
+
+  @media (--viewport-lg) {
+    max-width: 980px;
+  }
+}
+
+
+/*
+ * noResults
+ *
+ * Simple padding with white background
+ * Meant for listings pages with zero results
+ */
+
+.Container--noResults {
+  margin: 0;
+}
+
+
+/*
+ * shaded
+ *
+ * Light grey background. Used to be .Slab (minus card padding)
+ */
+
+.Container--shaded {
+  background: var(--color-grey-light);
+  padding: 0;
+}
+
+
+/*
+ * dark
+ *
+ * Dark background with light text. Used to be .Slab-dark
+ */
+
+.Container--dark {
+  background: var(--color-grey-darkest);
+  color: var(--color-white);
+  padding: 0;
+}
+
+
+/*
+ * alt
+ *
+ * White background with dark blue text. Used to be .Slab-alt
+ */
+
+.Container--alt {
+  background: var(--color-white);
+  color: var(--color-marine);
+  padding: 0;
+}
+
+
+/*
+ * employerSummary
+ *
+ * The main top-level representation of employer details, such as in search results
+ */
+
+.Container--employerSummary {
+  border: var(--border-width-thinnest) solid var(--color-grey);
+
+  .Container-header {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .Container-title {
+    margin: 0;
+  }
+
+  .Container-body {
+    padding-top: 0;
+  }
+}
+
+/*
+ * freelancerSummary
+ *
+ * Summary representations of freelancer/employer details,
+ * Appears in search results, contract page
+ */
+
+.Container--freelancerSummary {
+  margin-bottom: var(--space-micro-smallest);
+
+  .Container-body {
+
+    @media (--viewport-lg) {
+      h2,
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .Container-details {
+    border-top: var(--border-width-thinnest) solid var(--color-grey);
+    display: none;
+    padding: var(--space-micro) var(--space-micro-larger);
+
+    @media (--viewport-lg) {
+      display: block;
+    }
+  }
+}
+
+
+/*
+ * summaryCompact
+ *
+ * Summary representations of freelancer/employer details,
+ * Appears in Shortlisted search results and contract page
+ */
+
+.Container--summaryCompact {
+  border-bottom: var(--border-width-thinnest) solid var(--color-grey);
+  display: inline-block;
+  margin-bottom: var(--space-micro-smallest);
+  min-width: auto;
+  vertical-align: top;
+  width: 100%;
+
+  @media (--viewport-lg) {
+    min-width: 300px;
+    width: 49.7%;
+  }
+
+  .Container-media {
+    margin-top: 0;
+    max-width: 107px;
+    text-align: left;
+  }
+
+  .Container-body {
+    padding: var(--space-micro) 0;
+  }
+
+  .Container-footer {
+    border-top: none;
+    padding: 0 0 var(--space-micro);
+  }
+}
+
+
+/*
+ * summaryContract
+ *
+ * Removes width from summaryCard on Contract pages
+ */
+
+.Container--summaryContract {
+
+  @media (--viewport-lg) {
+    width: 100%;
+  }
+}
+
+
+/*
+ * contract
+ *
+ * Contract specific styles
+ */
+
+.Container--contract {
+  margin: 0;
+
+  .Container-subtitle {
+    @extend h4;
+    margin: 0;
+  }
+
+  .Container-summary {
+    text-align: center;
+
+    @media (--viewport-lg) {
+      padding: var(--space-micro) 0;
+    }
+  }
+}
+
+
+/*
+ * filter
+ *
+ * Card wraps "Filter by" form found on many pages (Timesheets, Conversations)
+ * Sets bottom margin between filters and results to 1px.
+ */
+
+.Container--filter {
+  margin: 0 0 var(--space-micro-smallest);
+}
+
+/*
+ * withTable
+ *
+ * Sets Card-body to transparent to avoid appearance of
+ * long tables overflowing out of the bounding element.
+ * Appears on Invoices pages.
+ */
+
+.Container--withTable {
+  background: transparent;
+
+  .Container-header {
+    background: var(--color-white);
+  }
+
+  .Container-body {
+    background: transparent;
+    padding: 0;
+  }
+}
+
+/*
+ * external
+ *
+ *  For example a work history validation request
+ *
+ */
+
+
+.Container--external{
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--space-micro-large) 0 0;
+
+  @media (--viewport-md) {
+  padding: var(--space-micro-largest) 0 0;
+  }
+
+  .Container-body{
+    padding: var(--space-micro-large);
+    margin: 0 auto;
+
+    @media (--viewport-md) {
+      padding: var(--space-micro-large) 90px var(--space-micro-large);
+    }
+  }
+
+  .Container-footer{
+    padding: var(--space-micro-large);
+    margin: 0 auto var(--space-micro-largest);
+
+    @media (--viewport-md) {
+      padding: var(--space-micro-large) 90px var(--space-micro-large);
+    }
+  }
+}
+
+/*
+ * accordion
+ *
+ *  wrapper for a bunch of expanders
+ *
+ */
+
+ .Container--accordion{
+  margin: 0 0 var(--space-micro-smallest);
+
+  .Container-body {
+    padding-top: 0;
+    padding-bottom: 0;
+    @media (--viewport-sm) {
+      padding: 0 10px;
+    }
+  }
+
+ }
+
+/*
+ * loading wrapper for ajax form filters
+ *
+ *
+ */
+
+
+ .Container-loading{
+  padding: var(--space-micro) var(--space-micro-large);
+ }
+
+/**
+ * specific padding requirements for the container header on the brief
+ *
+ */
+ .Container--briefHeader .Container-header {
+     padding: var(--space-micro-smaller) var(--space-micro);
+     position: static;
+
+     @media (--viewport-lg) {
+         position: relative;
+     }
+ }
+
+.Container--briefHeader .Container-header .ButtonGroup--hz--flex,
+.Container--briefHeader .Container-header .ContextualMenu {
+    width: 100%;
+
+    @media (--viewport-lg) {
+        width: auto;
+    }
+}
+
+.Container--briefHeader .Container-header .ButtonGroup--hz--flex {
+    flex-direction: column;
+    @media (--viewport-lg) {
+        flex-direction: row;
+    }
+}
+
+.Container--briefHeader.Container--previewBrief .Container-header h2 {
+    line-height: 130%;
+    margin-bottom: var(--space-micro);
+    @media (--viewport-lg) {
+        margin-bottom: 0;
+        margin-left: calc(75px + var(--space-micro)); // length of 'preview' tab + 14px
+    }
+}
+
+.Container--briefHeader .Container-header h2 {
+    margin: var(--space-micro-smaller) 0 var(--space-micro);
+    @media (--viewport-lg) {
+        margin: 0;
+    }
+}

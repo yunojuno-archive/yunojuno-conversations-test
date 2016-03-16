@@ -1,0 +1,52 @@
+/**
+* Hexagon
+*
+*
+* Hexagon displays a Hexagon shaped element with a colour fill.
+* Can contain content (bullet point, numeral)
+*/
+
+.Hexagon {
+  display: inline-block;
+  margin-right: 0px;
+  min-width: 50px;
+  vertical-align: middle
+  width: 70px;
+}
+
+.Hexagon-inner {
+  background-color: var(--color-blue);
+  display: flex;
+  color: var(--color-white);
+  float: left;
+  height: 32px;
+  margin: 16px 0;
+  position: relative;
+  width: 55px;
+
+  &::before,
+  &::after {
+    border-left: 27px solid transparent;
+    border-right: 27px solid transparent;
+    content: "";
+    position: absolute;
+    width: 0;
+  }
+
+  &::before {
+    border-bottom: 16px solid var(--color-blue);
+    bottom: 100%;
+  }
+
+  &::after {
+    border-top: 16px solid var(--color-blue);
+    left: 0;
+    top: 100%;
+  }
+}
+
+.Hexagon-body {
+  margin: auto;
+  text-align: center;
+  width: 100%;
+}

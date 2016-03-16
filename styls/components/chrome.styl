@@ -1,0 +1,688 @@
+/**
+ * Chrome
+ *
+ * The header, navigation and footer of the app. There are two versions,
+ * one with a sidebar (the default) and one without
+ */
+
+:root {
+
+  --chrome-sidebar-width: 250px;
+  --chrome-no-sidebar-header-height: 70px;
+
+  --chrome-header-precision-padding-width: 25px;
+
+
+}
+
+.Chrome {
+  background-color: var(--color-grey);
+}
+
+.Chrome-inner {
+  position: relative;
+}
+
+.Chrome-notifications {}
+
+/*
+ * Chrome-header
+ *
+ * Contains logos and quote. Only visible in large viewports
+ */
+
+.Chrome-header {
+  background: var(--color-grey-darkest);
+  color: var(--color-white);
+  font-size: var(--font-size-micro-smaller);
+  line-height: var(--line-height-tight);
+  padding: var(--space-micro-smaller) var(--space-micro);
+
+  @media (--viewport-md) {
+    padding: var(--space-micro-smaller) var(--space-micro-large);
+  }
+
+  @media (--viewport-lg) {
+    padding: var(--space-micro-smaller) var(--space-micro-large);
+    visibility: visible;
+  }
+}
+
+.Chrome-freelancerAvailableHeader {
+    background: var(--color-green-dark);
+    color: var(--color-white);
+
+    a {
+        color: var(--color-white);
+    }
+}
+
+.Chrome-freelancerUnavailableHeader {
+    background: var(--color-coral);
+    color: var(--color-white);
+
+    a {
+        color: var(--color-white);
+    }
+}
+
+.Chrome-headerInner {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto 0 0;
+}
+
+.Chrome-headerButton {
+  display: flex;
+  height: 40px;
+  text-decoration: none;
+  width: 40px;
+
+  .fa {
+    font-size: var(--font-size-macro-small);
+    margin: auto auto auto 0;
+  }
+
+  @media (--viewport-lg) {
+    display: none;
+  }
+}
+
+.Chrome-headerLogos {
+  margin-right: auto;
+  display: flex;
+
+  @media (--viewport-lg) {
+    display: block;
+    margin-right: 0;
+    min-width: 400px;
+  }
+}
+
+.Chrome-headerLogosInner {
+  align-items: center;
+  color: var(--color-white);
+  display: flex;
+  width: 100%;
+}
+
+.Chrome-headerLogosMedia {
+  align-items: center;
+  display: flex;
+  text-decoration: none;
+
+  span {
+    color: var(--color-white);
+  }
+}
+
+.Chrome-headerAvatarMediaInner {
+  height: 42px;
+  width: 42px;
+}
+
+.Chrome-headerLogoMediaInner {
+    display: none;
+    height: 42px;
+    margin-right: var(--space-micro);
+
+    @media (--viewport-lg) {
+        display: block;
+    }
+}
+
+.Chrome-headerLogosMedia .js-availability-control-trigger strong {
+    text-transform: uppercase;
+}
+
+.Chrome-burger {
+    //left: 21px;
+    //top: 64px;
+    background: transparent;
+    border: 0 none;
+    height: 24px;
+    margin-right: var(--space-micro);
+    position: relative;
+    width: 32px;
+    z-index: 11;
+
+    span {
+        background: #fff;
+        position: absolute;
+        top: 50%;
+        height: 4px;
+        left: 0;
+        margin-top: -2px;
+        display: block;
+        width: 100%;
+        opacity: 1;
+        transition: opacity 0.2s ease-out;
+    }
+
+    &:before, &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 32px;
+        height: 4px;
+        background: #fff;
+        transition: transform 0.2s ease-out, top 0.2s ease-out, margin-top 0.2s ease-out;
+    }
+
+    &:before {
+        top: 0;
+    }
+
+    &:after {
+        bottom: 0;
+    }
+}
+
+.is-open.Chrome-burger {
+    transform: scale(1);
+    -ms-transform: scale(1);
+    //left: 21px;
+    //top: 64px;
+
+    span {
+        opacity: 0;
+    }
+
+    &:before {
+        transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        top: 50%;
+        margin-top: -2px;
+    }
+
+    &:after {
+        transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        top: 50%;
+        margin-top: -2px;
+    }
+}
+
+.Chrome-profileMenu {
+    cursor: pointer;
+    z-index: var(--depth-3);
+}
+
+.Chrome-profileMenuInner {
+    display: flex;
+    align-items: center;
+}
+
+.Chrome-profileHeaderLogo {
+    order: 1;
+}
+
+.Chrome-profileHeaderLogosMedia {
+    order: 2;
+}
+
+.Chrome-profileMenu {
+    position: relative;
+
+    @media (--viewport-lg) {
+        display: block;
+        margin-right: 0;
+    }
+
+    menu {
+        display: none;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        right: -var(--space-micro-large);
+        top:49px;
+    }
+
+}
+
+
+
+.Chrome-profileMenuGreeting {
+    line-height: var(--line-height-loosest);
+    padding-right: var(--space-micro-smaller);
+
+    @media (--viewport-lg) {
+        margin: 0 var(--space-micro-smaller);
+    }
+}
+
+.Chrome-profileMenuGreeting span {
+    display: none;
+
+    @media (--viewport-lg) {
+        display: inline;
+        text-decoration: underline;
+
+    }
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.Chrome-headerLogosAvatar .Chrome-headerLogosMediaInner {
+    display: block;
+}
+
+// -headerLogo is a single white logo that does not appear on white viewports
+.Chrome-headerLogo {
+  text-align: right;
+  width: 50px;
+
+  @media (--viewport-lg) {
+    display: none;
+  }
+}
+
+
+/*
+ * Chrome-app
+ *
+ * Wraps the sidebar (bar) and main content (-content)
+ * Positions bar and content
+ */
+
+.Chrome-app {
+  align-items: stretch;
+  display: flex;
+  min-height: 100vh;
+}
+
+
+.Chrome-app--noSidebar {
+  margin: auto;
+
+  @media (--viewport-lg) {
+    max-width: 1160px;
+  }
+}
+
+/*
+ * Chrome-bar
+ *
+ * Sidebar content
+ */
+
+.Chrome-bar {
+  background-color: var(--color-grey-darkest);
+  color: var(--color-grey);
+  height: 100%;
+  left: -240px;
+  overflow: visible;
+  position: absolute;
+  transition-timing-function: ease-in-out;
+  transition: left 0.25s;
+  width: 240px;
+  z-index: var(--depth-4);
+
+  // no-js fallback: show the submenu
+  .no-js & {
+    left: 0;
+    overflow: visible;
+  }
+
+  &.is-expanded {
+    left: 0;
+    overflow: hidden;
+  }
+
+  @media (--viewport-lg) {
+    display: block;
+    height: auto;
+    min-height: 100%;
+    overflow: hidden;
+    position: static;
+    min-width: 200px;
+    max-width: 250px;
+  }
+}
+
+
+/*
+ * Chrome-content
+ *
+ * Main content panel
+ */
+
+.Chrome-content {
+  flex: 1;
+}
+
+.Chrome-employerContent {
+    position: relative;
+
+    &:before {
+        content: '';
+        background: var(--color-grey-darker);
+        display: block;
+        height: 1px;
+        left: 0;
+        opacity: 0.2;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+}
+
+/*
+ * Chrome-contentInner
+ *
+ * Main content panel spacing
+ */
+
+.Chrome-contentInner {
+  margin: 0;
+  padding: var(--space-micro);
+
+  @media (--viewport-md) {
+    padding: var(--space-micro-large);
+  }
+
+  @media (--viewport-lg) {
+    max-width: 1160px;
+    padding: var(--space-micro-largest) var(--space-micro) var(--space-micro-largest) var(--space-micro-largest);
+  }
+}
+
+/**
+ * Chrome--hasFixedFooter
+ *
+ * Brief flow has a fixed footer, so we need to have padding to allow
+ * the rest of the page to be not hidden beneath that.
+ */
+
+.Chrome--hasFixedFooter.Chrome-contentInner {
+    padding-bottom: calc(var(--space-micro) + 90px);
+
+    @media (--viewport-md) {
+        padding-bottom: calc(var(--space-micro-large) + 90px);
+    }
+
+    @media (--viewport-lg) {
+        padding-bottom: calc(var(--space-micro-largest) + 90px);
+    }
+}
+
+/*
+ * Chrome-footer
+ *
+ * Full-width colour panel, with fixed-width content
+ */
+
+.Chrome-footer {
+  background-color: var(--color-grey-darkest);
+  bottom: 0;
+  color: var(--color-white);
+  width: 100%;
+}
+
+
+// TODO - refactor
+.Chrome-notifications {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: var(--depth-7);
+}
+
+.Chrome-notifications--list {
+  background: var(--color-white);
+  list-style: none;
+  padding: 10px 6px;
+  position: absolute;
+  right: 0;
+  top: 42px;
+  width: 180px;
+}
+
+.Chrome-notifications--item {
+  border-bottom: 3px solid #ccc;
+  margin-bottom: 5px;
+}
+
+.Chrome-notifications--item a {
+  display: block;
+}
+
+.Chrome-notifications--button {
+  display: block;
+}
+
+.Chrome-notifications--newNotifications {
+  background: var(--color-coral-dark);
+}
+
+.Chrome-notifications--pulseAnimation {
+  color: var(--color-white);
+}
+
+
+/*
+ * dark
+ *
+ * Dark grey background with white text
+ */
+
+.Chrome--dark {
+  background: var(--color-grey-darkest);
+  color: var(--color-white);
+
+  .Chrome-navItem {
+
+    a {
+      color: var(--color-white);
+    }
+  }
+}
+
+/*
+ * light
+ *
+ * Light grey background
+ */
+
+.Chrome--light {}
+
+
+/*
+ * noSidebar
+ *
+ * A Chrome without a sidebar. Often with a footer.
+ * IE, Signin page, Homepage, Colophon, Submit an endorsement
+ * Was 'ChromeNoSidebar'
+ */
+
+.Chrome--noSidebar {
+  min-height: 100vh;
+
+  .Chrome-header {
+    background: transparent;
+    display: block;
+    height: var(--chrome-no-sidebar-header-height);
+    padding: 0;
+    visibility: visible;
+  }
+
+  .Chrome-headerInner {}
+
+ .Chrome-nav {
+  width: 100%;
+}
+
+  .Chrome-navLogo {
+    margin-right: auto;
+    padding-top: 10px;
+    display: inline-block;
+  }
+
+  .Chrome-navText{
+    position: relative;
+    top: 13px;
+  }
+
+  .Chrome-navItems {
+    display: none;
+    float: right;
+
+    @media (--viewport-md) {
+      display: block;
+      padding: 0;
+    }
+  }
+
+  .Chrome-navItem {
+    float: left;
+    letter-spacing: .01em;
+    list-style: none;
+    margin: 10px 20px 0 0;
+    padding: 10px 20px;
+  }
+
+  .Chrome-navButton {
+    letter-spacing: .01em;
+    text-transform: uppercase;
+  }
+
+  .Chrome-content {
+    flex: 1;
+    padding: 0;
+  }
+
+  .Chrome-contentInner {
+    margin: 0;
+    padding: 0;
+    max-width: none;
+
+    @media (--viewport-lg) {
+      padding: 0;
+    }
+  }
+
+  .Chrome-footer {
+    background-color: var(--color-marine);
+    align-self: flex-end;
+  }
+}
+
+
+/*
+ * errorPage
+ *
+ * Styles for Chrome 500, 404 pages
+ */
+
+.Chrome--errorPage {
+
+  .icon-yj-logo-white {
+    display: block;
+
+    @media (--viewport-lg) {
+      display: none;
+    }
+  }
+
+  .icon-yj-logo-black {
+    display: none;
+    opacity: 0.4;
+
+    @media (--viewport-lg) {
+      display: block;
+    }
+  }
+
+  .Chrome-header {
+    background-color: var(--color-marine);
+    margin-bottom: var(--space-micro-large);
+
+    @media (--viewport-lg) {
+      background-color: var(--color-coral);
+    }
+  }
+
+  .Chrome-headerInner {
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 var(--space-micro);
+  }
+
+  .Chrome-nav {
+    
+  }
+
+  .Chrome-navLogo {
+    margin: 0;
+    min-width: 50px;
+    padding-top: 0;
+    width: 50px;
+  }
+
+  .ChatMessage-body{
+    p {padding:10px; }
+
+    @media (--viewport-lg) {
+    p {
+      margin: 0;
+      padding: 0;
+      }
+    }
+  }
+}
+
+
+/*
+ * fullBleed
+ *
+ * Transparent background with optional background cover images
+ */
+
+.Chrome--fullBleed {
+  background: transparent none no-repeat center center fixed;
+  background-size: cover;
+}
+
+
+/*
+ * 403
+ *
+ */
+
+.Chrome--403 {
+  background-image: url("../images/static_pages/403.jpg");
+  background-position: 80% top;
+  background-size: cover;
+  height: 100%;
+  min-height: 100vh;
+
+  .Chrome-content {
+    margin-top: 20em;
+  }
+}
+
+
+/*
+ * 404
+ *
+ */
+
+.Chrome--404 {
+  background-image: url("../images/static_pages/404.jpg");
+  background-position: center;
+  background-size: cover;
+  height: 100%;
+  min-height: 100vh;
+
+  .Chrome-content {
+    margin-top: 15em;
+  }
+
+  .Chrome-footer {
+    background: transparent;
+    text-align: center;
+  }
+}

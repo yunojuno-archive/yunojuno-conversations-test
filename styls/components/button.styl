@@ -1,0 +1,1613 @@
+/**
+ * Button
+ *
+ * @requires suitcss/button
+ *
+ * Buttons are used for all actions. There are two main types:
+ * - looks like a button (default)
+ * - looks like a link
+ *
+ * Each type has different variants e.g.
+ * - Download link
+ * - Primary button
+ */
+
+:root {
+
+    --button-round-large-radius: 50px;
+    --button-round-small-radius: 20px;
+}
+
+.Button {
+    background: var(--color-grey-dark);
+    border-radius: 3px;
+    border: none;
+    color: var(--color-white);
+    cursor: pointer !important;
+    display: inline-block;
+    font-family: var(--font-family-sans-serif);
+    font-size: var(--font-size-micro-small);
+    font-style: normal;
+    font-weight: var(--font-weight-bold);
+    line-height: normal;
+    outline: none;
+    height: 50px;
+    padding: 0 30px;
+    text-transform: uppercase;
+    width: auto;
+
+    &:active {
+        box-shadow: none;
+    }
+
+    &:hover {
+        background: var(--color-grey-darker);
+        color: var(--color-white);
+    }
+
+    &.is-disabled {
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .fa {
+        margin-left: var(--space-micro-smaller);
+    }
+}
+
+.Button-inner {
+    align-items: center;
+    display: flex;
+    height: 100%;
+
+    .is-disabled & {
+        background-color: var(--color-grey) !important;
+        pointer-events: none;
+        border-color: var(--color-grey) !important;
+    }
+}
+
+/**
+ * primary
+ *
+ * Modifier to make button primary action
+ */
+
+.Button--primary {
+    display: block;
+    padding: 0;
+    width: 100%;
+
+    .Button-inner {
+        border-radius: 3px;
+        background: var(--color-coral);
+        display: flex;
+        justify-content: center;
+        padding: 0 30px;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+
+        &:hover {
+            background: var(--color-coral-dark);
+        }
+    }
+
+    @media (--viewport-lg) {
+        display: inline-block;
+        width: auto;
+    }
+}
+
+input.Button--primary {
+    border-radius: 3px;
+    background: var(--color-coral);
+    display: inline-block;
+    padding: 0 30px;
+    text-align: center;
+    height: 37px;
+
+    &:hover {
+        background: var(--color-coral-dark);
+    }
+}
+
+input.Button--register {
+    height: 50px;
+}
+
+/**
+ * confirmable
+ *
+ * Appears on timesheets
+ */
+
+.Button--confirmable {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-coral);
+    line-height: var(--line-height-tighter);
+    justify-content: center;
+    text-align: center;
+    transition-duration: 150ms;
+    transition-property: padding;
+    transition-timing-function: cubic-bezier(.4, .25, .29, .92);
+    width: 100%;
+
+    &:hover {
+        background: var(--color-coral-dark);
+    }
+}
+
+/**
+ * form
+ *
+ * Form button appears inline with form elements, such as text inputs
+ */
+
+.Button--form {
+    height: 37px;
+    margin-top: var(--space-micro);
+}
+
+.Button--formInline {
+    height: 44px;
+    margin-top: 0;
+}
+
+.Button--large {
+    padding: .7em 2em;
+}
+
+.Button--primary.Button--form{
+    .Button-inner{
+        display: inline-block;
+        line-height: 38px;
+    }
+}
+
+/* Single line button baseline isn't 1em height.*/
+.Button--singleLine {
+    line-height: 0.8em;
+}
+
+.Button--invert {
+    background: transparent;
+    border-color: var(--color-grey-dark);
+    border: var(--border-width-thinnest) solid;
+    color: var(--color-grey-dark);
+    // padding: .8em 1em .67em;
+}
+
+.Button--fullWidth {
+    // consider using u-sizeFull instead of this
+    width: 100% !important;
+}
+
+/**
+ * secondary
+ *
+ * Grey buttons used for utility actions (printing, etc.)
+ */
+
+.Button--secondary {
+    background: var(--color-grey-dark);
+
+    .Button-inner {
+        border-radius: 3px;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    &:hover {
+        background: var(--color-grey-darker);
+    }
+}
+
+/**
+ * Tall
+ *
+ * "Tall" button appears on BlackBook Freelancer cards, amongst other places
+ */
+
+.Button--tall {
+    display: block;
+    width: 100%;
+
+    .Button-inner {
+        // padding: 0 var(--space-micro-smaller);
+    }
+}
+
+/**
+ * Button-supportLabel
+ *
+ * Used in the new brief flow to indicate 'next step'
+ */
+.Button-supportLabel {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    margin: 0 var(--space-micro-large) 0 0;
+}
+
+.Button--link-style {
+    color: #fd6666;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.Button--link-style-float-right {
+    float: right;
+}
+
+/*
+ * Edge case for when all buttons need to be the same
+ * width, but we can't rely on a Grid-cell to constrain,
+ * such as on the homepage's bespoke layout, or in a ConfirmableButton
+ */
+
+.Button--fixedWidth--140 {
+    width: 140px !important;
+}
+
+.v2-Button--fixedWidth--140 {
+    @media (--viewport-lg) {
+        width: 140px !important;
+    }
+}
+
+.Button--fixedWidth--200 {
+    width: 200px !important;
+}
+
+.v2-Button--fixedWidth--200 {
+
+    @media (--viewport-lg) {
+        width: 200px !important;
+    }
+}
+
+.Button--maxWidth--200 {
+    max-width: 200px !important;
+}
+
+.Button--fixedWidth--240 {
+    width: 240px !important;
+}
+
+.v2-Button--fixedWidth--240 {
+
+    @media (--viewport-lg) {
+        width: 240px !important;
+    }
+}
+
+.Button--maxWidth--240 {
+    max-width: 240px !important;
+}
+
+.Button--fixedWidth--280 {
+    width: 280px !important;
+}
+
+.v2-Button--fixedWidth--280 {
+
+    @media (--viewport-lg) {
+        width: 280px !important;
+    }
+}
+
+.Button--maxWidth--280 {
+    max-width: 280px !important;
+}
+
+.Button--fixedWidth--300 {
+    width: 300px !important;
+}
+
+.v2-Button--fixedWidth--300 {
+
+    @media (--viewport-lg) {
+        width: 300px !important;
+    }
+}
+
+.Button--maxWidth--300 {
+    max-width: 300px !important;
+}
+
+.Button--veryImportant {
+    min-height: 65px;
+}
+
+.Button--important {
+    font-size: var(--font-size-micro-small);
+}
+
+/**
+ * =link
+ *
+ * Modifier to make button look like a link
+ */
+
+.Button--link {
+    background: none;
+    box-shadow: none;
+    color: var(--color-coral);
+    font-weight: normal;
+    height: auto;
+    text-decoration: underline;
+    text-transform: none;
+
+    &:hover {
+        background: none;
+        color: var(--color-coral-dark);
+        cursor: pointer;
+        position: relative;
+        text-decoration: none;
+    }
+
+    &:active {
+        transform: none;
+    }
+
+    &.Button--link--no-padding {
+        padding: 0;
+    }
+
+    &.Button--link--no-padding--hz {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    &.Button--link--inline {
+        display: inline-block;
+    }
+
+    & .Button--link--hiddenFileInput {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 10000;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .Button-inner {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* ==download */
+.Button--link--download {
+
+    &::after {
+        content: url("../images/icons/arrow-down-black.svg");
+        position: relative;
+        top: 4px;
+        right: -4px;
+    }
+}
+
+/* ==drill-down */
+.Button--link--drillDown {
+
+    @media (--viewport-lg) {
+
+        &::after {
+            font-family: 'FontAwesome';
+            display: inline-block;
+            content: '\f105';
+            position: relative;
+            top: 0;
+            right: -6px;
+        }
+    }
+}
+
+/* ==expander-down */
+.Button--expandDown {
+
+    @media (--viewport-lg) {
+
+        &::after {
+            font-family: 'FontAwesome';
+            display: inline-block;
+            content: '\f0d7';
+            position: absolute;
+            top: 50%;
+            margin-top: -0.5em;
+            right: 10px;
+        }
+    }
+}
+
+/* ==expander-up */
+.Button--expandUp {
+
+    @media (--viewport-lg) {
+
+        &::after {
+            font-family: 'FontAwesome';
+            display: inline-block;
+            content: '\f0d8';
+            position: absolute;
+            top: 50%;
+            margin-top: -0.5em;
+            right: 10px;
+        }
+    }
+}
+
+// Inverted version
+.Button--primary.Button--invert {
+    background: transparent !important;
+    // border-bottom: 0;
+    border-color: var(--color-coral-dark);
+    color: var(--color-coral-dark);
+
+    &:hover {
+        color: var(--color-coral-dark) !important;
+    }
+}
+
+/**
+ * =button-blue
+ *
+ * Modifier to make button blue
+ */
+.Button--blue {
+    background-color: var(--color-blue) !important;
+    border-color: var(--color-blue);
+    color: var(--color-white);
+}
+
+.Button--blue.Button--invert {
+    background-color: transparent !important;
+    // border-bottom: 0;
+    border-color: var(--color-blue);
+    color: var(--color-blue);
+
+    &:hover {
+        color: var(--color-blue);
+    }
+}
+
+/**
+ * =button-caret
+ *
+ * Modifier to add a '>' after the button text
+ */
+.Button--continueCaret {
+    position: relative;
+
+    &:after {
+        content: '\f105';
+        font-family: 'FontAwesome';
+        display: block;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        font-size: 17px;
+        margin-top: -0.5em;
+        right: 1.25em;
+    }
+
+    &.Button--veryImportant:after {
+        content: '\f105';
+        display: inline-block;
+        font-family: 'FontAwesome';
+        font-size: 24px;
+        height: auto;
+        margin: -0.5em 0 0 0;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: none;
+        width: auto;
+    }
+
+    &.Button--important:after {
+        content: '\f105';
+        display: inline-block;
+        font-family: 'FontAwesome';
+        font-size: 18px;
+        height: auto;
+        margin: -0.5em 0 0 0;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: none;
+        width: auto;
+    }
+}
+
+/**
+ * =button-file-upload
+ *
+ * Modifier to add a file icon after the button text
+ */
+
+.Button--fileUpload {
+    position: relative;
+
+    &:after {
+        content: url('../images/icons/file-white.svg');
+        display: inline-block;
+        height: 12px;
+        margin-left: 0em;
+        position: relative;
+        right: -4px;
+        top: 1px;
+        width: 12px;
+    }
+}
+
+/**
+ * =button-right-arrow
+ *
+ * Modifier to add a right arrow after the button text
+ */
+.Button--rightArrow {
+
+    &::after {
+        content: '\2192';
+    }
+}
+
+/**
+ * =button-print
+ *
+ * Used specifically to invoke print behaviour. Hidden on all but large viewport
+ */
+.Button--print {
+    display: none;
+    visibility: hidden;
+
+    @media (--viewport-lg) {
+        display: inline-block;
+        float: right;
+        visibility: visible;
+    }
+}
+
+/**
+ * =button-positive, button-negative and button-unselected
+ *
+ * Modifier to make buttons green and red to show significance
+ * but with an optional 'unselected' state, because the buttons
+ * display data as well as trigger a state change. The hover and active
+ * states for positive and negative use !important to ensure they
+ * override the grey in Button--unselected.
+ */
+
+.Button--positive, .Button--negative {
+    display: inline-block;
+    padding: 0;
+
+    .Button-inner {
+        border-radius: 3px;
+        background-color: var(--color-green);
+        display: flex;
+        justify-content: center;
+        padding: 0 30px;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+
+        &:hover {
+            background-color: var(--color-green-dark) !important;
+        }
+
+        &:active {
+            background-color: var(--color-green) !important;
+        }
+    }
+
+    // Inverted version
+    &.Button--invert {
+
+        .Button-inner {
+            background: transparent !important;
+            // border-bottom: 0;
+            border-color: var(--color-green);
+            color: var(--color-green);
+        }
+    }
+
+    &.is-selected {
+        background-color: var(--color-green);
+    }
+
+    &.is-unselected {
+        background-color: var(--color-grey-dark);
+    }
+}
+
+.Button--negative {
+    .Button-inner {
+        background-color: var(--color-red);
+    }
+
+    &:hover .Button-inner {
+        background-color: var(--color-red-dark) !important;
+    }
+
+    &:active .Button-inner {
+        background-color: var(--color-red) !important;
+    }
+
+    &.is-selected .Button-inner {
+        background-color: var(--color-red);
+    }
+
+    &.is-unselected .Button-inner {
+        background-color: var(--color-grey-dark);
+    }
+}
+
+// Inverted version
+.Button--negative.Button--invert {
+    background: transparent !important;
+    // border-bottom: 0;
+    border-color: var(--color-red-light);
+    color: var(--color-red-light);
+}
+
+.Button--shiftDown--homepageTop {
+    /* Only used to satisfy OCD on the homepage*/
+    top: 3px;
+
+    @media (--viewport-sm) {
+        top: 10px;
+    }
+}
+
+.Button--unselected {
+    // for use with the AvailabilityControl - this makes the unselected button grey
+    background-color: var(--color-grey-dark);
+
+    .Button-inner {
+        background-color: var(--color-grey-dark);
+        border-radius: 3px;
+        display: flex;
+        justify-content: center;
+        padding: 0 30px;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    &:hover {
+
+        .Button-inner {
+            background-color: transparent;
+        }
+    }
+}
+
+.Button--darkGrey {
+    // for use with the AvailabilityControl - this makes the unselected button grey
+    background-color: var(--color-grey-darker);
+
+    .Button-inner {
+        color: var(--color-white);
+        border-radius: 3px;
+        display: flex;
+        justify-content: center;
+        padding: 0 30px;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    &:hover {
+        background: var(--color-grey);
+
+        .Button-inner {
+            color: var(--color-grey-darker);
+        }
+    }
+}
+
+.Button--linkedIn {
+    // for use in freelancer registration
+    background-color: #007bb6 !important;
+}
+
+.Button--twitter {
+    // for use in freelancer registration
+    background-color: #55acee !important;
+}
+
+.Button--github {
+    // for use with the AvailabilityControl - this makes the unselected button grey
+    background-color: var(--color-grey-dark) !important;
+}
+
+/**
+* =button-invert
+*
+* Modifier used for inverted buttons e.g.
+* on landing page
+*/
+.Button--invert {
+    background: transparent;
+    border: var(--border-width-thinnest) solid var(--color-grey-dark);
+    color: var(--color-grey-dark);
+    font-weight: var(--font-weight-regular);
+
+    &:hover {
+        background: transparent;
+        color: var(--color-grey-dark);
+    }
+
+    &:active {
+        transform: none;
+    }
+}
+
+.js-active .Button--invert {
+
+    &:after {
+        background: transparent;
+        border: var(--border-width-thicker) solid transparent;
+        border-top-color: var(--color-coral);
+        content: '';
+        display: block;
+        height: 0;
+        left: 50%;
+        margin-left: -6px;
+        margin-top: 11px;
+        position: absolute;
+        width: 0;
+
+        @media (--viewport-lg) {
+            margin-top: 13px;
+        }
+    }
+}
+
+.js-active .Button--invert.Button--primary {
+    background: var(--color-coral) !important;
+    border-color: var(--color-coral);
+    color: var(--color-white) !important;
+
+    &:hover {
+        color: var(--color-white);
+    }
+}
+
+.js-active .Button--invert.Button--blue {
+    background-color: var(--color-blue) !important;
+    border-color: var(--color-blue);
+    color: var(--color-white);
+
+    &:after {
+        border-top-color: var(--color-blue);
+    }
+}
+
+/**
+ * =button-micro
+ *
+ * Modifier used for small actions e.g.
+ * adding form elements
+ */
+.Button--micro {
+    letter-spacing: var(--letter-spacing-looser);
+
+    &:active {
+        box-shadow: none;
+        transform: translate(0, 1px);
+    }
+}
+
+/**
+ * =confirmable-button
+ *
+ * Wrapper and modifier to require a second click to perform the action.
+ * A 'Confirmable Button' is resevered for actions which have an
+ * irreversible server-side change.
+ *
+ * Has dependent JS, too - see buttons.js (which is later packaged)
+ *
+ * ConfirmableButton is a wrapper, but Button--confirmable is subclasses of
+ * Button
+ */
+
+.Button--confirmable-trigger {
+    background: var(--color-blue-dark) !important;
+
+    &:hover {
+        background: var(--color-blue) !important;
+        color: var(--color-white);
+
+        .Button-inner {
+            background-color: transparent;
+        }
+    }
+
+    &.Button--invert {
+        background: transparent !important;
+    }
+
+    .ConfirmableButton--destructive & {
+        background: var(--color-yellow-dark) !important;
+    }
+
+    .ConfirmableButton--destructive &:hover {
+        background: var(--color-yellow) !important;
+        color: var(--color-white);
+    }
+}
+
+//inline confirmable link button
+
+.ConfirmableButton.Button--form{
+    height: 16px;
+    overflow: hidden;
+    margin: 0;
+    position: relative;
+    bottom: -3px;
+    Button{
+        background-color: transparent !important;
+        width: auto;
+        text-align: left;
+        padding: 0;
+        &:hover{
+            background-color: transparent !important;
+        }
+        .Button-inner{
+                display: block;
+                text-align: left;
+                width: auto;
+                height: auto;
+        color: var(--color-coral) !important;
+        }
+    }
+}
+
+/* Button-round
+ *
+ * Circular button with a media breakpoint
+ */
+
+.Button--round {
+    border-radius: var(--button-round-small-radius);
+    height: calc(2 * var(--button-round-small-radius));
+    line-height: var(--button-round-small-radius);
+    padding: 0;
+    width: calc(2 * var(--button-round-small-radius));
+
+    @media (--viewport-lg) {
+        border-radius: var(--button-round-large-radius);
+        height: calc(2 * var(--button-round-large-radius));
+        line-height: var(--button-round-large-radius);
+        width: calc(2 * var(--button-round-large-radius));
+    }
+
+    &.Button--round--tick,
+    &.Button--round--cross {
+        background-position: 57% 57%;
+        background-repeat: no-repeat;
+        background-size: 50% 50%;
+        display: inline-block;
+        text-indent: -9999px;
+    }
+
+    &.Button--round--tick {
+        background-image: url("../images/icons/tick-white.svg");
+        background-position: 60% 74%;
+        background-size: 62% 62%;
+    }
+
+    &.Button--round--cross {
+        background-image: url("../images/icons/cross-white.svg");
+    }
+}
+
+/*
+ * Button Group tweaks to underlying suit-button-group styling
+ *
+ */
+
+.ButtonGroup {
+
+    .ButtonGroup-item {
+        margin: 0 0 10px 0 !important;
+    }
+
+    .ButtonGroup-item--first {
+        margin-left: 0 !important;
+    }
+
+}
+
+.ButtonGroup-item--wrapper {
+    height: 45px;
+    width: 100px;
+}
+
+.ButtonGroup-item-mediaIcon {
+    align-items: center;
+    display: flex;
+    text-decoration: none;
+    width: 48px;
+
+    @media (--viewport-md) {
+    }
+}
+
+.ButtonGroup-item--removeEntry {
+    display: block;
+    position: relative;
+
+    &:hover {
+        color: var(--color-coral-dark);
+    }
+
+    .ButtonGroup-item-mediaIcon {
+        margin: 0 auto;
+    }
+
+    span,
+    i {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    i {
+        font-size: 22px;
+    }
+
+    .ButtonGroup-item--confirm {
+        display: none;
+    }
+
+    &.-confirm {
+        color: var(--color-blue-dark);
+
+        &:hover {
+            &:hover {
+                color: var(--color-blue);
+            }
+        }
+
+        .ButtonGroup-item--confirm {
+            display: block;
+            position: absolute;
+            bottom: -20px;
+            font-size: 14px;
+        }
+    }
+}
+
+.ButtonGroup--hz {
+    display: inline-block;
+
+    overflow: auto;
+
+    .ButtonGroup-item {
+        display: block;
+        margin: 0 10px 10px 0 !important;
+
+        @media (--viewport-lg) {
+            display: block;
+            float: left;
+            margin: 0 5px !important;
+
+            &.ButtonGroup-item--first {
+                margin-left: 0 !important;
+            }
+        }
+
+        &.ButtonGroup-item--noMargin {
+            margin: 0px 0px 0px 0px !important;
+        }
+    }
+
+    & .ButtonGroup-item--noFloat {
+        display: inline-block;
+        float: none !important;
+        margin: 10px;
+    }
+}
+
+.ButtonGroup--hz--flex {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    @media (--viewport-md) {
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+    }
+}
+
+// Button for core_tags.clipboarder template tag
+.Button--clipboarder {
+    background: url("../images/icons/clipboarder.png") 0 0 no-repeat;
+    border: 0;
+    height: 16px !important;
+    padding: 0 !important;
+    vertical-align: middle;
+    width: 16px !important;
+
+    &.is-hidden {
+        display: none;
+        visibility: hidden;
+    }
+}
+
+.Button--clipboarder--hiddenCopy {
+    display: none;
+    visibility: hidden;
+}
+
+// Disabled button
+// button.Button[disabled] {
+//     opacity: 0.5;
+
+//     &:hover {
+//         background-color: var(--color-grey-dark);
+//         cursor: default !important;
+//     }
+// }
+
+.Button--reset {
+    padding: 35px 14px;
+}
+
+.Button--availabilityControl {
+
+    &.Button--positive {
+        background-color: var(--color-green);
+    }
+
+    &.Button--negative {
+        background-color: var(--color-red);
+    }
+
+    &.is-unselected {
+        background-color: var(--color-grey-dark);
+    }
+}
+
+/**
+ * searchResultFreelancer
+ *
+ * Sets Button to display block on Search Result Freelancer mobile breakpoint,
+ * inline-block on medium+ breakpoints.
+ */
+
+.Button--searchResultFreelancer {
+    width: 100%;
+
+    @media (--viewport-md) {
+        width: auto;
+    }
+}
+
+/**
+ * Link button
+ *
+ * For when just need a CTA link that looks like a button without oodles of markup
+ */
+
+.Button--linkcta {
+
+    line-height: 50px;
+    padding: 0 10px;
+    background: var(--color-coral);
+
+    &:hover {
+        background: var(--color-coral-dark);
+    }
+}
+
+/**
+ * Contextual Menu
+ *
+ */
+
+.ContextualMenu {
+    position: relative;
+    box-sizing: border-box;
+    display: block;
+    & > .Button--primary {
+        margin-right: 36px;
+    }
+
+    @media (--viewport-lg) {
+        //width: auto;
+        //display: inline-block;
+        //padding-right:0px;
+        & > .Button--primary {
+            margin-right: 0px;
+        }
+
+        &.BlackBookFreelancer-button {
+            margin-top: 20px;
+        }
+    }
+
+    .Button-inner {
+        border: solid 1px var(--color-coral);
+        padding: 0 15px;
+        word-break: keep-all;
+    }
+
+    .Button--primary {
+        width: 100%;
+    }
+
+    .ContextualMenu-trigger {
+        display: inline-block;
+        margin: 0 0 3px 0;
+        position: absolute;
+        right: 0;
+        top: 0px;
+        width: 80px;
+
+        @media (--viewport-lg) {
+            position: relative;
+        }
+
+        .Button-inner {
+            padding: 4px 12px;
+            margin: 0;
+            @media (--viewport-lg) {
+                padding: 4px 0;
+            }
+        }
+
+        .fa {
+            font-weight: 700;
+            position: relative;
+            left: -1px;
+            margin: 0 auto;
+            font-size: 1.5em;
+        }
+
+        /*
+        position: absolute;
+        left: auto;
+        right: 0;
+        width: auto;/**/
+
+        @media (--viewport-lg) {
+            width: auto;
+            button {
+                width: auto;
+            }
+        }
+    }
+
+    .ContextualMenu-buttonwidth {
+        display: flex;
+        position: relative;
+        padding-right: 53px;
+
+        @media (--viewport-lg) {
+            width: auto;
+            padding-right: 0;
+        }
+
+        .Button--primary {
+            width: auto;
+        }
+
+        .Button {
+            flex-direction: row;
+            flex: 5;
+        }
+
+        .ContextualMenu-trigger {
+            flex: 1;
+            margin-left: 2px;
+        }
+
+        .Button-inner {
+            text-align: center;
+            justify-content: center;
+        }
+    }
+
+    .ContextualMenu-primaryButton {
+
+        width: 100%;
+
+        @media (--viewport-lg) {
+            width: auto;
+        }
+    }
+}
+
+.ContextualMenu.ContextualMenu--secondary {
+    .Button-inner {
+        border-color: var(--color-grey-darkest);
+    }
+
+    .ContextualMenu-primaryButton {
+        background: var(--color-grey-darker);
+        padding: 0;
+    }
+
+    .ContextualMenu-trigger {
+        background: var(--color-grey-darker);
+        padding: 0;
+        width: 50px;
+    }
+
+    .ContextualMenu-buttonwidth .Button-inner {
+        border: 0;
+    }
+
+    &.is-active .ContextualMenu-trigger .Button-inner {
+        background: transparent;
+        border: 0;
+    }
+
+    .ContextualMenu-dropDown li {
+        border-color: var(--color-grey-darkest);
+
+        a {
+            color: var(--color-grey-darkest);
+        }
+    }
+}
+
+.ManagedShortListFreelancer-button {
+    @media (--viewport-lg) {
+        flex: 1 0 35%;
+    }
+}
+
+.ContextualMenu .ContextualMenu-dropDown {
+    display: none;
+    list-style: none;
+    width: 100%;
+    padding: 0 !important;
+    margin: 2px 0 0 0 !important;
+
+    li {
+        background-color: var(--color-white);
+        border: solid 1px var(--color-coral);
+        border-width: 1px 1px 0 1px;
+        display: block;
+        text-align: center;
+        &:first-child {
+            border-radius: 3px 3px 0 0;
+        }
+        &:last-child {
+            border-width: 1px;
+            border-radius: 0 0 3px 3px;
+            &:first-child {
+                border-radius: 3px;
+            }
+        }
+
+        &:only-child {
+            border-width: 1px;
+            border-radius: 3px 3px;
+        }
+    }
+
+    a, button {
+        display: block;
+        font-weight: bold;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        white-space: nowrap;
+        width: 100%;
+    }
+}
+
+.ContextualMenu.is-active .ContextualMenu-dropDown {
+    z-index: 800;
+    display: block;
+    width: 100%;
+
+    @media (--viewport-md) {
+        width: auto;
+        position: absolute;
+        right: 0;
+        top: 50px;
+    }
+
+}
+
+.BlackBookFreelancer-button.ContextualMenu.is-active .ContextualMenu-dropDown {
+    @media (--viewport-md) {
+        top: 64px;
+        right: 14px;
+    }
+}
+
+.BlackBookFreelancer-button.ContextualMenu.is-active.is-flipped .ContextualMenu-dropDown {
+    @media (--viewport-md) {
+        top: -32px;
+        right: 14px;
+    }
+}
+
+.ManagedShortListFreelancer-button.ContextualMenu.is-active .ContextualMenu-dropDown {
+    @media (--viewport-md) {
+        top: 67px;
+    }
+}
+
+.ManagedShortListFreelancer-button.ContextualMenu.is-active.is-flipped .ContextualMenu-dropDown {
+    @media (--viewport-md) {
+        top: -29px;
+    }
+}
+
+.ContextualMenu.is-active .ContextualMenu-trigger .Button-inner {
+    background-color: var(--color-white);
+    border: solid 1px var(--color-coral);
+    color: var(--color-coral);
+    pointer-events: none;
+}
+
+.ContextualMenu.ContextualMenu--secondary.is-active .ContextualMenu-trigger {
+    background: var(--color-white);
+}
+
+.ContextualMenu.ContextualMenu--secondary.is-active .ContextualMenu-trigger .Button-inner {
+    border-color: var(--color-grey-dark);
+    color: var(--color-grey-dark);
+}
+
+
+.ContextualMenu.is-active.is-flipped .ContextualMenu-dropDown{
+    @media (--viewport-md) {
+        bottom: 101%;
+        position: absolute;
+        right: 0;
+        top: auto;
+        width: auto;
+    }
+}
+
+
+
+/**
+ * Start of a 2016 overhaul, simplifying buttons from a ui, design and dev POV
+ *
+ * Button is v general so going with CTAs for now
+ */
+
+
+ .Cta{
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    display: inline-block;
+    padding:10px 16px;
+    border-radius: 2px;
+ }
+
+.Cta--primary{
+    color: var(--color-white);
+    border: solid 1px var(--color-hotpink)
+    background: var(--color-hotpink);
+
+    &:hover{
+        color: var(--color-white);
+        background-color: #e90c54;
+        border: solid 1px var(--color-hotpink)
+    }
+
+    &:active{
+        color: var(--color-white);
+        background-color: var(--color-hotpink-active);
+        border: solid 1px var(--color-hotpink)
+    }
+}
+
+.Cta--secondary{
+    color: var(--color-secondarytext);
+    border: solid 1px var(--color-secondaryborder);
+    background: var(--color-white);
+
+    &:hover{
+        color: var(--color-secondarytext);
+        border: solid 1px var(--color-secondaryborder-hover);
+        background-color: var(--color-secondarybg-hover);
+    }
+
+    &:active{
+        color: var(--color-secondarytext);
+        border: solid 1px var(--color-secondaryborder);
+        background-color: var(--color-secondarybg-active);
+    }
+}
+
+.Cta--disabled{
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+}
+
+
+.Cta--flat{
+    background-color: var(--color-white);
+    color: var(--color-hotpink);
+    border: solid 1px var(--color-white);
+
+    &:hover{
+        background-color: var(--color-ctaflat-hover);
+        border: solid 1px var v;
+        color: var(--color-hotpink);
+    }
+}
+
+//Contextual menu has no Cta class
+
+.Cta--contextual{
+    position: relative;
+    display: inline-block;
+
+    .Cta--contextualMain, .Cta--contextualTrigger{
+        color: var(--color-white);
+        border: solid 1px var(--color-hotpink);
+        background: var(--color-hotpink);
+        line-height: 1;
+        text-decoration: none;
+        text-transform: uppercase;
+        display: inline-block;
+
+        &:hover{
+            color: var(--color-white);
+            background-color: var(--color-hotpink-hover);
+            border: solid 1px var(--color-hotpink-hover);
+        }
+
+        &:active{
+            color: var(--color-white);
+            background-color: var(--color-hotpink-active);
+            border: solid 1px var(--color-hotpink-active);
+        }
+
+    }
+
+    .Cta--contextualMain{
+        border-radius: 2px 4px 4px 2px;
+        padding: 10px 36px 10px 16px;
+        flex-direction: row;
+        flex: 6;
+
+    }
+
+    .Cta--contextualTrigger{
+        border-radius: 0 2px 2px 0;
+        width: 36px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        text-align: center;
+        flex: 1;
+
+        .fa{
+            font-weight: 700;
+            position: absolute;
+            font-size: 1.5em;
+            top: 50%;
+            margin-top: -.55em;
+            right: 9px
+
+        }
+    }
+
+    .Cta--contextualSubmenu{
+        display: none;
+        list-style: none;
+        position: absolute;
+        right: 16px;
+        top: 100%;
+        right: 0;
+        margin-top: -1px;
+        text-decoration: none;
+        padding: 0;
+        margin: 0;
+        border: solid 1px var(--color-secondarybg-active);
+
+        a{  
+            display: block;
+            background: var(--color-white);
+            color: var(--color-hotpink);
+            text-transform: uppercase;
+            padding: 8px 16px;
+            text-decoration: none;
+            &:hover{
+                background: var(--color-ctaflat-hover);
+            }
+        }
+    }
+
+    &.is-active .Cta--contextualSubmenu{
+            display: block;
+    }
+}
+
+
+
+.Cta--confirmable{
+    height: 36px;
+    overflow: hidden;
+
+    .Cta--confirmableSafety{
+        display: block;
+        cursor: pointer;
+        &.is-transitioning{
+            position: relative;
+            top: -4px;
+        }
+    }
+
+    .Cta--confirmableTrigger{
+        display: block;
+        cursor: pointer;
+        position: relative;
+        top: -2px;
+    }
+
+    //.is-hidden{display: none;}
+    .is-hidden {
+        height: 0;
+        font-size:0;
+        padding: 0;
+        top: 0;
+        .Button--invert {
+            border: 0;
+        }
+    }
+
+    .is-transitioning {
+       height: 0;
+       padding: 0;
+        font-size:0;
+    }
+
+}
+
+//Spinner
+.Cta .Spinner-item{
+    background: var(--color-black);
+}
+
+
+//Delete this
+.testing .Grid-cell{margin:3px;}
+
+.blocktest {
+    .Cta{ display: block !important; }
+    .Cta--contextual{ display: block !important; }
+    .Cta--contextualMain{ display: block !important; }
+    //    .Cta--contextualTrigger{top:0;left:0;}
+    //}
+    button{ width: 100%;}
+}

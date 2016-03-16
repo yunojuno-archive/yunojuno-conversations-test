@@ -1,0 +1,47 @@
+/**
+ * Asset
+ *
+ * Used to display images (ie, avatars)
+ */
+
+.Asset {
+  height: 60px;
+  width: 60px;
+
+  @media (--viewport-lg) {
+    height: 100px;
+    width: 100px;
+  }
+}
+
+.Asset-inner {
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+}
+
+
+/**
+ * rounded
+ *
+ */
+
+.Asset--rounded {
+
+  .Asset-inner {
+    border-radius: 50%;
+  }
+}
+
+
+/**
+ * xSmall
+ *
+ */
+
+.Asset--xSmall {
+  height: 40px;
+  width: 40px;
+}

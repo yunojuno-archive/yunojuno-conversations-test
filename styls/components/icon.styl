@@ -1,0 +1,150 @@
+/**
+ * Icon
+ *
+ * We currently use a combination of (App) Grunticon icons designed in-house
+ * and FontAwesome icon font.
+ */
+
+.Icon {
+  background-position: center center;
+  display: flex;
+  fill: currentColor;
+  height: 100%;
+  min-height: 32px;
+  min-width: 32px;
+  text-align: center;
+  width: 100%;
+
+  background-size: contain;
+}
+
+// App icons use the Icon-inner element for
+// setting dimensions
+
+.Icon-inner {
+  display: block;
+  height: 100%;
+  margin: auto;
+  width: 100%;
+}
+
+
+/**
+ * light
+ *
+ */
+
+.Icon--light {
+  color: var(--color-white);
+}
+
+
+/**
+ * dark
+ *
+ */
+
+.Icon--dark {
+  color: var(--color-grey-darkest);
+}
+
+
+/**
+ * invert
+ *
+ */
+
+.Icon--invert {
+
+  .Icon-inner {
+    background: currentColor;
+    fill: transparent;
+  }
+}
+
+/**
+ * medium
+ *
+ */
+
+.Icon--medium {
+  height : 32px;
+}
+
+
+/**
+ * large
+ *
+ */
+
+.Icon--large {
+  min-height: 48px;
+}
+
+
+/**
+ * larger
+ *
+ */
+
+.Icon--larger {
+  min-height: 60px;
+}
+
+
+/**
+ * favourite
+ *
+ * Favourite (heart) icon on BlackBook Freelancer cards
+ */
+
+.Icon--favourite {
+  display: block;
+  padding: var(--space-micro-smaller);
+}
+
+
+/**
+ * plus
+ *
+ * Plus sign used between contract parties
+ */
+
+.Icon--plus {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  .Icon-inner {
+    align-items: center;
+    display: flex;
+    font-size: 4rem;
+    height: 100%;
+    justify-content: center;
+  }
+}
+
+
+/**
+ * workHistoryValidation
+ *
+ */
+
+.Icon--workHistoryValidation {
+  display: flex;
+  order: 2;
+  margin: 0 8px;
+  width: 32px;
+
+  @media (--viewport-lg) {
+  display: inline-block;
+  order: unset;
+  }
+
+  .Icon-inner {
+    height: 30px;
+    width: auto;
+    margin-top: -4px;
+  }
+}

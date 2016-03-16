@@ -1,0 +1,64 @@
+/**
+ * Wrapper
+ *
+ * Used to ensure the widths of the different sections within
+ * the app match and that a consistent padding surrounds the main content
+ * at narrower viewports] sizes.
+ *
+ */
+
+.Wrapper {
+  // clear: fix;
+  // overflow-x: hidden;
+  // padding: 0 1em;
+}
+
+.Wrapper-inner {
+  margin: 0 auto;
+  max-width: 28em;
+}
+
+.Wrapper-inner--noOverflow {
+  overflow: hidden;
+}
+
+
+.Wrapper-inner--anchored {
+  // keep it attached to the left side of its container
+  margin-left: 0;
+}
+
+.Wrapper-inner--anchored--header {
+  margin-left: 0;
+  max-width: 85em !important;
+}
+
+
+/* =medium */
+.Wrapper--medium {
+  .Wrapper-inner {
+    max-width: 42em;
+  }
+}
+
+
+/* =wide */
+.Wrapper--wide {
+  .Wrapper-inner {
+    max-width: 70em; // 1120px // was 56em;
+  }
+}
+
+/* =Simulate the (inner) wrapper on unwrapped pages */
+.Rewrap {
+  margin: 0 auto;
+  max-width: 28em;
+}
+
+.Rewrap--medium {
+  max-width: 42em;
+}
+
+.Rewrap--wide {
+  max-width: 70em;
+}

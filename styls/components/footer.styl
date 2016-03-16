@@ -1,0 +1,137 @@
+/**
+ *  Footer
+ *
+ *
+ */
+
+:root {
+
+  --footer-height: 240px; // explicit height needed for sticky footer
+
+}
+
+.Footer {
+  margin: 0 auto;
+  padding: 0 0.9em;
+  // <div class="Wrapper Wrapper--wide">
+
+  //       <div class="Wrapper-inner u-island u-island--vert">
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (--viewport-lg) {
+    clear: both;
+    height: var(--footer-height);
+    padding: 0 1.8em;
+  }
+}
+
+.Footer-inner {}
+
+.Footer-items {
+  line-height: var(--line-height-base);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+
+  a {
+    color: var(--color-grey-darker);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-coral);
+    }
+  }
+}
+
+.Footer-body {
+  display: none;
+  padding: 0 !important;
+  visibility: hidden;
+
+  @media (--viewport-lg) {
+    display: inline-block;
+    padding: 0.5rem !important;
+    visibility: visible;
+  }
+}
+
+.Footer-title {
+  @extend h4;
+  margin-top: 0;
+}
+
+.Footer-socialLink {
+  float: left;
+}
+
+.Footer-socialLinkInner {
+  color: var(--color-grey-darker);
+  margin-right: var(--space-micro);
+
+  &:hover {
+    color: var(--color-coral);
+  }
+}
+
+
+/**
+ *  noSidebar
+ *
+ *  Displays as full-width footer on Homepage, Register, and Login pages
+ */
+
+.Footer--noSidebar {
+  color: var(--color-white);
+
+  .Footer-inner {
+    margin: 0 auto;
+    max-width: 70em;
+    padding: 3em var(--space-micro-large);
+  }
+
+  .Footer-body {
+    margin-top: 0;
+  }
+
+  .Footer-title {
+    margin: 0;
+  }
+}
+
+
+/**
+ *  sidebar
+ *
+ *  Contains a user avatar or YJ logo, depending on use
+ *  Only visible in desktop layout.
+ */
+
+.Footer--sidebar {
+  display: none;
+  visibility: hidden;
+
+  @media (--viewport-lg) {
+    display: block;
+    height: auto !important;
+    opacity: 0.4;
+    position: relative;
+    top: 15px;
+    visibility: visible;
+    width: 100%;
+  }
+
+  .Footer-socialLinkInner {
+    color: var(--color-grey-darker);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-coral);
+    }
+  }
+}

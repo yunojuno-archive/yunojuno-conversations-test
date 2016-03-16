@@ -1,0 +1,39 @@
+/**
+ * Conversation
+ *
+ * Conversation is a component comprised of a conversation form
+ * and list of chat messages.
+ */
+
+
+.Conversation {
+  border-top: var(--border-width-thinnest) solid var(--color-grey-dark);
+  padding: 2em 5em;
+}
+
+.Conversation--noBorder {
+    border: 0;
+}
+
+.Conversation-title {
+  @extend h3;
+}
+
+.Conversation-form {
+  padding-bottom: 2em;
+  /*margin-bottom: 2em;*/
+  border-bottom: 1px solid #b2bdcf;
+}
+
+.Conversation-body {}
+
+
+/**
+ * blackBook
+ *
+ */
+
+.Conversation--blackBook {
+  border-top: 0;
+  padding-top: 0;
+}

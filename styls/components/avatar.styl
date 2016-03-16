@@ -1,0 +1,344 @@
+/**
+ * Avatar
+ *
+ * Display images of Freelancers, Employers, and Logos.
+ */
+
+.Avatar {
+  width: 100%;
+}
+
+.Avatar-inner {
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 50%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  z-index: var(--depth-1);
+
+  &:before {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+  }
+}
+
+.Avatar-body {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: var(--depth-2);
+}
+
+
+/**
+ * availability
+ *
+ * Availability avatar displays
+ */
+
+.Avatar--availability {
+  border: var(--border-width-thinnest) solid var(--color-green);
+  border-radius: 50%;
+  color: var(--color-green);
+  padding: 4px;
+  position: relative;
+  .Avatar-label{
+    background: var(--color-green);
+  }
+
+  &.is-notActive, &.Avatar--statusWithdrawn {
+    border: var(--border-width-thinnest) solid var(--color-coral);
+    color: var(--color-coral);
+    .Avatar-label{
+      background:  var(--color-coral);
+    }
+  }
+
+  &.is-pending, &.Avatar--statusPending  {
+    border: var(--border-width-thinnest) solid var(--color-yellow-dark);
+    color: var(--color-yellow-dark);
+    .Avatar-label{
+      background:  var(--color-yellow-dark);
+    }
+  }
+
+  &.is-applied, &.Avatar--statusFinished  {
+    border: var(--border-width-thinnest) solid var(--color-grey-darkest);
+    color: var(--color-grey-darkest);
+    .Avatar-label{
+      background:  var(--color-grey-darkest);
+    }
+  }
+}
+
+.Avatar-label {
+    @extend h3;
+    align-items: center;
+    background: var(--color-green);
+    border: solid 2px var(--color-white);
+    border-radius: 5px;
+    bottom: -3px;
+    color: var(--color-white);
+    font-size: var(--font-size-micro-small);
+    height: 23px;
+    justify-content: center;
+    margin: 0 auto;
+    line-height: 21px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    width: 100%;
+    z-index: var(--depth-1);
+
+    &.Avatar-labelNarrow{
+      max-width: 43px;
+    }
+
+    @media (--viewport-md) {
+        display: flex;
+    }
+
+    .is-archived & {
+        background: var(--color-grey-darkest);
+        color: var(--color-white);
+    }
+}
+
+.Avatar--statusPending .Avatar-label {
+    background: var(--color-yellow);
+}
+
+
+/**
+ * employer avatar
+ * Displays employer logo on freelancer briefs
+ *
+ */
+
+.Avatar--employer .Avatar-inner {
+    border: var(--border-width-thinnest) solid var(--color-grey);
+}
+
+
+/**
+ * conversations
+ *
+ */
+
+.Avatar--conversations {
+  margin: 0 auto var(--space-micro);
+  max-width: 48px;
+
+  @media (--viewport-md) {
+    max-width: 64px;
+  }
+}
+
+
+/**
+ * freelancerCompact
+ *
+ * Specific size for Freelancer Summary (compact) avatar
+ */
+
+.Avatar--freelancerCompact {
+  height: 72px;
+  width: 72px;
+
+  @media (--viewport-lg) {
+    height: 107px;
+    width: 107px;
+  }
+}
+
+
+/**
+ * profile
+ *
+ * Centers profile avatars / logos
+ */
+
+.Avatar--profile {
+  margin: 0 auto;
+  max-width: 180px;
+}
+
+
+/**
+ * noImage
+ *
+ * Avatars without images display a circle with text/initials inside
+ */
+
+.Avatar--noImage {
+  position: relative;
+
+  .Avatar-inner {
+    background-color: var(--color-grey-darkest);
+    color: var(--color-white);
+    letter-spacing: var(--letter-spacing-loose);
+    line-height: var(--line-height-tightest);
+    text-align: center;
+  }
+}
+
+.Avatar--noImageWhite {
+
+  .Avatar-inner {
+    background-color: var(--color-white);
+    color: var(--color-coral);
+  }
+}
+
+
+/**
+ * chatMessage
+ *
+ * Size/Style for ChatMessage avatar replacement
+ */
+
+.Avatar--chatMessage {
+  margin: var(--space-micro) 0;
+  max-height: 60px;
+  max-width: 60px;
+
+  .Avatar-inner {
+    background-color: var(--color-grey-darkest);
+    color: var(--color-white);
+  }
+
+  @media (--viewport-lg) {
+    margin: var(--space-micro-large) 0;
+  }
+}
+
+
+/**
+ * addedToBlackBookByEmail
+ *
+ * Size/Style for BlackBook-add-by-email avatar replacement
+ */
+
+.Avatar--addedToBlackBookByEmail {
+  //margin: var(--space-micro) 0;
+  max-height: 40px;
+  max-width: 40px;
+
+  .Avatar-inner {
+    background-color: var(--color-yellow-dark);
+    color: var(--color-white);
+  }
+
+  @media (--viewport-lg) {
+    margin: 0 0;
+  }
+}
+
+.Avatar--addedToBlackBookByEmail--added {
+  .Avatar-inner {
+    background-color: var(--color-green-dark);
+  }
+}
+
+/**
+ * bookingResults
+ *
+ * Direct Booking list results (employer avatars)
+ * Sets max width and applies padding
+ */
+
+.Avatar--bookingResults {
+  max-width: 100px;
+  margin: auto 0 auto var(--space-micro-smaller);
+  padding: 0 var(--space-micro-smaller) var(--space-micro-smaller) 0;
+
+  @media (--viewport-lg) {
+    margin-left: var(--space-micro);
+  }
+}
+
+
+/**
+ * directBookingContact
+ *
+ * Size/Style for Freelancer-led Direct Booking contact avatar replacement
+ */
+
+.Avatar--directBookingContact {
+  //margin: var(--space-micro) 0;
+  max-height: 40px;
+  max-width: 40px;
+  min-width: 40px;
+  min-height: 40px;
+
+  .Avatar-inner {
+    background-color: var(--color-marine);
+    color: var(--color-white);
+  }
+
+  @media (--viewport-lg) {
+    margin: 0 0;
+  }
+}
+
+/**
+ * briefCard
+ *
+ * Displays small freelancer avatar on employer's brief cards
+ */
+
+.Avatar--briefCard {
+  max-width: 60px;
+}
+
+/**
+ * new Cards
+ *
+ * Displays small freelancer avatar on employer's brief cards
+ */
+
+.Avatar--card {
+    margin: 10px auto 0;
+    max-width: 70px;
+}
+
+
+/**
+ * editProfile
+ *
+ */
+
+.Avatar-editProfile {
+    display: flex;
+}
+
+.Avatar--editProfile {
+  margin: 0 var(--space-micro) var(--space-micro-smaller) 0;
+  max-width: 80px;
+  background-size: 100%;
+  border-radius: 100%;
+  flex: 0 0 94px;
+
+  @media (--viewport-lg) {
+    margin-top: var(--space-micro-smaller);
+  }
+}
+
+.Avatar-editProfile--supportText {
+    flex: calc(100% - 94px) 1 1;
+    margin: var(--space-micro) 0;
+}
+
+//IN THE MARKUP:
+// Price label
+

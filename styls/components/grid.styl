@@ -1,0 +1,45 @@
+/**
+ * Grid
+ *
+ * @requires suit-grid
+ *
+ * Extends the SuitCSS Grid to add optional gutters
+ */
+
+/**
+ * Grid gutters:
+ *
+ * A modifier to add gutters (~16px) to the Grid
+ */
+
+.Grid--withGutter {
+  margin: 0 -0.5rem;
+}
+
+.Grid--withGutter > form > .Form-item > .Grid-cell,
+.Grid--withGutter > form > .Grid-cell,
+.Grid--withGutter > .Form-item > .Grid-cell,
+.Grid--withGutter > .Grid-cell {
+  padding: 0 0.5rem;
+}
+
+
+// The future of layout.
+
+.Grid--flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Grid--flex > .Grid-cell {
+  display: flex;
+  box-lines: multiple;
+}
+
+.Grid--flexCenter > .Grid-cell {
+    align-items: center;
+}
+
+.Grid-cell.Grid-cell--flexEnd {
+    justify-content: flex-end;
+}

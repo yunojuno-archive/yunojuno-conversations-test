@@ -1,0 +1,1066 @@
+
+/**
+ * Roundel
+ *
+ * Used as call-outs or fact holders.
+ * Appears as a circle, often with centered text.
+ */
+
+:root {
+
+  --roundel-size-smallest: 20px;
+  --roundel-size-smaller: 40px;
+  --roundel-size-small: 54px;
+  --roundel-size-med: 100px;
+  --roundel-size: 180px;
+  --roundel-size-large: 240px;
+
+  --roundel-size-tooltip: 20px;
+  --roundel-size-46: 46px;
+  --roundel-size-60: 60px;
+
+}
+
+.Roundel {
+  height: var(--roundel-size);
+  margin: auto;
+  width: var(--roundel-size);
+}
+
+.Roundel-inner {
+  align-items: center;
+  background-color: var(--color-coral);
+  border-radius: 50%;
+  color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  line-height: var(--line-height-tightest);
+  margin: auto;
+  text-align: center;
+  width: 100%;
+}
+
+.Roundel-body {
+  display: block;
+  cursor: default;
+  line-height: var(--line-height-tighter);
+
+  @media (--viewport-lg) {
+    width: 90%;
+  }
+}
+
+.Roundel-label {
+  @extend h4;
+  line-height: var(--line-height-tighter);
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+
+/**
+ * withLabel
+ *
+ * Roundels with label text underneath
+ */
+
+.Roundel--withLabel {
+  height: 240px;
+
+  .Roundel-inner {
+    height: 180px;
+  }
+}
+
+
+/**
+ * xXsmall
+ *
+ */
+
+.Roundel--xXsmall {
+  height: var(--roundel-size-smallest);
+  width: var(--roundel-size-smallest);
+}
+
+
+/**
+ * xSmall
+ *
+ */
+
+.Roundel--xSmall {
+  height: var(--roundel-size-smaller);
+  width: var(--roundel-size-smaller);
+}
+
+
+/**
+ * small
+ *
+ */
+
+.Roundel--small {
+  height: var(--roundel-size-small);
+  width: var(--roundel-size-small);
+}
+
+
+/**
+ * med
+ *
+ */
+
+.Roundel--med {
+  height: var(--roundel-size-med);
+  width: var(--roundel-size-med);
+}
+
+
+/**
+ * large
+ *
+ */
+
+.Roundel--large {
+  height: calc(var(--roundel-size-large) - 8px);
+  width: calc(var(--roundel-size-large) - 8px);
+
+  @media (--viewport-lg) {
+    height: var(--roundel-size-large);
+    width: var(--roundel-size-large);
+  }
+}
+
+
+/**
+ * 46
+ *
+ * Appears on freelancer public availability
+
+
+.Roundel--46 {
+  height: var(--roundel-size-46);
+  width: var(--roundel-size-46);
+
+  .Roudel-label {
+    // margin-top: 5px;
+    text-transform: uppercase;
+  }
+}
+*/
+
+/**
+ * alt / pending
+ *
+ * Yellow. Denotes pending status
+ */
+
+.Roundel--pending,
+.Roundel--alt {
+
+  .Roundel-inner {
+    background-color: var(--color-yellow-dark);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * dark
+ *
+ * White text on a dark background
+ */
+
+.Roundel--dark {
+
+  .Roundel-inner {
+    background-color: var(--color-grey-darkest);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * inverse
+ *
+ * Transparent background, colored text.
+ * Appears in availability and progress components TODO: refactor
+ */
+
+.Roundel--inverse {
+
+  .Roundel-inner {
+    background-color: var(--color-white);
+    color: var(--color-coral-darker);
+  }
+}
+
+
+/**
+ * positive
+ *
+ * Green. Denotes availabile, accepted, positive actions/states
+ */
+
+.Roundel--positive {
+
+  .Roundel-inner {
+    background-color: var(--color-green-dark);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * negative
+ *
+ * Red. Denotes not accepted, rejected, not available
+ */
+
+.Roundel--negative {
+
+  .Roundel-inner {
+    background-color: var(--color-red-dark);
+    color: var(--color-white);
+  }
+}
+
+/**
+ * inverseDark
+ *
+ *
+ */
+
+.Roundel--inverseDark {
+
+  .Roundel-inner {
+    background-color: var(--color-coral-darker);
+    color: var(--color-grey-darkest);
+  }
+}
+
+
+/**
+ * inversePositive
+ *
+ *
+ */
+
+.Roundel--inversePositive {
+
+  .Roundel-inner {
+    background-color: var(--color-white);
+    color: var(--color-green-dark);
+  }
+}
+
+
+/**
+ * inverseAlt
+ *
+ * Yellow text on a white background
+ */
+
+.Roundel--inverseAlt {
+
+  .Roundel-inner {
+    background-color: var(--color-white);
+    color: var(--color-yellow-dark);
+  }
+}
+
+
+/**
+ * green
+ *
+ * Appears on the new freelancer dashboard
+ */
+
+.Roundel--green {
+
+  .Roundel-inner {
+    background-color: var(--color-green-light);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * blue
+ *
+ * Appears on the new freelancer dashboard
+ */
+
+.Roundel--blue {
+
+  .Roundel-inner {
+    background-color: var(--color-blue-light);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * yellow
+ *
+ * Appears on the new freelancer dashboard
+ */
+
+.Roundel--yellow {
+
+  .Roundel-inner {
+    background-color: var(--color-yellow-light);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * alt2
+ *
+ * Appears in timesheets (freelancer paid)
+ */
+
+.Roundel--alt2 {
+
+  .Roundel-inner {
+    background-color: var(--color-teal-dark);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * alt3
+ *
+ * Appears in timesheets (paid by agency)
+ */
+
+.Roundel--alt3 {
+
+  .Roundel-inner {
+    background-color: var(--color-laurel-dark);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * alt4
+ *
+ * Appears in timesheets (zero time)
+ */
+
+.Roundel--alt4 {
+
+  .Roundel-inner {
+    background-color: var(--color-marine);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * alt5
+ *
+ * Appears in timesheets (draft)
+ */
+
+.Roundel--alt5 {
+
+  .Roundel-inner {
+    background-color: var(--color-coral-dark);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * alt6
+ *
+ * Appears in timesheets (invoiced)
+ */
+
+.Roundel--alt6 {
+
+  .Roundel-inner {
+    background-color: var(--color-blue-dark);
+    color: var(--color-white);
+  }
+}
+
+
+/**
+ * alt7
+ *
+ * Appears in freelancer profiles (public availability)
+ */
+
+.Roundel--alt7 {
+
+  .Roundel-inner {
+    background-color: var(--color-white);
+    color: var(--color-green);
+  }
+}
+
+
+/**
+ * freelancerIconFill
+ *
+ * Appears on homepage. Displays Mr T.
+ */
+
+.Roundel--freelancerIconFill {
+  border-radius: 100%;
+  border: var(--border-width) solid transparent;
+
+  .Roundel-inner {
+    background: url("../images/landing_page/freelancer/icon.png") 50% 50% no-repeat transparent;
+    background-size: cover;
+
+    .js-active & {
+      border: var(--border-width) solid #D04B49;
+    }
+  }
+}
+
+
+/**
+ * employerIconFill
+ *
+ * Appears on homepage. Displays Mr T.
+ */
+
+.Roundel--employerIconFill {
+  border-radius: 100%;
+  border: var(--border-width) solid transparent;
+
+  .Roundel-inner {
+    background: url("../images/landing_page/employer/icon.png") 50% 50% no-repeat transparent;
+    background-size: cover;
+
+    .js-active & {
+      border: var(--border-width) solid #28878D;
+    }
+  }
+}
+
+
+/**
+ * jcvd
+ *
+ * Appears on 500.html
+ */
+
+.Roundel--jcvd {
+
+  .Roundel-inner {
+    background: url("../images/static_pages/jcvd.jpg") 70% 30% no-repeat transparent;
+    background-size: cover;
+  }
+
+  .Roundel-body {
+    @extend h2;
+  }
+}
+
+
+/**
+ * fox
+ *
+ * Appears on 500.html
+ */
+
+.Roundel--fox {
+
+  .Roundel-inner {
+    background: url("../images/static_pages/fox.jpg") 70% 30% no-repeat transparent;
+    background-size: cover;
+  }
+
+  .Roundel-body {
+    @extend h2;
+  }
+}
+
+
+/**
+ * tooltip
+ *
+ * Appears Employer > Open Brief with expandables
+ * Inline, transparent with grey icon
+ */
+
+.Roundel--tooltip {
+  display: inline-block;
+  font-size: var(--font-size-micro-smaller);
+  height: var(--roundel-size-tooltip);
+  line-height: var(--line-height-tightest);
+  text-decoration: none;
+  vertical-align: middle;
+  width: var(--roundel-size-tooltip);
+
+  .Roundel-inner {
+    background: transparent;
+    border: var(--border-width-thinnest) solid var(--color-grey-dark);
+    color: var(--color-grey-dark);
+  }
+}
+
+
+/**
+ * tooltipAdjust
+ *
+ * Appears Employer > Open Brief, Freelancer > Edit Profile
+ * Always appears with Roundel--tooltip
+ */
+
+.Roundel--tooltipAdjust {
+  margin-top: -3px;
+}
+
+
+/**
+ * inline
+ *
+ * For displaying roundels inline
+ * (Appears in brief & contract summaries)
+ */
+
+.Roundel--buttonSibling,
+.Roundel--inline {
+  display: inline-block;
+}
+
+
+/**
+ * cardPreview
+ *
+ * Responsive with maximum dimensions
+ * (Appears in profile summary preview)
+ */
+
+.Roundel--cardPreview {
+  height: auto;
+  margin: 0 auto;
+  max-height: var(--roundel-size-med);
+  max-width: var(--roundel-size-med);
+  overflow: hidden;
+  width: auto;
+
+  @media (--viewport-lg) {
+    height: 100%;
+    max-height: 160px;
+    max-width: 160px;
+    width: 100%;
+  }
+}
+
+
+/**
+ * profileStat
+ *
+ * Appears in employer and User profiles
+ *
+ */
+
+.Roundel--profileStat {
+  width: 150px;
+
+  .Roundel-inner {
+    @extend .standfirst;
+    background-color: var(--color-grey-darkest);
+    color: var(--color-coral);
+    height: 150px;
+  }
+}
+
+
+/**
+ * contract
+ *
+ * Appears in employer and User contract pages
+ *
+ */
+
+.Roundel--contract {
+  height: 160px;
+  width: 130px;
+
+  .Roundel-inner {
+    @extend .standfirst;
+    color: var(--color-coral);
+    height: 130px;
+  }
+
+  .Roundel-label {
+    @extend h3;
+    margin: var(--space-micro-smaller) 0;
+  }
+}
+
+
+/**
+ * availabilityBadge
+ *
+ * Roundel styles for Freelancer Availability Badge (public)
+ *
+ */
+
+.Roundel--availabilityBadge {
+  height: var(--roundel-size-46);
+  width: var(--roundel-size-46);
+
+  .Roundel-inner {
+    background-color: var(--color-white);
+    color: var(--color-green);
+  }
+
+  .Roundel-body {
+    @extend h2;
+  }
+}
+
+
+/**
+ * summary
+ *
+ * Roundels in Freelancer Summary cards
+ * Usually contain work reference stats
+ */
+
+.Roundel--summary {
+  margin: 0;
+  max-height: 80px !important;
+  max-width: 80px !important;
+
+  .Roundel-inner {
+    color: var(--color-coral);
+  }
+}
+
+
+/**
+ * summaryCompact
+ *
+ * Responsive Roundel with set size specific to
+ * Freelancer/Employer Summary Compact card
+ */
+
+.Roundel--summaryCompact {
+  height: auto;
+  width: 100%;
+
+  .Roundel-inner {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+
+    &:before {
+      content: "";
+      display: block;
+      padding-bottom: 100%;
+    }
+  }
+
+  .Roundel-body {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: var(--depth-2);
+  }
+}
+
+/**
+ * summaryStatCompact
+ *
+ * Meant for small stats/icons on Freelancer/Employer card
+ */
+
+.Roundel--summaryStatCompact {
+  display: inline-block;
+  height: var(--roundel-size-smaller);
+  margin-bottom: var(--space-micro-smaller);
+  margin-right: var(--space-micro);
+  width: var(--roundel-size-smaller);
+
+  @media (--viewport-lg) {
+    margin-right: 0;
+    margin-left: var(--space-micro);
+  }
+}
+
+
+/**
+ * responsive
+ *
+ * Responsive roundels
+ * Max-width can be set with additional --modifier classes or parent elements
+ */
+
+.Roundel--responsive {
+  height: auto;
+  overflow: hidden;
+  width: 100%;
+
+  .Roundel-inner {
+    display: block;
+    position: relative;
+
+    &:before {
+      content: "";
+      display: block;
+      padding-bottom: 100%;
+    }
+  }
+
+  .Roundel-body {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: var(--depth-2);
+  }
+}
+
+/**
+ * Brief cards
+ *
+ * Border styled roundel, transparent on the inside
+ */
+
+.Roundel--briefShortlist {
+    height: 30px;
+    position: relative;
+    width: 30px;
+}
+
+.Roundel--availability {
+    border: var(--border-width-thinnest) solid var(--color-green);
+    color: var(--color-green);
+    padding: 4px;
+    border-radius: 50%;
+
+    &.is-notActive {
+        border: var(--border-width-thinnest) solid var(--color-coral);
+        color: var(--color-coral);
+    }
+
+    &.is-pending {
+        border: var(--border-width-thinnest) solid var(--color-yellow-dark);
+        color: var(--color-yellow-dark);
+    }
+
+    &.is-applied {
+        border: var(--border-width-thinnest) solid var(--color-marine);
+        color: var(--color-marine);
+    }
+}
+
+.Roundel-caption {
+    font-size: var(--font-size-micro-smaller);
+
+
+    @media (--viewport-md) {
+        margin-left: var(--space-micro);
+    }
+
+    @media (--viewport-lg) {
+        display: none;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        left: 0;
+    }
+
+    .Roundel--availability + & {
+        color: var(--color-green);
+    }
+
+    .Roundel--availability.is-notActive + & {
+        color: var(--color-coral);
+    }
+
+    .Roundel--availability.is-pending + & {
+        color: var(--color-yellow-dark);
+    }
+
+    .Roundel--availability.is-applied + & {
+        color: var(--color-marine);
+    }
+}
+
+
+
+.Roundel-unreadNotification {
+    background: var(--color-green);
+    border-radius: 12px;
+    color: var(--color-white);
+    font-size: 9px;
+    height: 7px;
+    min-width: 7px;
+    padding: 0 2px;
+    position: absolute;
+    right: 0px;
+    text-align: center;
+    top: 0px;
+}
+
+.is-pending .Roundel-unreadNotification {
+    background: var(--color-yellow-dark);
+}
+
+.is-notActive .Roundel-unreadNotification {
+    background: var(--color-coral);
+}
+
+.is-applied .Roundel-unreadNotification {
+    background: var(--color-marine);
+}
+
+
+/**
+ * TODO
+ *
+ * Various type treatment inside of roundels needs refactoring
+ * Most can probably be stripped as we're using flexbox for centering content
+ * instead of lineheight/padding/positioning
+ */
+
+
+// .Roundel-body--singleLine {}
+// .Roundel-body--singleLine--smallText {}
+// .Roundel-body--singleLine--largeText {}
+
+// .Roundel-body--twoLines {}
+// .Roundel-body--threeLines {}
+
+// .Roundel-body--onlyDeck {}
+// .Roundel-body--firstDeck {}
+// .Roundel-body--secondDeck {}
+// .Roundel-body--thirdDeck {}
+
+// .Roundel-body--altDeckColour {}
+
+// .Roundel-body--singleLine {
+//   display: inline-block;
+//   line-height: calc(2 * var(--roundel-std-radius)); // to match height of parent Roundel
+//   vertical-align: middle;
+
+//   .Roundel--med & {
+//     line-height: calc(2 * var(--roundel-med-radius)); // to match height of med parent
+//   }
+
+//   .Roundel--med--responsive & {
+//     line-height: calc(2 * var(--roundel-size-60)); // to match height of med parent
+
+//     @media (--viewport-lg) {
+//       line-height: calc(2 * var(--roundel-med-radius)); // to match height of med parent
+//     }
+//   }
+
+//   .Roundel--large--responsive & {
+//     line-height: var(--roundel-large-radius); // to match height of larger parent
+
+//     @media (--viewport-lg) {
+//       line-height: calc(1.5 * var(--roundel-large-radius)); // to match height of larger parent
+//     }
+//   }
+
+//   .Roundel--large & {
+//     line-height: calc(2 * var(--roundel-large-radius) - 10); // to match height of larger parent
+
+//     @media (--viewport-lg) {
+//       line-height: calc(2 * var(--roundel-large-radius)); // to match height of larger parent
+//     }
+//   }
+
+//   .Roundel--xSmall & {
+//     line-height: calc(2 * var(--roundel-xSmall-radius)); // to match height of larger parent
+//   }
+
+//   .Roundel--46 & {
+//     line-height: calc(2 * var(--roundel-46-radius) + 4); // manual tweak
+//   }
+// }
+
+// .Roundel-body--twoLines {
+//   display: inline-block;
+//   line-height: var(--line-height-tight);
+//   margin-top: 3.3em;
+//   padding: 0 7px;
+
+//   .Roundel--large & {
+//     margin-top: 4.5em;
+//     padding: 0 10px;
+//   }
+
+//   @media (--viewport-lg) {
+//     margin-top: 3em;
+
+//     .Roundel--large & {
+//       margin-top: 4.3em;
+//     }
+//   }
+// }
+
+// .Roundel-body--threeLines {
+//   display: inline-block;
+//   line-height: var(--line-height-tight);
+//   margin-top: 3em;
+//   padding: 0 7px;
+
+//   .Roundel--large & {
+//     margin-top: 3em;
+//     padding: 0 10px;
+//   }
+
+//   @media (--viewport-lg) {
+//     margin-top: 2.6em;
+
+//     .Roundel--large & {
+//       margin-top: 4em;
+//     }
+//   }
+// }
+
+
+// // Roundels with decks are for structured content, not wrapping lines
+
+// .Roundel-body--altDeckColour {
+//   color: var(--color-coral);
+// }
+
+// .Roundel-body--onlyDeck {
+//   display: inline-block;
+//   font-size: var(--font-size-inc-56); // Correct
+//   font-weight: var(--font-weight-semibold);
+//   line-height: calc(2 * var(--roundel-std-radius) + 10); // to match height of parent Roundel + some fudge factor
+//   vertical-align: middle;
+// }
+
+// .Roundel-body--firstDeck {
+//   color: var(--color-white);
+//   display: inline-block;
+//   font-weight: var(--font-weight-regular);
+//   line-height: var(--line-height-tightest);
+//   padding-top: 50px;
+//   // text-transform: uppercase;
+
+//   .Roundel--threeDecks & {
+//     padding-top: 40px;
+//   }
+// }
+
+// .Roundel-body--secondDeck {
+//   bottom: 5px;
+//   font-size: var(--font-size-inc-48);
+//   font-weight: var(--font-weight-semibold);
+//   line-height: var(--font-size-inc-48);
+//   position: relative;
+//   // text-transform: uppercase;
+
+//   .Roundel--threeDecks & {
+//     bottom: 2px;
+//   }
+// }
+
+// .Roundel-body--thirdDeck {
+//   color: var(--color-white);
+//   display: inline-block;
+//   font-weight: var(--font-weight-regular);
+//   line-height: var(--line-height-tightest);
+//   // text-transform: uppercase;
+
+//   .Roundel--threeDecks & {
+//     line-height: 0.8rem;
+//   }
+// }
+
+
+
+/*
+
+  TODO: more colour variations...
+
+*/
+
+// .Roundel--inverse.Roundel--avatarReplacement+.Roundel-bodyWrapper {
+
+//   color: var(--color-coral-darker);
+
+//   .Roundel-body {
+//     font-size: var(--font-size-micro-small);
+//     letter-spacing: var(--letter-spacing-looser);
+//   }
+// }
+
+// .Roundel--invert {
+//   background: transparent;
+//   border: var(--border-width-thinnest) solid var(--color-coral);
+//   color: var(--color-coral);
+
+//   &.Roundel--buttonSibling {
+//     margin-top: 3px; // keep in center when next to a button.
+//   }
+
+//   &.Roundel--lightDark {
+//     border-color: var(--color-grey-dark);
+//     color: var(--color-grey-dark);
+//   }
+
+//   &.Roundel--dark {
+//     background: transparent;
+//     border-color: var(--color-grey-darkest);
+//     color: var(--color-grey-darkest);
+//   }
+
+//   &.Roundel--positive {
+//     background: transparent;
+//     border-color: var(--color-green-dark);
+//     color: var(--color-green-dark);
+//   }
+
+//   &.Roundel--pending,
+//   &.Roundel--alt {
+//     background: transparent;
+//     border-color: var(--color-yellow-dark);
+//     color: var(--color-yellow-dark);
+//   }
+
+//   &.Roundel--alt2 {
+//     background: transparent;
+//     border-color: var(--color-teal-dark);
+//     color: var(--color-teal-dark);
+//   }
+
+//   &.Roundel--alt3 {
+//     background: transparent;
+//     border-color: var(--color-laurel-dark);
+//     color: var(--color-laurel-dark);
+//   }
+
+//   &.Roundel--alt4 {
+//     background: transparent;
+//     border-color: var(--color-marine);
+//     color: var(--color-marine);
+//   }
+// }
+

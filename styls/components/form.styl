@@ -1,0 +1,977 @@
+/**
+ * Form
+ *
+ * The Form component wraps around the default form elements
+ * to provide some layout, non-standard form elements
+ * (e.g. text-based controls), item errors and help.
+ *
+ * Global errors (e.g. ones related to the form as a whole) are
+ * handled by the Notification component (in particular, the
+ * Alert component).
+ */
+
+.Form {}
+
+
+/**
+ * Item
+ *
+ * The container for each form control
+ */
+
+.Form-item {
+
+  &.is-invalid input,
+  &.is-invalid select,
+  &.is-invalid textarea {
+    border-color: var(--color-red);
+  }
+}
+
+/**
+ * =required
+ *
+ * A modifier for required form items
+ */
+.Form-item--required {
+
+  & .Form-item-wrapper {
+    font-size: var(--font-size-micro-small);
+    position: relative;
+
+    &:before {
+      border-left: 16px solid transparent;
+      border-top: 16px solid var(--color-coral);
+      content: " ";
+      display: inline-block;
+      position: absolute;
+      right: 1px;
+      top: 1px;
+      z-index: var(--depth-2);
+    }
+  }
+}
+
+
+/**
+ * Form-items
+ *
+ * A container for a form control with multiple items
+ * (eg, checkboxes and radio)
+ */
+
+.Form-items {
+
+  &.is-required {
+
+    .Form-label {
+      position: relative;
+
+      &:before {
+        border-left: 16px solid transparent;
+        border-top: 16px solid var(--color-coral);
+        content: " ";
+        display: inline-block;
+        position: absolute;
+        right: 1px;
+        top: 1px;
+        z-index: var(--depth-2);
+      }
+    }
+  }
+}
+
+
+/**
+ * Label
+ *
+ * Changes depending on error or selected state
+ */
+
+.Form-label {
+  font-weight: var(--font-weight-bold);
+  margin-top: 10px;
+  // text-transform: uppercase;
+
+  .is-invalid & {
+    color: var(--color-red);
+  }
+
+  &.is-selected {
+    color: var(--color-blue);
+  }
+}
+
+.Form-label--compact {
+  color: var(--color-grey-darker);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tighter);
+}
+
+.Form-label--hasChannel {
+  margin-bottom: 1em;
+}
+
+.Form-label--noMargin {
+  margin-top: 0;
+}
+
+.Form-item---strength {
+  margin-top: 3px;
+  width: 100%;
+
+  .dot {
+    background: var(--color-red);
+    box-sizing border-box;
+    display: block;
+    float: left;
+    height: 5px;
+    margin: 0 0.25%;
+    width: 19.6%;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &.last {
+      margin-right: 0;
+    }
+  }
+
+  p {
+    clear: both;
+  }
+
+  &.terrible .dot { background: var(--color-coral); }
+  &.average .dot { background: var(--color-yellow); }
+  &.good .dot { background: var(--color-laurel); }
+  &.fantastic .dot { background: var(--color-green-darker); }
+}
+
+/**
+ * Wrapper for actual form field
+ *
+ * Fits snugly, to help with styling
+ */
+
+.Form-item-wrapper {
+
+  & ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  input[type="checkbox"].native + label {
+      display: inline-block;
+  }
+}
+
+.Form-item-wrapper--inlineBlock {
+  display: inline-block;
+
+  & label {
+    display: inline-block;
+    margin-right: 5px;
+  }
+  & select,
+  & input {
+    width: auto;
+    margin-right: 5px;
+  }
+}
+
+/**
+ * Wrapper for a file input
+ *
+ * Works with a custom widget help with styling,
+ * so if classnames change here, change them in
+ * yunojuno.apps.core.forms.widgets too
+ */
+
+.Form-item--fileInputWrapper {
+  display: inline-block;
+  height: 20px !important;
+  margin-top: 8px;
+  overflow: hidden;
+  position: relative;
+  width: 150px !important;
+
+  & input {
+    cursor: pointer !important;
+    height: 20px;
+    margin: 0;
+    opacity: 0;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
+.Form-item--fileInputWrapper--status {
+  padding-top: 1px;
+  width: auto !important;
+}
+
+.Form-item--fileInputWrapper--clear {
+  margin-left: 1em;
+}
+
+.Form-item--searchInput:after {
+  // TODO: search icon
+}
+
+// The <a> containing the uploaded file.
+.Form-item--uploadedFile {
+    margin-right: var(--space-micro-smaller);
+}
+
+/**
+ * Editable text fields
+ * eg: Brief description field on Search page
+ */
+
+.Form-inputEditable {
+  margin-bottom: var(--space-micro-smaller);
+  width: 95%;
+}
+
+.Form-checkboxInline {
+  display: inline-block;
+  margin-right: var(--space-micro);
+  padding: var(--space-micro-smaller) 0;
+}
+
+/**
+ * Wrapper for a standalone text input,
+ * eg: freelancer search input, conversation message input
+ */
+
+.Form-item-wrapper--standaloneInput {
+
+  & input,
+  & textarea {
+    background-color: var(--color-white);
+    height: 44px;
+  }
+
+  & textarea.expand {
+    min-height: 110px;
+  }
+}
+
+.Form-item-wrapper--forRadios {
+
+  & label {
+    margin-bottom: 10px;
+  }
+
+}
+
+/**
+ * Expanded section when someone is clicking on the textarea.
+ */
+
+.expand {
+
+  .Form-item-wrapper--standaloneInput textarea {
+    min-height: 110px;
+  }
+}
+
+/**
+ * Help text
+ *
+ * The help text accompanying a form field
+ */
+
+.Form-helpText {
+  @extend small;
+  line-height: var(--line-height-tight);
+}
+
+.Form-helpText--forCheckboxes {
+    margin-left: var(--space-micro-larger);
+}
+
+/**
+ * Errors
+ *
+ * The errors for each item
+ */
+.Form-errors {
+  margin: 0;
+  padding: 0;
+}
+
+.Form-errorsItem {
+  color: var(--color-red);
+  font-size: var(--font-size-micro-small);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding-left: 15px;
+
+  &:before {
+    content:""; background:url(../images/icons/exclam-circled-var-red.svg);
+    display: block;
+    height:13px;
+    width: 13px;
+    margin-top: -7px;
+    /* margin-right: 1px; */
+    position: absolute;
+    top:50%;
+    left:0;
+    background-size:100%;
+  }
+}
+
+
+/**
+ * Item Group
+ *
+ * Sometimes (e.g. for radio/check groups) an item can contain
+ * more than one label and control. A Item Group is used to wrap
+ * these labels and controls.
+ */
+.Form-itemGroup {}
+
+.Form-itemGroupItem {
+  display: inline-block;
+}
+
+/**
+ * Control
+ *
+ * The control is the form element itself (input, select etc)
+ * It changes depending on error state.
+ */
+
+.Form-control {
+  .is-invalid & {
+    border-color: var(--color-red);
+  }
+}
+
+/**
+ * =Hidden control
+ *
+ * A modifier for hidden controls e.g. for text-based radio
+ * and checkboxes
+ */
+
+.Form-control--hidden {
+  opacity: 0;
+}
+
+.Form-control--deleteTriggerWrapper {
+    font-size: var(--font-size-macro);
+    margin-left: var(--space-micro-larger);
+
+    @media (--viewport-lg) {
+      font-size: var(--font-size-macro-small);
+      margin-top: -var(--space-micro);
+      margin-left: -var(--space-micro-smaller);
+    }
+}
+
+/**
+ * Count
+ *
+ * Some items can have a character count
+ */
+.Form-count {
+  @extend small;
+}
+
+/**
+ * Info
+ *
+ * Each item can have a piece information/help within it
+ */
+
+.Form-info {
+  margin: 0;
+}
+
+.Filter{
+  overflow : hidden;
+}
+
+.Filter select {
+  background-color: var(--color-white) !important;
+  background-position: 95% 60%;
+  padding-right: 2.2em;
+}
+
+.Filter-label {
+  font-weight: var(--font-weight-semibold);
+  margin:0;
+}
+
+.Filter-reset {
+  font-size: var(--font-size-base);
+  padding: 0.3em 0.6em;
+  display: block;
+}
+
+.Filter-reset--hidden {
+    display: none;
+}
+
+
+.Filter-cta {
+  margin-top:1.4em;
+
+    //@media (--viewport-lg) {
+    //  margin-left: var(--space-micro-large);
+    //}
+}
+
+//If the row of filters is full, (4/4 or 5/5) the CTA needs some float right styles
+
+.Filter-ctaNextline {
+  @media (--viewport-lg) {
+    float: right;
+    margin-top: 0;
+    .Button { float: right }
+  }
+}
+
+/**
+ * Special profile form fields
+ *
+ */
+
+.Form-vanityUrlDomain {
+  padding-right: 1px; // so the italic trailing slash is not cut off
+}
+
+.Form-vanityUrl {
+  display: inline-block;
+  width: auto;
+}
+
+/**
+ * Currency
+ *
+ * Some inputs can have a currency symbol prepended
+ */
+.Form-currency {}
+
+.Form-currency-GBP {
+  position: relative;
+
+  & input {
+    padding-left: 20px;
+  }
+
+  &:after {
+    color: var(--color-grey-darker);
+    content: "\00a3";
+    left: 8px;
+    position: absolute;
+    top: 7px;
+  }
+}
+
+
+/**
+ * chat
+ *
+ * Small form for chatting. Includes text input and avatar.
+ */
+
+.Form--chat {
+
+  .Form-label {
+    display: block;
+    margin: 0 0 var(--space-micro-smaller);
+  }
+
+  .Form-item {
+    margin: 0 0 var(--space-micro-smaller);
+  }
+}
+
+
+/**
+ * contract
+ *
+ * Styles Contract page buttons
+ */
+
+.Form--contract {
+  text-align: center;
+
+  .ButtonGroup--hz .ButtonGroup-item {
+    display: inline-block;
+    max-width: 280px;
+  }
+
+  .Form-innerCard {
+    background: var(--color-grey-light);
+    margin: var(--space-micro) auto 0;
+    max-width: 350px;
+    padding: var(--space-micro);
+  }
+}
+
+
+/**
+ * register
+ *
+ * Form styles for initial registration pages.
+ * Logging in / Signing up / Employer's Freelancer validation
+ */
+
+.Form--register {
+
+  .Form-errors,
+  .Form-label,
+  .Form-help,
+  .Form-item-wrapper--forRadios label {
+    text-align: left;
+  }
+
+  .Form-button {
+    padding-top: var(--space-micro-smaller);
+    text-align: center;
+  }
+
+  .Form-item-wrapper {
+    margin-top: var(--space-micro-smaller);
+  }
+
+  // For setting checkbox labels in normal font
+  .Form-item-wrapper label {
+    font-weight: var(--font-weight-regular);
+    margin-bottom: var(--space-micro-smaller);
+  }
+}
+
+
+/**
+ * settings
+ *
+ * Form styles on Settings page
+ */
+
+.Form--settings {
+
+  // For setting checkbox labels in normal font
+  .Form-item-wrapper label {
+    font-weight: var(--font-weight-regular);
+    margin-bottom: var(--space-micro-smaller);
+  }
+}
+
+
+/**
+ * password
+ *
+ * Form styles for change password page
+ */
+
+.Form--password {
+
+  .Form-errors,
+  .Form-label,
+  .Form-help,
+  .Form-item-wrapper--forRadios label {
+    text-align: left;
+  }
+
+  .Form-button {
+    padding-top: var(--space-micro-smaller);
+    text-align: center;
+  }
+}
+
+
+/**
+ * freelancerDirectBooking
+ *
+ * Form styles for freelancer direct booking (particularly the typeahead
+ */
+
+.Form--freelancerDirectBooking input[type=text] {
+    height: 42px;
+}
+
+/**
+ * workHistory
+ *
+ * Form styles for WorkHistory form
+ */
+
+.Form--workHistory {
+
+  .Form-item,
+  .Form-buttons {
+    max-width: 400px;
+    margin-bottom: var(--space-micro-large);
+
+    @media (--viewport-lg) {
+      // margin-bottom: 0;
+    }
+  }
+
+  .Form-label {
+    background-color: var(--color-white);
+    display: inline;
+    margin-left: -var(--space-micro-smaller);
+    padding: 0 var(--space-micro-smaller);
+  }
+
+  .Form-item {
+    margin: 0 0 var(--space-micro-large);
+  }
+
+  .Form-input {
+    margin: 0;
+  }
+
+  .Form-textInput {
+    border-color: var(--color-grey-darker);
+    height: 42px;
+    //margin-bottom: var(--space-micro-smaller);
+  }
+
+  .Form-buttons {
+    text-align: right;
+  }
+
+  .Form-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 10px;
+
+    @media (--viewport-lg) {
+      background-color: var(--color-white);
+      margin-top: 0;
+      // padding: 0 var(--space-micro-smaller);
+      padding: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .Form-link {
+    border-right: var(--border-width-thinnest) solid var(--color-grey);
+    display: block;
+    font-weight: var(--font-weight-light);
+    padding: var(--space-micro-smaller) var(--space-micro) 0;
+
+    &:last-child {
+      border-right: 0;
+      padding-right: 0;
+    }
+
+    @media (--viewport-lg) {
+      padding-top: 0;
+    }
+  }
+
+  .Form-buttons {
+    display: flex;
+    flex-direction: column-reverse;
+    height: 90px;
+    justify-content: space-between;
+    text-align: center;
+
+    @media (--viewport-md) {
+      height: auto;
+      display: block;
+      text-align: right;
+    }
+  }
+
+  .Form-errors {
+    padding-left: 0;
+  }
+
+  .Form-errorsItem {
+
+    &:before {
+      height: 12px;
+      margin-right: 5px;
+      width: 12px;
+    }
+  }
+
+  ::-webkit-input-placeholder {
+    color: var(--color-grey-darker);
+  }
+
+  :-moz-placeholder { /* Firefox 18- */
+    color: var(--color-grey-darker);
+  }
+
+  ::-moz-placeholder {  /* Firefox 19+ */
+    color: var(--color-grey-darker);
+  }
+
+  :-ms-input-placeholder {
+    color: var(--color-grey-darker);
+  }
+
+}
+
+/*
+ * notes
+ *
+ * Form styles for notes (as appears on BlackBook Freelancer cards)
+ */
+
+.Form--notes {
+  margin: var(--space-micro-large) 0;
+
+  .Form-item,
+  .Form-label {
+    margin: 0 0 var(--space-micro-smaller);
+  }
+
+  .Form-item textarea {
+    background-color: var(--color-grey);
+    color: var(--color-marine);
+  }
+
+  .Form-button {
+    text-align: right;
+  }
+}
+
+.Form-item--positionRelative {
+    position: relative;
+}
+
+.Form-input--clearableButton {
+    background: var(--color-coral);
+    border-radius: 5px;
+    color: var(--color-white);
+    cursor: pointer;
+    height: 20px;
+    line-height: 20px;
+    position: absolute;
+    right: 6px;
+    text-align: center;
+    text-decoration: none;
+    top: 6px;
+    width: 20px;
+
+    &:hover {
+        color: var(--color-white);
+    }
+}
+
+/*
+ * Feedback form
+ *
+ * NPS feedback form
+ */
+
+.Form-feedback{
+  display: none;
+  max-width: 300px;
+  position: fixed;
+  bottom: -300px;
+  left: 0;
+  z-index: var(--depth-3);
+  transition: bottom 0.5s;
+
+  &.is-expanded {
+    bottom:0;
+  }
+
+  &.is-loaded {
+      display: block;
+
+      @media (--viewport-sm) {
+          display: none;
+      }
+  }
+
+  @media (--viewport-md) {
+    left: 20px;
+  }
+
+  @media (--viewport-lg) {
+    left: 290px;
+  }
+
+  .Form-feedback--header {
+      cursor: pointer;
+  }
+
+  .Form-feedback--content, .Form-feedback--stagethree{
+    background: var(--color-white);
+    //min-height: 300px;
+    padding: var(--space-micro);
+    border-left: solid 1px var(--color-grey);
+    border-right: solid 1px var(--color-grey);
+    overflow: hidden;
+  }
+
+  .Form-feedback--content > p:first-child{
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: solid 1px var(--color-grey);
+  }
+
+  .Form-feedback--header{
+    background: var(--color-grey-darkest);
+    color:  var(--color-white);
+    border-radius: 4px 4px 0 0;
+    margin:0;
+    padding: 8px var(--space-micro);
+    a{
+      float: right;
+      text-decoration: none;
+      font-size: 1.4em;
+      font-weight: 300;
+      color: var(--color-grey);
+    }
+  }
+
+
+  .Form-feedback--score{
+    padding: 0;
+    font-size: 12px;
+    margin: 0 0 20px 4px;
+    list-style: none;
+
+    li{
+      border-left: solid 1px var(--color-marine);
+      display:inline;
+      position: relative;
+      margin: 0 0 0 -3px;
+
+      &:last-child{
+        border-right: solid 1px var(--color-marine);
+      }
+    }
+
+    label{
+      display: inline;
+    }
+
+    input[type=radio]{
+      border: 0;
+      clip: rect(0 0 0 0);
+      height: 1px; margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      width: 1px;
+      position: absolute;
+      top:0;left:0;right:0;bottom:0;
+    }
+
+    input[type=radio]:checked{
+      background-color: red;
+    }
+
+    [type="radio"] + span {
+      display: inline-block;
+      cursor: pointer;
+      color: var(--color-marine);
+      padding: 5px 7px;
+      border-radius: 3px;
+      transition: background-color ease 0.2s, color ease 0.2s;
+      z-index: var(--depth-7);
+    }
+
+    [type="radio"]:checked + span {
+      background-color: var(--color-coral);
+      color: var(--color-white);
+      position: relative;
+      left: -1px;
+      margin-right: -3px;
+      padding: 5px 9px 5px 8px;
+    }
+  }
+
+  .Form-feedback--scale{
+      height: 8px;
+      border-bottom:solid 1px  var(--color-coral);
+      width: 135px;
+      display: inline-block;
+      position: relative;
+      top: -3px;
+      margin: 0 10px 0;
+
+      .Icon{
+        display: inline;
+      }
+
+      .fa{
+        color: var(--color-coral);
+        position: absolute;
+      }
+
+      .fa-angle-left{
+        left: -1px;
+      }
+
+      .fa-angle-right{
+        right: -1px;
+      }
+
+  }
+
+  //textarea{
+  //  margin-bottom: 20px;
+  //}
+
+  .Button{
+    margin: 20px 0 10px;
+    float: right;
+
+    &.disabled{
+      opacity: 0.5;
+      pointer-events: none;
+
+      &:hover, &:active {
+        background-color: var(--color-grey-dark);
+        cursor: default !important;
+        }
+    }
+  }
+}
+
+
+/*
+ timesheet form
+*/
+.Form-item-section-cost{
+  width: 100px;
+  display: inline-block;
+  margin:0 5px 0 0;
+  @media (--viewport-sm) {
+    margin:0 0 5px 0 !important;
+    display: block;
+    width:100%;
+  }
+}
+
+/*
+Unmanaged form
+*/
+.Form-item-section--horizontal {
+    position: relative;
+}
+
+.Form-item-section-ownership_duration_number {
+    width:65%;
+}
+
+.Form-item-section-ownership_duration_interval {
+    width: 33%;
+    position: absolute;
+    top: 11px;
+    right: 0;
+}

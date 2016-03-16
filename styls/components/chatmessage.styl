@@ -1,0 +1,52 @@
+/**
+ * ChatMessage
+ *
+ * Each ChatMessage shows a message in a conversation
+ */
+
+
+.ChatMessage {
+  border-bottom: 1px solid #b2bdcf;
+}
+
+.ChatMessage:last-child {
+  border:0;
+}
+
+.ChatMessage-inner {}
+
+.ChatMessage-avatar {}
+
+.ChatMessage-content {
+  background: var(--color-white);
+  padding: var(--space-micro-smaller);
+
+  @media (--viewport-lg) {
+    padding: var(--space-micro-large) 0;
+  }
+}
+
+.ChatMessage-body {}
+
+.ChatMessage-meta {
+  @extend small;
+}
+
+
+/**
+ * otherParty
+ *
+ * Used to show alternating chat messages (L/R avatars)
+ * Appears on 404 page
+ */
+
+.ChatMessage--otherParty {
+
+  .ChatMessage-inner {}
+
+  .ChatMessage-meta {
+    text-align: right;
+  }
+
+  .ChatMessage-avatar {}
+}
