@@ -48,6 +48,7 @@ function ConversationView(model, partial) {
     this.view = partial;
     this.identifier = gen_uuid();
     this.textarea = $(this.view).find('textarea');
+    this.fileinput = $(this.view).find('input[type="file"]');
     this.form = $(this.view).find('form');
     this.submitButton = $(this.view).find('button[type="submit"]');
 
@@ -127,6 +128,8 @@ ConversationView.prototype = {
         $(document)
             .off('submit', '#' + this.identifier +' .js-conversationForm')
             .on('submit', '#' + this.identifier +' .js-conversationForm', this.onSubmitForm.bind(this));
+
+        // TODO: The following 4 input selectors seem unnecessary, if this.textarea, this.fileinput and this.submitButton already point to them.
         $(document)
             .off('focus', '#' + this.identifier +' .js-conversationForm textarea')
             .on('focus', '#' + this.identifier +' .js-conversationForm textarea', this.onExpandForm.bind(this));
@@ -139,6 +142,7 @@ ConversationView.prototype = {
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
             .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+
         $(document)
             .off('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger')
             .on('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger', this.onClearFileAttachment);
@@ -202,16 +206,16 @@ ConversationView.prototype = {
      */
     emptyForm: function() {
         this.textarea.val('');
-        this.form.find('input[type=file]').val('');
+        this.fileinput.val('');
         $(this.view).removeClass('expand');
     },
     
     /**
      * Validate form
-     * - Ensure message has length
+     * - Ensure message or file input has length
      */
     validateForm: function() {
-        if (!this.textarea.val().trim().length) {
+        if (!this.textarea.val().trim().length && !this.fileinput.val().trim().length) {
             return false;
         }
 
