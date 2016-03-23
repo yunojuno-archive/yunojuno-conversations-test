@@ -23,6 +23,7 @@ var conversationMessages = {
 };
 
 var Conversations = require('../components/Conversations.js'),
+    Validator = require('../core/Validators.js'),
     defaultError = 'THIS IS A DEFAULT ERROR MESSAGE',
     conversationMockResponse = {"status": {"feedback_message": false, "success": true}, "html": "", "meta": {"total_messages": conversationMessages.count}},
     conversationHTML = `
@@ -118,6 +119,7 @@ describe('Test conversations (load, event binds and submission calls)', function
         spyOn(view, 'triggerSubmitForm').and.callThrough();
         spyOn(view, 'emptyForm').and.callThrough();
         spyOn(view, 'detectAndRemoveAttachment').and.callThrough();
+        spyOn(view, 'onClearFileAttachment').and.callThrough();
 
         callableFunc.eventViewCallback = function () {
         };
@@ -184,6 +186,12 @@ describe('Test conversations (load, event binds and submission calls)', function
         $(view.form).find('button[type=submit]').trigger('click');
 
         expect(view.onClickSubmitButton).toHaveBeenCalled();
+    });
+
+    it('expects clicking clear button to trigger onClearFileAttachment', function () {
+        $(view.form).find('.Form-item--fileInputWrapper--clear .js-clearableFileInput-trigger').trigger('click');
+
+        expect(view.onClearFileAttachment).toHaveBeenCalled();
     });
 
     it('triggers the submitForm spy', function () {
@@ -605,5 +613,55 @@ describe('Load conversations using constructor', function () {
         controller = new Conversations.constructor($conversationObj);
 
         expect(localStorage.getItem('messages')).toBe(JSON.stringify({count: 0, items: []}));
+    });
+});
+
+describe('Pass a message through Validator', function () {
+
+    var criteria = [
+        {
+            name : 'required',
+            message : 'You can\'t send blank messages.'
+        },
+        {
+            name : 'maxLength',
+            constraints : 255,
+            message : 'You have exceeded the maxmimum character limit for a message.'
+        }
+    ];
+
+    it('has no errors', function() {    
+        var message = `Help! Help! I'm being oppressed! Violence inherent in the system! Violence inherent in the system!`;
+        var validationErrors = Validator(message, criteria);
+
+        expect(validationErrors.length).toBe(0);
+    });
+
+    it('triggers Required validation on empty message', function() {
+        var message = '';
+        var validationErrors = Validator(message, criteria);
+
+        expect(validationErrors.length).toBe(1);
+        expect(validationErrors[0].error).toBe('required');
+        expect(validationErrors[0].message).toBe('You can\'t send blank messages.');
+    });
+
+    it('triggers Required validation on empty message with whitespace', function() {
+        var message = '    ';
+        var validationErrors = Validator(message, criteria);
+
+        expect(validationErrors.length).toBe(1);
+        expect(validationErrors[0].error).toBe('required');
+        expect(validationErrors[0].message).toBe('You can\'t send blank messages.');
+    });
+
+    it('triggers maxLength validation on long message', function(){
+        var message = `Listen, strange women lyin' in ponds distributin' swords is no basis for a system of government! Supreme executive power derives from a mandate from the masses, not from some farcical aquatic ceremony! Oh, but you can't expect to wield supreme executive power just because some watery tart threw a sword at you!`;
+
+        var validationErrors = Validator(message, criteria);
+
+        expect(validationErrors.length).toBe(1);
+        expect(validationErrors[0].error).toBe('maxLength');
+        expect(validationErrors[0].message).toBe('You have exceeded the maxmimum character limit for a message.');
     });
 });
