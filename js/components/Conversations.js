@@ -6,6 +6,8 @@
 
 var YJEvent = require('../core/Events.js'),
     gen_uuid = require('../core/Utils.js').gen_uuid,
+    escapeHtml = require('../core/Utils.js').escapeHtml,
+    Validator = require('../core/Validators.js'),
     defaultError = '';
 
 // Add Conversation level scope to the YJ global namespace
@@ -20,12 +22,13 @@ function ConversationModel() {
 }
 
 ConversationModel.prototype = {
+
     /**
      * Add message to top of stack to order in DESC.
      */
     addItem: function(message) {
         this._messages.unshift(message);
-        this.messageAdded.notify(message);
+        this.messageAdded.notify(message);            
     },
 
     /**
@@ -139,6 +142,13 @@ ConversationView.prototype = {
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
             .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+        $(document)
+            .off('click', '#' + this.identifier +' .js-clearableFileInput-trigger')
+            .on('click', '#' + this.identifier +' .js-clearableFileInput-trigger', this.onClearFileAttachment.bind(this));
+        // add random console.log for css transition end 
+        $(document)
+            .off('transitionend', '#' + this.identifier +' .Form-item-wrapper--controlGroup')
+            .on('transitionend', '#' + this.identifier +' .Form-item-wrapper--controlGroup', this.onTransitionEnd);            
     },
 
     /**
@@ -232,8 +242,13 @@ ConversationView.prototype = {
      * When a user clicks the 'clear attachment' link after adding an
      * attachment it should trigger this and clear the value.
      */
-    onClearFileAttachment: function() {
+    onClearFileAttachment: function(event) {
+        event.preventDefault();
+        var $relevantStatus = $('.js-uploadFile-name');
+        $relevantStatus.empty();
+        this.form.find('input[type=file]').val('');
 
+        $('.Form-item--fileInputWrapper--clear .js-clearableFileInput-trigger').hide();
     },
 
     /**
@@ -245,14 +260,47 @@ ConversationView.prototype = {
             summaryString = "File selected: " + $(this).val().split('\\').pop();
         $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
         $relevantStatus.html(summaryString);
+
+        // display clear button on adding file
+        $('.Form-item--fileInputWrapper--clear .js-clearableFileInput-trigger').show();
     },
 
     /**
      * Submit form over ajax
      */
     onClickSubmitButton: function(ev) {
-        // TODO - Add validation to form.
-        return this.triggerSubmitForm(ev.currentTarget.form);
+        // get validation message area
+        var $validation = this.form.find('.Form-errors');
+
+        // Sanitize message input to prevent mischief with unescaped characters
+        var message = escapeHtml(ev.currentTarget.form.elements.message.value);
+
+        // call Validator with validation config array and sanitized message.
+        var validationErrors = Validator(message, [
+            {
+                name : 'required',
+                message : 'You can\'t send blank messages.'
+            },
+            {
+                name : 'maxLength',
+                constraints : 512,
+                message : 'You have exceeded the maxmimum character limit for a message.'
+            }
+        ]);
+
+        // empty out the validation message area
+        $validation.empty()
+
+        // if there are validation errors, loop through and output them
+        if (validationErrors.length > 0) {
+            validationErrors.forEach(function(error, index) {
+                $validation.append(`<p class="Form-errorsItem">${error.message}</p>`);    
+            });
+        }
+        // if there are no validation errors, proceed with submission
+        else {
+            return this.triggerSubmitForm(ev.currentTarget.form);    
+        }
     },
     /**
      * Clicking on textarea adds class of expand which shows the controls
@@ -280,6 +328,13 @@ ConversationView.prototype = {
      */
     onSubmitForm: function() {
         return false;
+    },
+
+    /**
+     *  Handle transitionend event
+     */
+    onTransitionEnd : function(event) {
+        console.log('TransitionEnd event:', event);
     },
 
     /**
@@ -330,7 +385,8 @@ ConversationController.prototype = {
         var key,
             data = {
                 avatar: 'YOU',
-                message: conversationForm.elements.message.value,
+                // escape the message string to avoid shenanigans 
+                message: escapeHtml(conversationForm.elements.message.value), 
                 date: new Date()
             };
 

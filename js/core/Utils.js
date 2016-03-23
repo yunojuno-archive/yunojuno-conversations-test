@@ -8,6 +8,24 @@ var gen_uuid = function gen_uuid() {
     return uuid;
 };
 
+
+// method from StackOverflow for escaping dangerous html entities
+var escapeHtml = function (string) {
+    var entityMap = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': '&quot;',
+        "'": '&#39;',
+        "/": '&#x2F;'
+    };
+
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+        return entityMap[s];
+    });
+}
+
 module.exports = {
-    gen_uuid: gen_uuid
+    gen_uuid: gen_uuid,
+    escapeHtml : escapeHtml
 };
