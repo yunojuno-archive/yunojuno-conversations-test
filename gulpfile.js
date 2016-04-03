@@ -98,4 +98,13 @@ gulp.task('karma_watch', function karma_watch(done) {
 //gulp.task('test', gulp.series(karma));
 //gulp.task('test', gulp.series(tasks.scripts.js_hint, karma));
 
+gulp.task('watch', function() {
+    gulp.watch('styls/*.styl', ['css']);
+    gulp.watch('js/**/*.js', ['scripts', 'karma']);
+});
+
+gulp.task('default', ['watch'], function() {
+
+});
+
 module.exports = gulp;

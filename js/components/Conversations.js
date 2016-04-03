@@ -121,9 +121,10 @@ ConversationView.prototype = {
      * - onKeyDown() determines if use has used form submit shortcuts
      * - onClickSubmitButton() submits our form over AJAX
      * - onChangeFilePicker() gives user UI feedback on which file they picked
-     *
+     * -
      */
     bindEventListeners: function() {
+
         $(document)
             .off('submit', '#' + this.identifier +' .js-conversationForm')
             .on('submit', '#' + this.identifier +' .js-conversationForm', this.onSubmitForm.bind(this));
@@ -138,7 +139,10 @@ ConversationView.prototype = {
             .on('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]', this.onClickSubmitButton.bind(this));
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
-            .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+            .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker.bind(this));
+        $(document)
+            .off('click', '#' + this.identifier +' a.js-clearableFileInput-trigger')
+            .on('click', '#' + this.identifier +' a.js-clearableFileInput-trigger', this.onClearFileAttachment.bind(this));
     },
 
     /**
@@ -195,8 +199,10 @@ ConversationView.prototype = {
      * the form to show the attachment.
      */
     emptyForm: function() {
+
         this.textarea.val('');
-        this.form.find('input[type=file]').val('');
+        this.removeFileAttachment();
+        this.changeAttachmentClearVisibility(false);
         $(this.view).removeClass('expand');
     },
 
@@ -226,14 +232,34 @@ ConversationView.prototype = {
         this.buildMessages();
         this.bindEventListeners();
         this.detectAndRemoveAttachment();
+        this.bindAnimationTrigger();
+    },
+
+    /**
+     * Example of triggering JS after animation
+     */
+    bindAnimationTrigger: function() {
+
+        $(".Form-item-wrapper--controlGroup").bind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function(){
+            console.log('JS Triggered on animation');
+        });
     },
 
     /**
      * When a user clicks the 'clear attachment' link after adding an
      * attachment it should trigger this and clear the value.
      */
-    onClearFileAttachment: function() {
+    onClearFileAttachment: function(ev) {
 
+        ev.preventDefault();
+        this.removeFileAttachment();
+        this.updateFileNameDisplay('');
+        this.changeAttachmentClearVisibility(false);
+    },
+
+    removeFileAttachment() {
+        this.form.find('input[type=file]').val('');
+        this.updateFileNameDisplay('');
     },
 
     /**
@@ -241,18 +267,54 @@ ConversationView.prototype = {
      * the filename and place in an element next to the picker.
      */
     onChangeFilepicker: function(ev) {
-        var $relevantStatus = $(this).parent().next('.js-uploadFile-name').first(),
-            summaryString = "File selected: " + $(this).val().split('\\').pop();
-        $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
-        $relevantStatus.html(summaryString);
+
+        let filename = ev.currentTarget.value.split('\\').pop();
+
+        this.updateFileNameDisplay(filename);
+        this.changeAttachmentClearVisibility(true);
+    },
+
+    /**
+     * @param filename
+     */
+    updateFileNameDisplay: function(filename='') {
+
+        let $filenameEl = this.form.find('.js-uploadFile-name');
+
+        if(!!filename) {
+            filename = "File selected: " + filename;
+        }
+
+        $filenameEl.html(filename);
+    },
+
+    changeAttachmentClearVisibility: function(visibility) {
+
+        let $clearLink = this.form.find('.js-clearableFileInput-trigger');
+
+        if(visibility) {
+            $clearLink.show();
+        }
+        else {
+            $clearLink.hide();
+        }
     },
 
     /**
      * Submit form over ajax
      */
     onClickSubmitButton: function(ev) {
-        // TODO - Add validation to form.
-        return this.triggerSubmitForm(ev.currentTarget.form);
+
+        if(this.validateForm()) {
+            this.triggerSubmitForm(ev.currentTarget.form);
+            this.textarea.removeClass('is-invalid');
+            this.form.find('.js-is-invalid-message').html('');
+        }
+        else {
+            this.form.find('.js-is-invalid-message').html('Please enter a valid message');
+            this.textarea.addClass('is-invalid');
+        }
+
     },
     /**
      * Clicking on textarea adds class of expand which shows the controls
@@ -288,8 +350,20 @@ ConversationView.prototype = {
      */
     triggerSubmitForm: function(form) {
         this.eventSubmitMessage.notify(form);
+    },
+
+    /**
+     * Tests whether the form has input
+     * @TODO - This should be split out into its own validation method
+     *
+     * @returns {boolean}
+     */
+    validateForm: function() {
+
+        return(!!this.textarea.val());
     }
-};
+}
+;
 
 function ConversationController(model, view, init = true) {
     this._model = model;
