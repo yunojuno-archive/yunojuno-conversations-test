@@ -44,6 +44,7 @@ var Conversations = require('../components/Conversations.js'),
                     </label>
                     <div class="Form-item">
                         <textarea class="js-activateMessage" cols="40" id="id_message" maxlength="2000" name="message" placeholder="Click here to add a message or attach a file..."></textarea>
+                        <span class="js-is-invalid-message"></span>
                     </div>
                 </div>
                 <div class="Form-item-wrapper--controlGroup">
@@ -118,6 +119,7 @@ describe('Test conversations (load, event binds and submission calls)', function
         spyOn(view, 'triggerSubmitForm').and.callThrough();
         spyOn(view, 'emptyForm').and.callThrough();
         spyOn(view, 'detectAndRemoveAttachment').and.callThrough();
+        spyOn(view, 'validateForm').and.callThrough();
 
         callableFunc.eventViewCallback = function () {
         };
@@ -181,9 +183,54 @@ describe('Test conversations (load, event binds and submission calls)', function
     });
 
     it('expects clicking button to trigger onClickSubmitButton', function () {
+
         $(view.form).find('button[type=submit]').trigger('click');
 
         expect(view.onClickSubmitButton).toHaveBeenCalled();
+    });
+
+    it('validates form on submission', function() {
+
+        $(view.form).find('button[type=submit]').trigger('click');
+
+        expect(view.validateForm).toHaveBeenCalled();
+    });
+
+    it('validatemessage triggers submit form', function() {
+
+        $(view.form).find('textarea[name=message]').val('test message');
+        $(view.form).find('button[type=submit]').trigger('click');
+
+        expect(view.validateForm).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).toHaveBeenCalled();
+    });
+
+    it('validation prevents submission of empty messages ', function() {
+
+        $(view.form).find('button[type=submit]').trigger('click');
+
+        var errorMsg = $(view.form).find('.js-is-invalid-message').html();
+        expect(errorMsg).toEqual('Please enter a valid message');
+    });
+
+    it('Hides the clear link on submission', function() {
+
+        var clearLink = $(view.form).find('a.js-clearableFileInput-trigger');
+        clearLink.show();
+
+        $(view.form).find('textarea[name=message]').val('test message');
+        $(view.form).find('button[type=submit]').trigger('click');
+
+        expect(clearLink.css('display')).toEqual('none');
+    });
+
+    it('should fully remove any attachment when clicking clear', function() {
+
+        var clearLink = $(view.form).find('a.js-clearableFileInput-trigger');
+        clearLink.trigger('click');
+
+        expect(clearLink.css('display')).toEqual('none');
+        expect($(view.view).find('.js-uploadFile-name').html()).toBe('');
     });
 
     it('triggers the submitForm spy', function () {
@@ -207,7 +254,7 @@ describe('Test conversations (load, event binds and submission calls)', function
         $(view.view).find('input[type="file"]').trigger('change');
 
         expect(view.onChangeFilepicker).toHaveBeenCalled();
-        expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');
+        expect($(view.view).find('.js-uploadFile-name').html()).toBe('');
     });
 
     it('triggers the keydown event (which causes a submit through ctrlKey)', function () {
@@ -607,3 +654,10 @@ describe('Load conversations using constructor', function () {
         expect(localStorage.getItem('messages')).toBe(JSON.stringify({count: 0, items: []}));
     });
 });
+
+//Test clear link available
+//Test no attachment in message after clearing
+//Test clear link goes after clicking
+//Test correct link shows after clearing one and adding another
+//Test file selected gets remove after submission
+//Check validate behaves correctly

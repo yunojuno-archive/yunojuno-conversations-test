@@ -150,6 +150,7 @@
                                                 </label>
                                                 <div class="Form-item">
                                                     <textarea class="js-activateMessage" cols="40" id="id_message" maxlength="2000" name="message" placeholder="Click here to add a message or attach a file..."></textarea>
+                                                    <span class="js-is-invalid-message"></span>
                                                 </div>
                                             </div>
                                             <div class="Form-item-wrapper--controlGroup">
@@ -158,7 +159,10 @@
                                                         <a class="js-uploadFile-trigger" href="#">Add an attachment</a>
                                                         <input class="js-uploadFile-trigger" id="id_attachment" name="attachment" type="file">
                                                     </div>
-                                                    <div class="Form-item--fileInputWrapper js-clearableFileInput Form-item--fileInputWrapper--status u-textMuted js-uploadFile-name"></div><div class="Form-item--fileInputWrapper Form-item--fileInputWrapper--status Form-item--fileInputWrapper--clear"><a href="#" class="js-clearableFileInput-trigger" style="display: none;"> Clear</a></div>
+                                                    <div class="Form-item--fileInputWrapper js-clearableFileInput Form-item--fileInputWrapper--status u-textMuted js-uploadFile-name"></div>
+                                                    <div class="Form-item--fileInputWrapper Form-item--fileInputWrapper--status Form-item--fileInputWrapper--clear">
+                                                        <a href="#" class="js-clearableFileInput-trigger">Clear attachment</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="Form-button">
