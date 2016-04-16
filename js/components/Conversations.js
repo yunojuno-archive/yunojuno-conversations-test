@@ -208,6 +208,19 @@ ConversationView.prototype = {
         this.form.find('input[type=file]').val('');
         $(this.view).removeClass('expand');
     },
+    
+    /**
+     * Check whether the textarea contains any non-whitespace characters, if
+     * so then consider it valid.
+     */
+    isValidForm: function(form) {
+        // Maybe also check length? Not sure on exact validation requirements
+        var message = form.elements.message.value;
+        if (typeof message !== 'undefined' && /\S/.test(message)) {
+            return true;
+        }
+        return false;
+    },
 
     /**
      * Loop through items and build a template, 
@@ -261,7 +274,10 @@ ConversationView.prototype = {
      */
     onClickSubmitButton: function(ev) {
         // TODO - Add validation to form.
-        return this.triggerSubmitForm(ev.currentTarget.form);
+        var form = ev.currentTarget.form;
+        if (this.isValidForm(form)) {
+            return this.triggerSubmitForm(form);
+        }
     },
     /**
      * Clicking on textarea adds class of expand which shows the controls
@@ -279,9 +295,10 @@ ConversationView.prototype = {
      */
     onKeyDown: function(ev) {
         var keyCode = ev.keyCode;
-        if ((keyCode === 10 || keyCode === 13) && (ev.ctrlKey || ev.metaKey)) {
+        var form = ev.currentTarget.form;
+        if ((keyCode === 10 || keyCode === 13) && (ev.ctrlKey || ev.metaKey) && this.isValidForm(form)) {
             ev.target.blur();
-            return this.triggerSubmitForm(ev.target.form);
+            return this.triggerSubmitForm(form);
         }
     },
     /**

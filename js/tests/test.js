@@ -145,6 +145,10 @@ describe('Test conversations (load, event binds and submission calls)', function
 
     beforeEach(function () {
         jasmine.Ajax.install();
+        view.emptyForm();
+        view.onClickSubmitButton.calls.reset();
+        view.onKeyDown.calls.reset();
+        view.triggerSubmitForm.calls.reset();
     });
 
     afterEach(function () {
@@ -216,12 +220,34 @@ describe('Test conversations (load, event binds and submission calls)', function
         e.keyCode = 10; // Enter
         e.ctrlKey = true;
 
+        view.textarea.val('Hello');
         view.textarea.trigger(e);
 
         expect(view.onKeyDown).toHaveBeenCalled();
         expect(view.triggerSubmitForm).toHaveBeenCalled();
     });
 
+    it('prevents keydown form submission (through ctrlKey) with empty message', function() {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        e.ctrlKey = true;
+        
+        view.textarea.val('');
+        view.textarea.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
+    
+    it('prevents keydown form submission (through ctrlKey) with whitespace-only message', function() {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        e.ctrlKey = true;
+        
+        view.textarea.val(' \t\n');
+        view.textarea.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
 
     it('triggers the keydown event (which causes a submit through metaKey)', function () {
         var e = $.Event('keydown');
@@ -229,10 +255,63 @@ describe('Test conversations (load, event binds and submission calls)', function
         // Meta key in this case is cmd key on a mac (for example)
         e.metaKey = true;
 
+        view.textarea.val('Hello');
         view.textarea.trigger(e);
 
         expect(view.onKeyDown).toHaveBeenCalled();
         expect(view.triggerSubmitForm).toHaveBeenCalled();
+    });
+    
+    it('prevents keydown form submission (through metaKey) with empty message', function () {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        // Meta key in this case is cmd key on a mac (for example)
+        e.metaKey = true;
+        
+        view.textarea.val('');
+        view.textarea.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
+    
+    it('prevents keydown form submission (through metaKey) with whitespace-only message', function () {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        // Meta key in this case is cmd key on a mac (for example)
+        e.metaKey = true;
+        
+        view.textarea.val(' \t\n');
+        view.textarea.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
+    
+    it('triggers the mouse click event which causes submit', function() {
+        var e = $.Event('click');
+        
+        view.textarea.val('hello');
+        view.submitButton.trigger(e);
+
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).toHaveBeenCalled();
+    });
+    
+    it('prevents mouse click form submission with empty message', function () {
+        var e = $.Event('click');
+        
+        view.textarea.val('');
+        view.submitButton.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
+    
+    it('prevents mouse click form submission with whitespace-only message', function () {
+        var e = $.Event('click');
+        
+        view.textarea.val(' \t\n');
+        view.submitButton.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
     });
 
     it('has added a class to the partial on textarea focus', function () {
@@ -249,6 +328,7 @@ describe('Test conversations (load, event binds and submission calls)', function
         e.keyCode = 10; // Enter
         e.ctrlKey = true;
 
+        view.textarea.val('Hello');
         view.textarea.trigger(e);
 
         expect(view.onKeyDown).toHaveBeenCalled();
