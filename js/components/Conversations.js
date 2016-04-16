@@ -6,6 +6,7 @@
 
 var YJEvent = require('../core/Events.js'),
     gen_uuid = require('../core/Utils.js').gen_uuid,
+    sanitizeString = require('../core/Utils.js').sanitizeString,
     defaultError = '';
 
 // Add Conversation level scope to the YJ global namespace
@@ -170,18 +171,26 @@ ConversationView.prototype = {
      */
     buildTemplate: function(avatar, chat_message, datetime, attachment) {
         // Replace avatar initials
+        
+        /**
+         * Sanitize input. Probably a better place to put this but didn't want
+         * to restructure the code too much
+         */
+        var inputs = [avatar, chat_message, datetime, attachment];
+        var sanitizedInputs = inputs.map(sanitizeString);
+        var [sanitized_avatar, sanitized_chat_message, sanitized_datetime, sanitized_attachment] = sanitizedInputs;
 
         // Make copy of template.
         var tpl = this.template.toString(),
             attachTpl = '';
 
-        tpl = tpl.replace('{{ AVATAR_INITIALS }}', avatar);
-        tpl = tpl.replace('{{ CHAT_MESSAGE }}', chat_message);
-        tpl = tpl.replace('{{ DATE_TIME }}', datetime);
+        tpl = tpl.replace('{{ AVATAR_INITIALS }}', sanitized_avatar);
+        tpl = tpl.replace('{{ CHAT_MESSAGE }}', sanitized_chat_message);
+        tpl = tpl.replace('{{ DATE_TIME }}', sanitized_datetime);
 
-        if(attachment) {
+        if(sanitized_attachment) {
             // Add attachment filename to the template
-            attachTpl = this.attachmentTemplate.toString().replace('{{ ATTACHMENT }}', attachment);
+            attachTpl = this.attachmentTemplate.toString().replace('{{ ATTACHMENT }}', sanitized_attachment);
         }
 
         // If there is an attachment, we replace the contents with the template, else with an empty string.

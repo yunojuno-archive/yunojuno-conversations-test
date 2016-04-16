@@ -23,6 +23,7 @@ var conversationMessages = {
 };
 
 var Conversations = require('../components/Conversations.js'),
+    sanitizeString = require('../core/Utils.js').sanitizeString,
     defaultError = 'THIS IS A DEFAULT ERROR MESSAGE',
     conversationMockResponse = {"status": {"feedback_message": false, "success": true}, "html": "", "meta": {"total_messages": conversationMessages.count}},
     conversationHTML = `
@@ -605,5 +606,22 @@ describe('Load conversations using constructor', function () {
         controller = new Conversations.constructor($conversationObj);
 
         expect(localStorage.getItem('messages')).toBe(JSON.stringify({count: 0, items: []}));
+    });
+});
+
+describe('Test string sanitization', function() {
+    it('sanitizes strings correctly', function() {
+        expect(sanitizeString('<h1>Hello</h1>')).toBe('&lt;h1&gt;Hello&lt;/h1&gt;');
+    });
+    
+    it('does not modify non-string values', function() {
+        var nothing;
+        var number = 3;
+        var obj = {};
+        var array = [];
+        expect(sanitizeString(nothing)).toBe(nothing);
+        expect(sanitizeString(number)).toBe(number);
+        expect(sanitizeString(obj)).toBe(obj);
+        expect(sanitizeString(array)).toBe(array);
     });
 });
