@@ -49,6 +49,8 @@ function ConversationView(model, partial) {
     this.view = partial;
     this.identifier = gen_uuid();
     this.textarea = $(this.view).find('textarea');
+    this.fileInput = $(this.view).find('input[type="file"]');
+    this.clearFileButton = $(this.view).find('.js-clearableFileInput-trigger');
     this.form = $(this.view).find('form');
     this.submitButton = $(this.view).find('button[type="submit"]');
 
@@ -139,7 +141,10 @@ ConversationView.prototype = {
             .on('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]', this.onClickSubmitButton.bind(this));
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
-            .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+            .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker.bind(this));
+        $(document)
+            .off('click', '#' + this.identifier + ' .js-clearableFileInput-trigger')
+            .on('click', '#' + this.identifier + ' .js-clearableFileInput-trigger', this.onClearFileAttachment.bind(this));
     },
 
     /**
@@ -205,8 +210,17 @@ ConversationView.prototype = {
      */
     emptyForm: function() {
         this.textarea.val('');
-        this.form.find('input[type=file]').val('');
+        this.clearFileInput();
         $(this.view).removeClass('expand');
+    },
+    
+    /**
+     * Clears the filepicker, including the neighbouring filename
+     */
+    clearFileInput: function() {
+        this.form.find('input[type=file]').val('');
+        this.form.find('.js-uploadFile-name').first().html('');
+        this.clearFileButton.hide();
     },
     
     /**
@@ -254,8 +268,9 @@ ConversationView.prototype = {
      * When a user clicks the 'clear attachment' link after adding an
      * attachment it should trigger this and clear the value.
      */
-    onClearFileAttachment: function() {
-
+    onClearFileAttachment: function(ev) {
+        ev.preventDefault();
+        this.clearFileInput();
     },
 
     /**
@@ -263,10 +278,11 @@ ConversationView.prototype = {
      * the filename and place in an element next to the picker.
      */
     onChangeFilepicker: function(ev) {
-        var $relevantStatus = $(this).parent().next('.js-uploadFile-name').first(),
-            summaryString = "File selected: " + $(this).val().split('\\').pop();
+        var $relevantStatus = this.form.find('.js-uploadFile-name'),
+            summaryString = "File selected: " + this.fileInput.val().split('\\').pop();
         $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
         $relevantStatus.html(summaryString);
+        this.clearFileButton.show();
     },
 
     /**

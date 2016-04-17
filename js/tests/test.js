@@ -213,6 +213,19 @@ describe('Test conversations (load, event binds and submission calls)', function
 
         expect(view.onChangeFilepicker).toHaveBeenCalled();
         expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');
+        expect(view.clearFileButton.css('display')).not.toBe('none');
+    });
+    
+    it('initially hides the clear attachment button', function() {
+        view.textarea.trigger('focus');
+        expect(view.clearFileButton.css('display')).toBe('none');
+    });
+    
+    it('triggers clearing file attachment on click and hides the clear attachment button', function() {
+        view.fileInput.trigger('change');
+        view.clearFileButton.trigger('click');
+        expect($(view.view).find('.js-uploadFile-name').html()).toBe('');
+        expect(view.clearFileButton.css('display')).toBe('none');
     });
 
     it('triggers the keydown event (which causes a submit through ctrlKey)', function () {
