@@ -145,6 +145,9 @@ ConversationView.prototype = {
         $(document)
             .off('click', '#' + this.identifier + ' .js-clearableFileInput-trigger')
             .on('click', '#' + this.identifier + ' .js-clearableFileInput-trigger', this.onClearFileAttachment.bind(this));
+        $(document)
+            .off('transitionend', '#' + this.identifier + ' .Form-item-wrapper--controlGroup')
+            .on('transitionend', '#' + this.identifier + ' .Form-item-wrapper--controlGroup', this.onFormTransitionEnd.bind(this));
     },
 
     /**
@@ -330,6 +333,13 @@ ConversationView.prototype = {
      */
     triggerSubmitForm: function(form) {
         this.eventSubmitMessage.notify(form);
+    },
+    
+    /**
+     * Do something when the file attachment transition finishes
+     */
+    onFormTransitionEnd: function() {
+      console.log('transition finished');
     }
 };
 
