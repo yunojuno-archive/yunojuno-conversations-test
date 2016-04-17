@@ -227,13 +227,16 @@ ConversationView.prototype = {
     },
     
     /**
-     * Check whether the textarea contains any non-whitespace characters, if
-     * so then consider it valid.
+     * Check whether the textarea contains any non-whitespace characters, and
+     * whether there is an attachment, if one of these conditions is true then
+     * consider it valid.
      */
     isValidForm: function(form) {
         // Maybe also check length? Not sure on exact validation requirements
         var message = form.elements.message.value;
-        if (typeof message !== 'undefined' && /\S/.test(message)) {
+        var attachment = form.elements.attachment.value;
+        if ((typeof message !== 'undefined' && /\S/.test(message))
+            || (typeof attachment !== 'undefined' && /\S/.test(attachment))) {
             return true;
         }
         return false;
