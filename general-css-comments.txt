@@ -1,0 +1,12 @@
+Overall I think the CSS is done well, great use of variables and componentising the code that it's easier to reason about and find relevant code.
+
+There seem to be a lot of uses of the "!important" flag across the project, which may not cause issues for you but in my experience can be a pain when trying to modify the value later with javascript or a different CSS rule.
+If the issue is overwriting specificity due to chained selectors, perhaps the BEM approach of using "__" for children of components (eg. "Button__icon") could help?
+
+As someone with no prior experience with the code, I would've found it very useful to have more uniform and descriptive comments within component files.
+For example the avatar.styl there are several block comments delineating different sections of the component, but I'm not really sure what each of those sections represent.
+
+One small thing is that when writing CSS I tend to try and organise the order of properties in a given selector, eg as shown here https://css-tricks.com/poll-results-how-do-you-order-your-css-properties/.
+I find it can just make it a bit easier to understand the code more quickly.
+
+Another minor thing I noted was that there are several comments using "//", which works fine because CSS doesn't understand it and so ignores it, but according to the spec the only valid comments are written using "/* */".

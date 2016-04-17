@@ -1,0 +1,8 @@
+I tried to avoid too much refactoring of existing code, and I tried to follow existing conventions where possible.
+
+I wasn't exactly sure what was required in terms of form validation so I just checked for any non-whitespace input.
+Regardless the set up is there so that it would be easy to add additional conditions to the isValidForm function.
+I also chose to make this function take in the form as an argument as I'm currently in the habit of writing in a relatively functional style.
+I believe writing in this style makes code a bit more re-usable (easier to drop in somewhere else if you're not using "this") and easier to test.
+
+Also, the tests for the clear attachment button are slightly inadequate as they can't check whether a file was really removed (because you can't add a file in the testing environment), not sure if much can be done about that.
