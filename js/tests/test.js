@@ -23,6 +23,7 @@ var conversationMessages = {
 };
 
 var Conversations = require('../components/Conversations.js'),
+    sanitizeString = require('../core/Utils.js').sanitizeString,
     defaultError = 'THIS IS A DEFAULT ERROR MESSAGE',
     conversationMockResponse = {"status": {"feedback_message": false, "success": true}, "html": "", "meta": {"total_messages": conversationMessages.count}},
     conversationHTML = `
@@ -144,6 +145,10 @@ describe('Test conversations (load, event binds and submission calls)', function
 
     beforeEach(function () {
         jasmine.Ajax.install();
+        view.emptyForm();
+        view.onClickSubmitButton.calls.reset();
+        view.onKeyDown.calls.reset();
+        view.triggerSubmitForm.calls.reset();
     });
 
     afterEach(function () {
@@ -208,6 +213,19 @@ describe('Test conversations (load, event binds and submission calls)', function
 
         expect(view.onChangeFilepicker).toHaveBeenCalled();
         expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');
+        expect(view.clearFileButton.css('display')).not.toBe('none');
+    });
+    
+    it('initially hides the clear attachment button', function() {
+        view.textarea.trigger('focus');
+        expect(view.clearFileButton.css('display')).toBe('none');
+    });
+    
+    it('triggers clearing file attachment on click and hides the clear attachment button', function() {
+        view.fileInput.trigger('change');
+        view.clearFileButton.trigger('click');
+        expect($(view.view).find('.js-uploadFile-name').html()).toBe('');
+        expect(view.clearFileButton.css('display')).toBe('none');
     });
 
     it('triggers the keydown event (which causes a submit through ctrlKey)', function () {
@@ -215,12 +233,34 @@ describe('Test conversations (load, event binds and submission calls)', function
         e.keyCode = 10; // Enter
         e.ctrlKey = true;
 
+        view.textarea.val('Hello');
         view.textarea.trigger(e);
 
         expect(view.onKeyDown).toHaveBeenCalled();
         expect(view.triggerSubmitForm).toHaveBeenCalled();
     });
 
+    it('prevents keydown form submission (through ctrlKey) with empty message', function() {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        e.ctrlKey = true;
+        
+        view.textarea.val('');
+        view.textarea.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
+    
+    it('prevents keydown form submission (through ctrlKey) with whitespace-only message', function() {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        e.ctrlKey = true;
+        
+        view.textarea.val(' \t\n');
+        view.textarea.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
 
     it('triggers the keydown event (which causes a submit through metaKey)', function () {
         var e = $.Event('keydown');
@@ -228,10 +268,63 @@ describe('Test conversations (load, event binds and submission calls)', function
         // Meta key in this case is cmd key on a mac (for example)
         e.metaKey = true;
 
+        view.textarea.val('Hello');
         view.textarea.trigger(e);
 
         expect(view.onKeyDown).toHaveBeenCalled();
         expect(view.triggerSubmitForm).toHaveBeenCalled();
+    });
+    
+    it('prevents keydown form submission (through metaKey) with empty message', function () {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        // Meta key in this case is cmd key on a mac (for example)
+        e.metaKey = true;
+        
+        view.textarea.val('');
+        view.textarea.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
+    
+    it('prevents keydown form submission (through metaKey) with whitespace-only message', function () {
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        // Meta key in this case is cmd key on a mac (for example)
+        e.metaKey = true;
+        
+        view.textarea.val(' \t\n');
+        view.textarea.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
+    
+    it('triggers the mouse click event which causes submit', function() {
+        var e = $.Event('click');
+        
+        view.textarea.val('hello');
+        view.submitButton.trigger(e);
+
+        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).toHaveBeenCalled();
+    });
+    
+    it('prevents mouse click form submission with empty message', function () {
+        var e = $.Event('click');
+        
+        view.textarea.val('');
+        view.submitButton.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
+    });
+    
+    it('prevents mouse click form submission with whitespace-only message', function () {
+        var e = $.Event('click');
+        
+        view.textarea.val(' \t\n');
+        view.submitButton.trigger(e);
+
+        expect(view.triggerSubmitForm).not.toHaveBeenCalled();
     });
 
     it('has added a class to the partial on textarea focus', function () {
@@ -248,6 +341,7 @@ describe('Test conversations (load, event binds and submission calls)', function
         e.keyCode = 10; // Enter
         e.ctrlKey = true;
 
+        view.textarea.val('Hello');
         view.textarea.trigger(e);
 
         expect(view.onKeyDown).toHaveBeenCalled();
@@ -605,5 +699,22 @@ describe('Load conversations using constructor', function () {
         controller = new Conversations.constructor($conversationObj);
 
         expect(localStorage.getItem('messages')).toBe(JSON.stringify({count: 0, items: []}));
+    });
+});
+
+describe('Test string sanitization', function() {
+    it('sanitizes strings correctly', function() {
+        expect(sanitizeString('<h1>Hello</h1>')).toBe('&lt;h1&gt;Hello&lt;/h1&gt;');
+    });
+    
+    it('does not modify non-string values', function() {
+        var nothing;
+        var number = 3;
+        var obj = {};
+        var array = [];
+        expect(sanitizeString(nothing)).toBe(nothing);
+        expect(sanitizeString(number)).toBe(number);
+        expect(sanitizeString(obj)).toBe(obj);
+        expect(sanitizeString(array)).toBe(array);
     });
 });

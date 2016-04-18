@@ -8,6 +8,15 @@ var gen_uuid = function gen_uuid() {
     return uuid;
 };
 
+var sanitizeString = function sanitizeString(string) {
+    if (typeof string === 'string') {
+        return string.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    } else {
+        return string;
+    }
+}
+
 module.exports = {
-    gen_uuid: gen_uuid
+    gen_uuid: gen_uuid,
+    sanitizeString: sanitizeString
 };

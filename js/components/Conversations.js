@@ -6,6 +6,7 @@
 
 var YJEvent = require('../core/Events.js'),
     gen_uuid = require('../core/Utils.js').gen_uuid,
+    sanitizeString = require('../core/Utils.js').sanitizeString,
     defaultError = '';
 
 // Add Conversation level scope to the YJ global namespace
@@ -48,6 +49,8 @@ function ConversationView(model, partial) {
     this.view = partial;
     this.identifier = gen_uuid();
     this.textarea = $(this.view).find('textarea');
+    this.fileInput = $(this.view).find('input[type="file"]');
+    this.clearFileButton = $(this.view).find('.js-clearableFileInput-trigger');
     this.form = $(this.view).find('form');
     this.submitButton = $(this.view).find('button[type="submit"]');
 
@@ -138,7 +141,13 @@ ConversationView.prototype = {
             .on('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]', this.onClickSubmitButton.bind(this));
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
-            .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+            .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker.bind(this));
+        $(document)
+            .off('click', '#' + this.identifier + ' .js-clearableFileInput-trigger')
+            .on('click', '#' + this.identifier + ' .js-clearableFileInput-trigger', this.onClearFileAttachment.bind(this));
+        $(document)
+            .off('transitionend', '#' + this.identifier + ' .Form-item-wrapper--controlGroup')
+            .on('transitionend', '#' + this.identifier + ' .Form-item-wrapper--controlGroup', this.onFormTransitionEnd.bind(this));
     },
 
     /**
@@ -170,18 +179,26 @@ ConversationView.prototype = {
      */
     buildTemplate: function(avatar, chat_message, datetime, attachment) {
         // Replace avatar initials
+        
+        /**
+         * Sanitize input. Probably a better place to put this but didn't want
+         * to restructure the code too much
+         */
+        var inputs = [avatar, chat_message, datetime, attachment];
+        var sanitizedInputs = inputs.map(sanitizeString);
+        var [sanitized_avatar, sanitized_chat_message, sanitized_datetime, sanitized_attachment] = sanitizedInputs;
 
         // Make copy of template.
         var tpl = this.template.toString(),
             attachTpl = '';
 
-        tpl = tpl.replace('{{ AVATAR_INITIALS }}', avatar);
-        tpl = tpl.replace('{{ CHAT_MESSAGE }}', chat_message);
-        tpl = tpl.replace('{{ DATE_TIME }}', datetime);
+        tpl = tpl.replace('{{ AVATAR_INITIALS }}', sanitized_avatar);
+        tpl = tpl.replace('{{ CHAT_MESSAGE }}', sanitized_chat_message);
+        tpl = tpl.replace('{{ DATE_TIME }}', sanitized_datetime);
 
-        if(attachment) {
+        if(sanitized_attachment) {
             // Add attachment filename to the template
-            attachTpl = this.attachmentTemplate.toString().replace('{{ ATTACHMENT }}', attachment);
+            attachTpl = this.attachmentTemplate.toString().replace('{{ ATTACHMENT }}', sanitized_attachment);
         }
 
         // If there is an attachment, we replace the contents with the template, else with an empty string.
@@ -196,8 +213,33 @@ ConversationView.prototype = {
      */
     emptyForm: function() {
         this.textarea.val('');
-        this.form.find('input[type=file]').val('');
+        this.clearFileInput();
         $(this.view).removeClass('expand');
+    },
+    
+    /**
+     * Clears the filepicker, including the neighbouring filename
+     */
+    clearFileInput: function() {
+        this.form.find('input[type=file]').val('');
+        this.form.find('.js-uploadFile-name').first().html('');
+        this.clearFileButton.hide();
+    },
+    
+    /**
+     * Check whether the textarea contains any non-whitespace characters, and
+     * whether there is an attachment, if one of these conditions is true then
+     * consider it valid.
+     */
+    isValidForm: function(form) {
+        // Maybe also check length? Not sure on exact validation requirements
+        var message = form.elements.message.value;
+        var attachment = form.elements.attachment.value;
+        if ((typeof message !== 'undefined' && /\S/.test(message))
+            || (typeof attachment !== 'undefined' && /\S/.test(attachment))) {
+            return true;
+        }
+        return false;
     },
 
     /**
@@ -232,8 +274,9 @@ ConversationView.prototype = {
      * When a user clicks the 'clear attachment' link after adding an
      * attachment it should trigger this and clear the value.
      */
-    onClearFileAttachment: function() {
-
+    onClearFileAttachment: function(ev) {
+        ev.preventDefault();
+        this.clearFileInput();
     },
 
     /**
@@ -241,10 +284,11 @@ ConversationView.prototype = {
      * the filename and place in an element next to the picker.
      */
     onChangeFilepicker: function(ev) {
-        var $relevantStatus = $(this).parent().next('.js-uploadFile-name').first(),
-            summaryString = "File selected: " + $(this).val().split('\\').pop();
+        var $relevantStatus = this.form.find('.js-uploadFile-name'),
+            summaryString = "File selected: " + this.fileInput.val().split('\\').pop();
         $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
         $relevantStatus.html(summaryString);
+        this.clearFileButton.show();
     },
 
     /**
@@ -252,7 +296,10 @@ ConversationView.prototype = {
      */
     onClickSubmitButton: function(ev) {
         // TODO - Add validation to form.
-        return this.triggerSubmitForm(ev.currentTarget.form);
+        var form = ev.currentTarget.form;
+        if (this.isValidForm(form)) {
+            return this.triggerSubmitForm(form);
+        }
     },
     /**
      * Clicking on textarea adds class of expand which shows the controls
@@ -270,9 +317,10 @@ ConversationView.prototype = {
      */
     onKeyDown: function(ev) {
         var keyCode = ev.keyCode;
-        if ((keyCode === 10 || keyCode === 13) && (ev.ctrlKey || ev.metaKey)) {
+        var form = ev.currentTarget.form;
+        if ((keyCode === 10 || keyCode === 13) && (ev.ctrlKey || ev.metaKey) && this.isValidForm(form)) {
             ev.target.blur();
-            return this.triggerSubmitForm(ev.target.form);
+            return this.triggerSubmitForm(form);
         }
     },
     /**
@@ -288,6 +336,13 @@ ConversationView.prototype = {
      */
     triggerSubmitForm: function(form) {
         this.eventSubmitMessage.notify(form);
+    },
+    
+    /**
+     * Do something when the file attachment transition finishes
+     */
+    onFormTransitionEnd: function() {
+      console.log('transition finished');
     }
 };
 
