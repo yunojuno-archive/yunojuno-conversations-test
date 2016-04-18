@@ -6,3 +6,5 @@ I also chose to make this function take in the form as an argument as I'm curren
 I believe writing in this style makes code a bit more re-usable (easier to drop in somewhere else if you're not using "this") and easier to test.
 
 Also, the tests for the clear attachment button are slightly inadequate as they can't check whether a file was really removed (because you can't add a file in the testing environment), not sure if much can be done about that.
+
+I also added input sanitization for HTML tags, I'm aware this wasn't a requirement and probably isn't even an issue in the real environment as the input would be sanitized in the Django code before going in the database, but still better to be safe than sorry!
