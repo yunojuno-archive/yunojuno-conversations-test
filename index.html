@@ -144,7 +144,7 @@
                                             </div>
                                         </div>
                                         <div class="Grid-cell u-size9of12 u-md-size10of12 u-lg-size10of12">
-                                            <div class="Form-itemGroup Form-item-section-message">
+                                            <div class="Form-itemGroup Form-item-section-message" onclick="console.log('CSS Animation when clicking the form')">
                                                 <label class="Form-label Form-label-for-message" for="id_message">
                                                         Send private message
                                                 </label>
@@ -152,8 +152,8 @@
                                                     <textarea class="js-activateMessage" cols="40" id="id_message" maxlength="2000" name="message" placeholder="Click here to add a message or attach a file..."></textarea>
                                                 </div>
                                             </div>
-                                            <div class="Form-item-wrapper--controlGroup">
-                                                <div class="Form-item-wrapper">
+                                            <div  class="Form-item-wrapper--controlGroup">
+                                                <div class="Form-item-wrapper ">
                                                     <div class="Form-item--fileInputWrapper">
                                                         <a class="js-uploadFile-trigger" href="#">Add an attachment</a>
                                                         <input class="js-uploadFile-trigger" id="id_attachment" name="attachment" type="file">
@@ -167,6 +167,8 @@
                                                         Send message
                                                     </span>
                                                 </button>
+												
+												 <button class="Button Button--primary js-spinnerButton" name="test" href="#">Remove attachment</button>
                                             </div>
                                         </div>
                                     </div>

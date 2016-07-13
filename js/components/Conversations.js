@@ -139,6 +139,10 @@ ConversationView.prototype = {
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
             .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+		$(document)
+			.off('click', '#' + this.identifier + ' .js-conversationForm button[name="test"]')
+			.on('click', '#' + this.identifier + ' .js-conversationForm button[name="test"]', this.onClearFileAttachment);
+                       
     },
 
     /**
@@ -233,6 +237,10 @@ ConversationView.prototype = {
      * attachment it should trigger this and clear the value.
      */
     onClearFileAttachment: function() {
+		var $relevantStatus = $("#id_attachment").parent().next('.js-uploadFile-name').first();
+        $relevantStatus.removeClass('Form-item--fileInputWrapper--clear');
+		console.log("File removed. You may upload a new file now");
+        $relevantStatus.html("");
 
     },
 
@@ -252,6 +260,12 @@ ConversationView.prototype = {
      */
     onClickSubmitButton: function(ev) {
         // TODO - Add validation to form.
+		var message = $("#id_message").val();
+		if(message.length===0){
+			alert("Field can't be empty. Please type some text first");
+            console.log("Empty field. Form won't send at all");
+			return false;
+		}
         return this.triggerSubmitForm(ev.currentTarget.form);
     },
     /**
@@ -424,3 +438,4 @@ module.exports = {
     // Constructor is invoked on the platform.
     constructor: Conversation
 };
+
