@@ -229,22 +229,32 @@ ConversationView.prototype = {
     },
 
     /**
-     * When a user clicks the 'clear attachment' link after adding an
+     * When a user clicks the 'clear attachment' link after adding an 
      * attachment it should trigger this and clear the value.
      */
-    onClearFileAttachment: function() {
-
+    onClearFileAttachment: function() { 
+        
     },
 
     /**
      * When user clicks our filepicker and chooses a file, take 
      * the filename and place in an element next to the picker.
      */
-    onChangeFilepicker: function(ev) {
+    onChangeFilepicker: function(ev) { 
         var $relevantStatus = $(this).parent().next('.js-uploadFile-name').first(),
-            summaryString = "File selected: " + $(this).val().split('\\').pop();
+            summaryString = "File selected: " + $(this).val().split('\\').pop(),
+            btnAttachment = $( "button.js-spinnerButton:nth-child(2)" ).show();
         $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
         $relevantStatus.html(summaryString);
+        btnAttachment.show();
+
+        /**
+         *  Remove text and btm attachment 
+         */
+        btnAttachment.click(function() {
+           $relevantStatus.html(summaryString).empty();
+           $(this).hide();
+        });
     },
 
     /**
@@ -287,10 +297,24 @@ ConversationView.prototype = {
      * Notify the controller event to store our message in localStorage.
      */
     triggerSubmitForm: function(form) {
-        this.eventSubmitMessage.notify(form);
-    }
-};
 
+    var textareaForm = $("#id_message");
+    
+    if (textareaForm.val() != "") {
+     this.eventSubmitMessage.notify(form);
+     } else {
+         textareaForm.addClass('invalid--form');
+    
+         setTimeout(function() {
+             textareaForm.removeClass('invalid--form');
+             alert('JavaScript trigger following the CSS animation');
+         }, 1000)
+    
+        }
+    }
+    
+};        
+       
 function ConversationController(model, view, init = true) {
     this._model = model;
     this._view = view;

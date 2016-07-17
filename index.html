@@ -21,7 +21,7 @@
             function initButtonSpinners() {}
         </script>
         <link rel="stylesheet" media="screen" href="css/core.css">
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     </head>
     <body>
         <div class="Chrome Chrome--noSidebar Chrome--light">
@@ -61,7 +61,7 @@
 
                             <p>A conversation thread is made of many messages. Each message contains the message (obviously), possibly an attachment and the date/time it was sent.</p>
 
-                            <p>In practice, the form is also replaced, which with it brings validation from the server. However as we are using localStorage the form isn't replaced and instead is only emptied.</p>
+                            <p>In practice, the form is also replaced, which with it brings from the server. However as we are using localStorage the form isn't replaced and instead is only emptied.</p>
 
                             <p>What you will find when you checkout the source is an isolated piece of functionality from our platform.</p>
 
@@ -167,6 +167,12 @@
                                                         Send message
                                                     </span>
                                                 </button>
+                                                <button class="Button Button--primary js-spinnerButton btnremoveAttachment" type="button">
+                                                    <span class="Button-inner removeAttachment">
+                                                        Remove attachment
+                                                    </span>
+                                                </button>
+                                                
                                             </div>
                                         </div>
                                     </div>
