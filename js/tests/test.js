@@ -61,6 +61,11 @@ var Conversations = require('../components/Conversations.js'),
                             Send message
                         </span>
                     </button>
+                    <button class="Button Button--primary js-spinnerButton btnremoveAttachment" type="button">
+                        <span class="Button-inner removeAttachment">
+                            Remove attachment
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -182,6 +187,9 @@ describe('Test conversations (load, event binds and submission calls)', function
 
     it('expects clicking button to trigger onClickSubmitButton', function () {
         $(view.form).find('button[type=submit]').trigger('click');
+        
+        $(view.form).find($("#id_message")).val;
+        expect($(view.view).attr('class')).toContain('expand');
 
         expect(view.onClickSubmitButton).toHaveBeenCalled();
     });
@@ -205,6 +213,7 @@ describe('Test conversations (load, event binds and submission calls)', function
     // That would be a huge security hole in browsers.
     it('triggers the onchange event for filepicker', function () {
         $(view.view).find('input[type="file"]').trigger('change');
+        $(view.form).find('button[type=submit]').trigger('click');
 
         expect(view.onChangeFilepicker).toHaveBeenCalled();
         expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');

@@ -92,11 +92,23 @@
             background: var(--color-coral-dark);
         }
     }
+    
+    .Button-inner.removeAttachment {
+        background: var(--color-green);
+
+        &:hover {
+            background: var(--color-green-dark);
+        }
+    }
 
     @media (--viewport-lg) {
         display: inline-block;
         width: auto;
     }
+}
+
+.Button--primary.btnremoveAttachment {
+    display:none;
 }
 
 input.Button--primary {
