@@ -2,7 +2,15 @@
   "name": "yunojuno-conversations",
   "version": "1.0.0",
   "description": "Frontend developer test for YunoJuno",
+  "engines": {
+    "node": "9.0.0",
+    "npm": "5.5.1"
+  },
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yunojuno/yunojuno-conversations-test"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,8 +38,7 @@
     "karma-browserify": "^5.0.2",
     "karma-coverage": "^0.5.3",
     "karma-jasmine": "^0.3.7",
-    "karma-phantomjs-launcher": "^1.0.0",
-    "phantomjs-prebuilt": "^2.1.4",
+    "karma-chrome-launcher": "^1.0.1",
     "postcss-calc": "^5.2.0",
     "postcss-custom-media": "^5.0.1",
     "postcss-custom-properties": "^5.0.0",
