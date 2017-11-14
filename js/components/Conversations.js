@@ -46,7 +46,6 @@ ConversationModel.prototype = {
 function ConversationView(model, partial) {
     // Set accessors for the partial.
     this.view = partial;
-    this.identifier = gen_uuid();
     this.textarea = $(this.view).find('textarea');
     this.form = $(this.view).find('form');
     this.filePicker = $(this.view).find('input[type="file"]');
@@ -64,9 +63,6 @@ function ConversationView(model, partial) {
             items: []
         };
     }
-
-    // Set uuid on form
-    $(this.view).attr('id', this.identifier);
 
     // Make global event for other parts of the platform to subscribe to.
     YJ.Conversation.conversationUpdated = new YJEvent(this);
