@@ -5,7 +5,6 @@
 /* global getCookie */
 
 var YJEvent = require('../core/Events.js'),
-    gen_uuid = require('../core/Utils.js').gen_uuid,
     defaultError = '';
 
 // Add Conversation level scope to the YJ global namespace
@@ -30,7 +29,7 @@ ConversationModel.prototype = {
 
     /**
      * Get single item from local store. This is an unused helper function
-     */ 
+     */
     getItem: function(index) {
         return this._messages[index];
     },
@@ -48,6 +47,7 @@ function ConversationView(model, partial) {
     this.view = partial;
     this.textarea = $(this.view).find('textarea');
     this.form = $(this.view).find('form');
+	this.errorsContainer = $(this.view).find('.Form-errors');
     this.filePicker = $(this.view).find('input[type="file"]');
     this.submitButton = $(this.view).find('button[type="submit"]');
     this.resetButton = $(this.view).find('button[type="reset"]');
@@ -113,7 +113,7 @@ ConversationView.prototype = {
     attachmentTemplate: '<p><a class="ChatMessage-attachment" target="_blank" href="#">{{ ATTACHMENT }}</a></p>',
     /**
      * All the bindings to our document happen here
-     * 
+     *
      * - onSubmitForm() stops sync form submit
      * - onExpandForm() shows the attachment field
      * - onKeyDown() determines if use has used form submit shortcuts
@@ -124,19 +124,19 @@ ConversationView.prototype = {
      *
      */
     bindEventListeners: function() {
-				this.form.off('click');
-				this.filePicker.off('change');
-				this.textarea.off('focus');
-				this.textarea.off('keydown');
-				this.resetButton.off('click');
-				this.submitButton.off('click');
+		this.form.off('click');
+		this.filePicker.off('change');
+		this.textarea.off('focus');
+		this.textarea.off('keydown');
+		this.resetButton.off('click');
+		this.submitButton.off('click');
 
-				this.form.on('submit', this.onSubmitForm.bind(this));
-				this.filePicker.on('change', this.onChangeFilepicker);
-				this.textarea.on('focus', this.onExpandForm.bind(this));
-				this.textarea.on('keydown', this.onKeyDown.bind(this));
-				this.resetButton.on('click', this.onClearFileAttachment.bind(this));
-				this.submitButton.on('click', this.onClickSubmitButton.bind(this));
+		this.form.on('submit', this.onSubmitForm.bind(this));
+		this.filePicker.on('change', this.onChangeFilepicker);
+		this.textarea.on('focus', this.onExpandForm.bind(this));
+		this.textarea.on('keydown', this.onKeyDown.bind(this));
+		this.resetButton.on('click', this.onClearFileAttachment.bind(this));
+		this.submitButton.on('click', this.onClickSubmitButton.bind(this));
     },
 
     /**
@@ -226,9 +226,9 @@ ConversationView.prototype = {
     },
 
     /**
-		 * When a user clicks the 'clear attachment' link after adding an
-		 * attachment it should trigger this and clear the value.
-     */
+	* When a user clicks the 'clear attachment' link after adding an
+	* attachment it should trigger this and clear the value.
+    */
     onClearFileAttachment: function() {
 		this.filePicker.val(null);
 		$('.js-conversationForm .js-clearableFileInput').empty();
@@ -245,18 +245,52 @@ ConversationView.prototype = {
         $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
         $relevantStatus.html(summaryString);
     },
-
+	/*
+	 * An error item is the div that sits inside the errorContainer
+	 */
+	createErrorItem: function () {
+		var dom = document.createElement('div');
+		dom.className = 'Form-errorsItem';
+		dom.innerText = 'An error has occurred, either add message or attachment';
+		return dom;
+	},
+	/*
+	 * show the error state to the user
+	 */
+	displayErrorMessage: function() {
+		var errorItem = this.createErrorItem();
+		this.errorsContainer.append(errorItem);
+	},
+	/*
+	 * removes all error messages inside the container
+	 */
+	clearErrorMessages: function() {
+		this.errorsContainer.empty();
+	},
     /**
      * Submit form over ajax
      */
     onClickSubmitButton: function(ev) {
-        // TODO - Add validation to form.
-        return this.triggerSubmitForm(ev.currentTarget.form);
+		this.clearErrorMessages();
+		var textAreaValid = this.textarea.val().length > 0;
+		var filePickerValid = this.filePicker.val().length > 0;
+		var valid = textAreaValid || filePickerValid;
+		if (!valid) {
+			this.displayErrorMessage();
+			return false;
+		}
+        this.triggerSubmitForm(ev.currentTarget.form);
     },
+	/**
+	* When the form has either lost focus or has completed hide revert the form
+	* back to its contracted state
+	*/
+	onContractForm: function() {
+		$(this.view).removeClass('expand');
+	},
     /**
      * Clicking on textarea adds class of expand which shows the controls
      * and expands the textarea.
-     *
      */
     onExpandForm: function() {
         $(this.view).addClass('expand');
@@ -271,7 +305,7 @@ ConversationView.prototype = {
         var keyCode = ev.keyCode;
         if ((keyCode === 10 || keyCode === 13) && (ev.ctrlKey || ev.metaKey)) {
             ev.target.blur();
-            return this.triggerSubmitForm(ev.target.form);
+            this.triggerSubmitForm(ev.target.form);
         }
     },
     /**
