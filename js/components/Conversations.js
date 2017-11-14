@@ -54,6 +54,17 @@ function ConversationView(model, partial) {
 
     var messages = JSON.parse(localStorage.getItem('messages'));
 
+	// Demonstrate the ability to add a javascript trigger following the CSS
+	// animation (an alert or console.log() is enough)
+	var transitions = [
+		'transitionend',
+		'webkitTransitionEnd',
+		'oTransitionEnd',
+		'MSTransitionEnd'
+	].join(' ');
+
+	this.form.on(transitions, function(){ console.log('i am a transition') });
+
     // Detect messages
     if(messages !== null) {
         this.conversationMessages = messages;
