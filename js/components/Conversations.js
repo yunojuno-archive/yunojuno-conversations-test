@@ -193,13 +193,12 @@ ConversationView.prototype = {
      * the form to show the attachment.
      */
     emptyForm: function() {
-        this.textarea.val('');
-        this.form.find('input[type=file]').val('');
-        $(this.view).removeClass('expand');
+		this.textarea.val(null);
+		this.onClearFileAttachment();
+		this.onContractForm();
     },
-
     /**
-     * Loop through items and build a template, 
+     * Loop through items and build a template,
      * eventually replacing the contents with our template string.
      */
     renderTemplate: function(items) {
@@ -227,15 +226,17 @@ ConversationView.prototype = {
     },
 
     /**
-     * When a user clicks the 'clear attachment' link after adding an
-     * attachment it should trigger this and clear the value.
+		 * When a user clicks the 'clear attachment' link after adding an
+		 * attachment it should trigger this and clear the value.
      */
     onClearFileAttachment: function() {
-
+		this.filePicker.val(null);
+		$('.js-conversationForm .js-clearableFileInput').empty();
+		$('.js-conversationForm .js-clearableFileInput-trigger').hide();
     },
 
     /**
-     * When user clicks our filepicker and chooses a file, take 
+     * When user clicks our filepicker and chooses a file, take
      * the filename and place in an element next to the picker.
      */
     onChangeFilepicker: function(ev) {
@@ -320,8 +321,8 @@ ConversationController.prototype = {
     },
 
     /*
-     * Performs the action of sending a message to another user. 
-     * In this case we are only sending a single strand from ourselves. 
+     * Performs the action of sending a message to another user.
+     * In this case we are only sending a single strand from ourselves.
      * So another party will never 'receive' a message.
      */
     sendMessage: function(callee, conversationForm) {
@@ -368,7 +369,7 @@ ConversationController.prototype = {
      * - status(obj)
      *  - success: (true/false)
      *  - feedback: (string/null)
-     */ 
+     */
     submitSuccess: function(xhr, responseObj) {
         var wasSuccessful = responseObj.status.success,
             feedbackMessage = responseObj.status.feedback_message,
