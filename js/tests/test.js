@@ -55,11 +55,20 @@ var Conversations = require('../components/Conversations.js'),
                         <div class="Form-item--fileInputWrapper js-clearableFileInput Form-item--fileInputWrapper--status u-textMuted js-uploadFile-name"></div><div class="Form-item--fileInputWrapper Form-item--fileInputWrapper--status Form-item--fileInputWrapper--clear"><a href="#" class="js-clearableFileInput-trigger" style="display: none;"> Clear</a></div>
                     </div>
                 </div>
+                <div class="Form-errors">
+                </div>
+
                 <div class="Form-button">
                     <button class="Button Button--primary js-spinnerButton" type="submit">
                         <span class="Button-inner">
                             Send message
                         </span>
+                    </button>
+
+                    <button class="Button Button--primary js-spinnerButton" type="reset">
+                      <span class="Button-inner">
+                        Remove Attachment
+                      </span>
                     </button>
                 </div>
             </div>
@@ -109,13 +118,16 @@ describe('Test conversations (load, event binds and submission calls)', function
         model = new Conversations.ConversationModel();
         view = new Conversations.ConversationView(model, $conversationObj);
 
-        spyOn(view, 'onClickSubmitButton').and.callThrough();
+        spyOn(view, 'checkFormForSubmission').and.callThrough();
         spyOn(view, 'onKeyDown').and.callThrough();
         spyOn(view, 'onSubmitForm').and.callThrough();
         spyOn(view, 'onChangeFilepicker').and.callThrough();
         spyOn(view, 'onExpandForm').and.callThrough();
         spyOn(view, 'init').and.callThrough();
         spyOn(view, 'triggerSubmitForm').and.callThrough();
+        spyOn(view, 'onClearFileAttachment').and.callThrough();
+        spyOn(view, 'displayErrorMessage').and.callThrough();
+        spyOn(view, 'clearErrorMessages').and.callThrough();
         spyOn(view, 'emptyForm').and.callThrough();
         spyOn(view, 'detectAndRemoveAttachment').and.callThrough();
 
@@ -180,10 +192,10 @@ describe('Test conversations (load, event binds and submission calls)', function
         expect(model.getItem(0).date).toBe(fixture.date);
     });
 
-    it('expects clicking button to trigger onClickSubmitButton', function () {
+    it('expects clicking button to trigger checkFormForSubmission', function () {
         $(view.form).find('button[type=submit]').trigger('click');
 
-        expect(view.onClickSubmitButton).toHaveBeenCalled();
+        expect(view.checkFormForSubmission).toHaveBeenCalled();
     });
 
     it('triggers the submitForm spy', function () {
@@ -208,6 +220,50 @@ describe('Test conversations (load, event binds and submission calls)', function
 
         expect(view.onChangeFilepicker).toHaveBeenCalled();
         expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');
+    });
+
+    // This will always be undefined anyway as mentioned in the test:
+    // 'triggers the onchange event for filepicker', you cannot set a value of a
+    // file picker
+    it('onClearFileAttachment() empties file picker', function () {
+      var filePicker = $(this.view).find('input[type="file"]');
+      view.onClearFileAttachment();
+      expect(filePicker.val()).toBe(undefined);
+    });
+
+    it('onClearFileAttachment() hides input trigger', function () {
+      var trigger = $(view.view).find('.js-conversationForm .js-clearableFileInput-trigger');
+      view.onClearFileAttachment();
+      expect(trigger.is(':visible')).toBe(false);
+    });
+
+    it('onClearFileAttachment() empties file input', function () {
+      var trigger = $(view.view).find('.js-conversationForm .js-clearableFileInput');
+      view.onClearFileAttachment();
+      expect(trigger.children().length > 0).toBe(false);
+    });
+
+    it('onClearFileAttachment() is called on reset click', function () {
+      $(view.view).find('button[type="reset"]').trigger('click');
+      expect(view.onClearFileAttachment).toHaveBeenCalled();
+    });
+
+    it('checkFormForSubmission() errors on invalid submission', function () {
+      view.submitButton.trigger('click');
+      expect(view.clearErrorMessages).toHaveBeenCalled();
+      expect(view.displayErrorMessage).toHaveBeenCalled();
+    });
+
+    it('checkFormForSubmission() successfully validates on submission', function () {
+      view.textarea.val('i am a test message');
+      view.submitButton.trigger('click');
+      expect(view.clearErrorMessages).toHaveBeenCalled();
+      expect(view.triggerSubmitForm).toHaveBeenCalled();
+    });
+
+    it('when emptying the form onClearFileAttachment() is called', function () {
+      $(view.view).find('button[type="reset"]').trigger('click');
+      expect(view.onClearFileAttachment).toHaveBeenCalled();
     });
 
     it('triggers the keydown event (which causes a submit through ctrlKey)', function () {
@@ -240,9 +296,22 @@ describe('Test conversations (load, event binds and submission calls)', function
         expect($(view.view).attr('class')).toContain('expand');
     });
 
-    it('triggers a submit which in turn triggers to submit form YJ event', function () {
+    it('fails to submit if use hits enter and form invalid', function () {
+        // Set spy to also callthrough.
+        view.textarea.val('test value');
+
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        e.ctrlKey = true;
+
+        view.textarea.trigger(e);
+        expect(view.displayErrorMessage).toHaveBeenCalled();
+    });
+
+    it('triggers form submission when user hits enter', function () {
         // Set spy to also callthrough.
         view.triggerSubmitForm.calls.reset(); // Reset Mock calls.
+        view.textarea.val('test value');
 
         var e = $.Event('keydown');
         e.keyCode = 10; // Enter
@@ -320,7 +389,7 @@ describe('Test conversations (submitting messages to the stack)', function () {
         model = new Conversations.ConversationModel();
         view = new Conversations.ConversationView(model, $conversationObj);
 
-        spyOn(view, 'onClickSubmitButton').and.callThrough();
+        spyOn(view, 'checkFormForSubmission').and.callThrough();
         spyOn(view, 'onKeyDown').and.callThrough();
         spyOn(view, 'onSubmitForm').and.callThrough();
         spyOn(view, 'onChangeFilepicker').and.callThrough();
@@ -358,49 +427,49 @@ describe('Test conversations (submitting messages to the stack)', function () {
     afterEach(function () {
         jasmine.Ajax.uninstall();
     });
-	it('simulates a success response and adds message to the stack', function() {
-		// Splurge fake response into conversation response and check responseObj performs correctly.
-		displayNewAlert.calls.reset();
-		buildMessageHTML.calls.reset();
-		controller.submitSuccess({}, conversationMockResponse);
+  it('simulates a success response and adds message to the stack', function() {
+    // Splurge fake response into conversation response and check responseObj performs correctly.
+    displayNewAlert.calls.reset();
+    buildMessageHTML.calls.reset();
+    controller.submitSuccess({}, conversationMockResponse);
 
-		expect(model.getItems().length).toBe(12);
-		expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
+    expect(model.getItems().length).toBe(12);
+    expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
 
         expect(view.emptyForm).toHaveBeenCalled();
         expect(view.detectAndRemoveAttachment).toHaveBeenCalled();
 
-		expect(buildMessageHTML).not.toHaveBeenCalled();
-		expect(displayNewAlert).not.toHaveBeenCalled();
-	});
+    expect(buildMessageHTML).not.toHaveBeenCalled();
+    expect(displayNewAlert).not.toHaveBeenCalled();
+  });
 
-	it('simulates a jQuery success response and adds message to the stack', function() {
-		buildMessageHTML.calls.reset();
+  it('simulates a jQuery success response and adds message to the stack', function() {
+    buildMessageHTML.calls.reset();
 
-		// Splurge fake response into conversation response and check responseObj performs correctly.
-		controller.submitJquerySuccess(conversationMockResponse, '', {}, false);
+    // Splurge fake response into conversation response and check responseObj performs correctly.
+    controller.submitJquerySuccess(conversationMockResponse, '', {}, false);
 
-		expect(model.getItems().length).toBe(12);
-		expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
+    expect(model.getItems().length).toBe(12);
+    expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
 
-		expect(buildMessageHTML).not.toHaveBeenCalled();
-		expect(displayNewAlert).not.toHaveBeenCalled();
-	});
+    expect(buildMessageHTML).not.toHaveBeenCalled();
+    expect(displayNewAlert).not.toHaveBeenCalled();
+  });
 
-	it('simulates a success response with a feeback message', function() {
-		conversationMockResponse.status.feedback_message = "Clever girl.";
+  it('simulates a success response with a feeback message', function() {
+    conversationMockResponse.status.feedback_message = "Clever girl.";
 
-		buildMessageHTML.calls.reset();
+    buildMessageHTML.calls.reset();
 
-		// Splurge fake response into conversation response and check responseObj performs correctly.
-		controller.submitSuccess({}, conversationMockResponse);
+    // Splurge fake response into conversation response and check responseObj performs correctly.
+    controller.submitSuccess({}, conversationMockResponse);
 
-		expect(model.getItems().length).toBe(12);
-		expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
+    expect(model.getItems().length).toBe(12);
+    expect(callableFunc.eventModelMessageAddedCallback).toHaveBeenCalled();
 
-		expect(buildMessageHTML).toHaveBeenCalled();
-		expect(displayNewAlert).toHaveBeenCalled();
-	});
+    expect(buildMessageHTML).toHaveBeenCalled();
+    expect(displayNewAlert).toHaveBeenCalled();
+  });
 
     it('simulates a unsuccessful response with a feeback message', function() {
         conversationMockResponse.status.success = false;
@@ -430,29 +499,29 @@ describe('Test conversations (submitting messages to the stack)', function () {
         expect(displayNewAlert).not.toHaveBeenCalled();
     });
 
-	it('simulates a fail response', function() {
-		conversationMockResponse.status.feedback_message = null;
+  it('simulates a fail response', function() {
+    conversationMockResponse.status.feedback_message = null;
 
-		displayNewAlert.calls.reset();
+    displayNewAlert.calls.reset();
 
-		// Splurge fake response into conversation response and check responseObj performs correctly.
-		controller.submitFail();
+    // Splurge fake response into conversation response and check responseObj performs correctly.
+    controller.submitFail();
 
-		expect(displayNewAlert).toHaveBeenCalled();
-	});
+    expect(displayNewAlert).toHaveBeenCalled();
+  });
 });
 
 describe('Load conversations in a client which doesn\'t support ajax file uploads (> IE9)', function () {
-	var controller, model, view, $conversationObj;
+  var controller, model, view, $conversationObj;
 
-	beforeAll(function () {
+  beforeAll(function () {
         $(conversationHTML).find('.js-conversationBody').html('');
-		$conversationObj = $(conversationHTML).get(0);
-		document.body.appendChild($conversationObj);
+    $conversationObj = $(conversationHTML).get(0);
+    document.body.appendChild($conversationObj);
 
-		YJ.canUseAjaxFileUploads = function () {
-			return false;
-		};
+    YJ.canUseAjaxFileUploads = function () {
+      return false;
+    };
 
         // Clear local storage
         localStorage.clear();
@@ -460,40 +529,40 @@ describe('Load conversations in a client which doesn\'t support ajax file upload
         // Add some fake items to localStorage.
         localStorage.setItem('messages', JSON.stringify(conversationMessages));
 
-		model = new Conversations.ConversationModel();
-		view = new Conversations.ConversationView(model, $conversationObj);
+    model = new Conversations.ConversationModel();
+    view = new Conversations.ConversationView(model, $conversationObj);
         spyOn(view, 'detectAndRemoveAttachment').and.callThrough();
-		controller = new Conversations.ConversationController(model, view);
-	});
+    controller = new Conversations.ConversationController(model, view);
+  });
 
-	afterAll(function () {
-		document.removeChild($conversationObj);
-	});
+  afterAll(function () {
+    document.removeChild($conversationObj);
+  });
 
-	it('has the correct amount of messages', function () {
-		expect(model.getItems().length).toBe(12);
-	});
+  it('has the correct amount of messages', function () {
+    expect(model.getItems().length).toBe(12);
+  });
 
-	it('has no attachment field', function () {
-		expect(view.form[0].querySelector('input[type=file]')).toBe(null);
+  it('has no attachment field', function () {
+    expect(view.form[0].querySelector('input[type=file]')).toBe(null);
         expect(view.detectAndRemoveAttachment).toHaveBeenCalled();
-	});
+  });
 
-	it('Getting the first message returns the correct fixture', function () {
+  it('Getting the first message returns the correct fixture', function () {
         var fixture = conversationMessages.items[conversationMessages.items.length-1];
 
-		expect(model.getItem(0).avatar).toBe(fixture.avatar);
-		expect(model.getItem(0).message).toBe(fixture.message);
-		expect(model.getItem(0).date).toBe(fixture.date);
-	});
+    expect(model.getItem(0).avatar).toBe(fixture.avatar);
+    expect(model.getItem(0).message).toBe(fixture.message);
+    expect(model.getItem(0).date).toBe(fixture.date);
+  });
 
-	it('has emitted 2 message added events', function () {
-	});
+  it('has emitted 2 message added events', function () {
+  });
 
-	it('has added a class to the partial on textarea focus', function () {
-		view.textarea.focus();
-		expect($(view.view).attr('class')).toContain('expand');
-	});
+  it('has added a class to the partial on textarea focus', function () {
+    view.textarea.focus();
+    expect($(view.view).attr('class')).toContain('expand');
+  });
 });
 
 describe('Load conversations with empty localStorage', function () {
