@@ -47,23 +47,23 @@ function ConversationView(model, partial) {
     this.view = partial;
     this.textarea = $(this.view).find('textarea');
     this.form = $(this.view).find('form');
-		this.errorsContainer = $(this.view).find('.Form-errors');
+    this.errorsContainer = $(this.view).find('.Form-errors');
     this.filePicker = $(this.view).find('input[type="file"]');
     this.submitButton = $(this.view).find('button[type="submit"]');
     this.resetButton = $(this.view).find('button[type="reset"]');
 
     var messages = JSON.parse(localStorage.getItem('messages'));
 
-	// Demonstrate the ability to add a javascript trigger following the CSS
-	// animation (an alert or console.log() is enough)
-	var transitions = [
-		'transitionend',
-		'webkitTransitionEnd',
-		'oTransitionEnd',
-		'MSTransitionEnd'
-	].join(' ');
-
-	this.form.on(transitions, function(){ console.log('i am a transition') });
+    // Demonstrate the ability to add a javascript trigger following the CSS
+    // animation (an alert or console.log() is enough)
+    var transitions = [
+      'transitionend',
+      'webkitTransitionEnd',
+      'oTransitionEnd',
+      'MSTransitionEnd'
+    ].join(' ');
+    
+    this.form.on(transitions, function(){ console.log('i am a transition') });
 
     // Detect messages
     if(messages !== null) {
@@ -129,25 +129,25 @@ ConversationView.prototype = {
      * - onExpandForm() shows the attachment field
      * - onKeyDown() determines if use has used form submit shortcuts
      * - onClearFileAttachment() clears the attachment from the form the user is
-		 *   editing
-     * - onClickSubmitButton() submits our form over AJAX
+     *   editing
+     * - checkFormForSubmission() submits our form over AJAX
      * - onChangeFilepicker() gives user UI feedback on which file they picked
      *
      */
     bindEventListeners: function() {
-			this.form.off('click');
-			this.filePicker.off('change');
-			this.textarea.off('focus');
-			this.textarea.off('keydown');
-			this.resetButton.off('click');
-			this.submitButton.off('click');
+      this.form.off('click');
+      this.filePicker.off('change');
+      this.textarea.off('focus');
+      this.textarea.off('keydown');
+      this.resetButton.off('click');
+      this.submitButton.off('click');
 
-			this.form.on('submit', this.onSubmitForm.bind(this));
-			this.filePicker.on('change', this.onChangeFilepicker);
-			this.textarea.on('focus', this.onExpandForm.bind(this));
-			this.textarea.on('keydown', this.onKeyDown.bind(this));
-			this.resetButton.on('click', this.onClearFileAttachment.bind(this));
-			this.submitButton.on('click', this.onClickSubmitButton.bind(this));
+      this.form.on('submit', this.onSubmitForm.bind(this));
+      this.filePicker.on('change', this.onChangeFilepicker);
+      this.textarea.on('focus', this.onExpandForm.bind(this));
+      this.textarea.on('keydown', this.onKeyDown.bind(this));
+      this.resetButton.on('click', this.onClearFileAttachment.bind(this));
+      this.submitButton.on('click', this.checkFormForSubmission.bind(this));
     },
 
     /**
@@ -204,9 +204,9 @@ ConversationView.prototype = {
      * the form to show the attachment.
      */
     emptyForm: function() {
-			this.textarea.val(null);
-			this.onClearFileAttachment();
-			this.onContractForm();
+      this.textarea.val(null);
+      this.onClearFileAttachment();
+      this.onContractForm();
     },
     /**
      * Loop through items and build a template,
@@ -237,20 +237,20 @@ ConversationView.prototype = {
     },
 
     /**
-		* When a user clicks the 'clear attachment' link after adding an
-		* attachment it should trigger this and clear the value.
+    * When a user clicks the 'clear attachment' link after adding an
+    * attachment it should trigger this and clear the value.
     */
     onClearFileAttachment: function(event) {
-			if(event) {
-				// the purpose of this task was to clear the file attachment
-				// to do this a button[type='reset'] was used, which default
-				// behaviour is to clear all items in a form, this prevents
-				// clearing the users pre written message
-				event.preventDefault();
-			}
-			this.filePicker.val(null);
-			$(this.view).find('.js-conversationForm .js-clearableFileInput').empty();
-			$(this.view).find('.js-conversationForm .js-clearableFileInput-trigger').hide();
+      if(event) {
+        // the purpose of this task was to clear the file attachment
+        // to do this a button[type='reset'] was used, which default
+        // behaviour is to clear all items in a form, this prevents
+        // clearing the users pre written message
+        event.preventDefault();
+      }
+      this.filePicker.val(null);
+      $(this.view).find('.js-conversationForm .js-clearableFileInput').empty();
+      $(this.view).find('.js-conversationForm .js-clearableFileInput-trigger').hide();
     },
 
     /**
@@ -263,49 +263,49 @@ ConversationView.prototype = {
         $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
         $relevantStatus.html(summaryString);
     },
-	/*
-	 * An error item is the div that sits inside the errorContainer
-	 */
-	createErrorItem: function () {
-		var dom = document.createElement('div');
-		dom.className = 'Form-errorsItem';
-		dom.innerText = 'An error has occurred, either add message or attachment';
-		return dom;
-	},
-	/*
-	 * show the error state to the user
-	 */
-	displayErrorMessage: function() {
-		var errorItem = this.createErrorItem();
-		this.errorsContainer.append(errorItem);
-	},
-	/*
-	 * removes all error messages inside the container
-	 */
-	clearErrorMessages: function() {
-		this.errorsContainer.empty();
-	},
-	/**
-	* Submit form over ajax
-	*/
-	onClickSubmitButton: function(ev) {
-		this.clearErrorMessages();
-		var textAreaValid = this.textarea.val().length > 0;
-		var filePickerValid = this.filePicker.val().length > 0;
-		var valid = textAreaValid || filePickerValid;
-		if (!valid) {
-			this.displayErrorMessage();
-			return false;
-		}
-		this.triggerSubmitForm(ev.currentTarget.form);
-	},
-	/**
-	* When the form has either lost focus or has completed hide revert the form
-	* back to its contracted state
-	*/
-	onContractForm: function() {
-		$(this.view).removeClass('expand');
-	},
+  /*
+   * An error item is the div that sits inside the errorContainer
+   */
+  createErrorItem: function () {
+    var dom = document.createElement('div');
+    dom.className = 'Form-errorsItem';
+    dom.innerText = 'An error has occurred, either add message or attachment';
+    return dom;
+  },
+  /*
+   * show the error state to the user
+   */
+  displayErrorMessage: function() {
+    var errorItem = this.createErrorItem();
+    this.errorsContainer.append(errorItem);
+  },
+  /*
+   * removes all error messages inside the container
+   */
+  clearErrorMessages: function() {
+    this.errorsContainer.empty();
+  },
+  /**
+  * Submit form over ajax
+  */
+  checkFormForSubmission: function(ev) {
+    this.clearErrorMessages();
+    var textAreaValid = this.textarea.val().length > 0;
+    var filePickerValid = this.filePicker.val().length > 0;
+    var valid = textAreaValid || filePickerValid;
+    if (!valid) {
+      this.displayErrorMessage();
+      return false;
+    }
+    this.triggerSubmitForm(ev.currentTarget.form);
+  },
+  /**
+  * When the form has either lost focus or has completed hide revert the form
+  * back to its contracted state
+  */
+  onContractForm: function() {
+    $(this.view).removeClass('expand');
+  },
     /**
      * Clicking on textarea adds class of expand which shows the controls
      * and expands the textarea.
@@ -323,7 +323,7 @@ ConversationView.prototype = {
         var keyCode = ev.keyCode;
         if ((keyCode === 10 || keyCode === 13) && (ev.ctrlKey || ev.metaKey)) {
             ev.target.blur();
-            this.triggerSubmitForm(ev.target.form);
+            this.checkFormForSubmission(ev);
         }
     },
     /**
