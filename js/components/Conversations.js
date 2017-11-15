@@ -339,6 +339,12 @@ ConversationController.prototype = {
             data.attachment = conversationForm.elements.attachment.value.split('\\').pop();
         }
 
+        // Validate message
+        if ((typeof data.message !== "string") ||
+            (data.message.length === 0) ||
+            (data.message.length > Number(conversationForm.elements.message.getAttribute("maxlength")))) {
+            return;
+        }
 
         // Tell model to add item.
         this._model.addItem(data);
