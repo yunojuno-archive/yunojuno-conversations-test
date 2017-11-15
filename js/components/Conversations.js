@@ -260,6 +260,7 @@ ConversationView.prototype = {
         } else {
             $relevantStatus.removeClass('Form-item--fileInputWrapper--clear');
             $relevantStatus.html('');
+            $(ev.target).val();
         }
         this.validateForm();
     },
@@ -368,9 +369,8 @@ ConversationController.prototype = {
             data.attachment = conversationForm.elements.attachment.value.split('\\').pop();
         }
 
-        // check if message data exists, check if maxlength attribute is honoured
-        if ((typeof data.message !== "string") ||
-            (data.message.length === 0) ||
+        // if message data and attachment data don't exist, or the message length is too long, don't continue
+        if (((!data.message) && (!data.attachment)) ||
             (data.message.length > Number(conversationForm.elements.message.getAttribute("maxlength")))) {
             return;
         }
