@@ -55,13 +55,22 @@ var Conversations = require('../components/Conversations.js'),
                         <div class="Form-item--fileInputWrapper js-clearableFileInput Form-item--fileInputWrapper--status u-textMuted js-uploadFile-name"></div><div class="Form-item--fileInputWrapper Form-item--fileInputWrapper--status Form-item--fileInputWrapper--clear"><a href="#" class="js-clearableFileInput-trigger" style="display: none;"> Clear</a></div>
                     </div>
                 </div>
+								<div class="Form-errors">
+								</div>
+
                 <div class="Form-button">
                     <button class="Button Button--primary js-spinnerButton" type="submit">
                         <span class="Button-inner">
                             Send message
                         </span>
                     </button>
-                </div>
+
+										<button class="Button Button--primary js-spinnerButton" type="reset">
+											<span class="Button-inner">
+												Remove Attachment
+											</span>
+										</button>
+								</div>
             </div>
         </div>
     </form>
@@ -116,6 +125,9 @@ describe('Test conversations (load, event binds and submission calls)', function
         spyOn(view, 'onExpandForm').and.callThrough();
         spyOn(view, 'init').and.callThrough();
         spyOn(view, 'triggerSubmitForm').and.callThrough();
+        spyOn(view, 'onClearFileAttachment').and.callThrough();
+        spyOn(view, 'displayErrorMessage').and.callThrough();
+        spyOn(view, 'clearErrorMessages').and.callThrough();
         spyOn(view, 'emptyForm').and.callThrough();
         spyOn(view, 'detectAndRemoveAttachment').and.callThrough();
 
@@ -209,6 +221,50 @@ describe('Test conversations (load, event binds and submission calls)', function
         expect(view.onChangeFilepicker).toHaveBeenCalled();
         expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');
     });
+
+		// This will always be undefined anyway as mentioned in the test:
+	  // 'triggers the onchange event for filepicker', you cannot set a value of a
+		// file picker
+		it('onClearFileAttachment() empties file picker', function () {
+			var filePicker = $(this.view).find('input[type="file"]');
+			view.onClearFileAttachment();
+			expect(filePicker.val()).toBe(undefined);
+		});
+
+		it('onClearFileAttachment() hides input trigger', function () {
+			var trigger = $(view.view).find('.js-conversationForm .js-clearableFileInput-trigger');
+			view.onClearFileAttachment();
+			expect(trigger.is(':visible')).toBe(false);
+		});
+
+		it('onClearFileAttachment() empties file input', function () {
+			var trigger = $(view.view).find('.js-conversationForm .js-clearableFileInput');
+			view.onClearFileAttachment();
+			expect(trigger.children().length > 0).toBe(false);
+		});
+
+		it('onClearFileAttachment() is called on reset click', function () {
+			$(view.view).find('button[type="reset"]').trigger('click');
+			expect(view.onClearFileAttachment).toHaveBeenCalled();
+		});
+
+		it('onClickSubmitButton() errors on invalid submission', function () {
+			view.submitButton.trigger('click');
+			expect(view.clearErrorMessages).toHaveBeenCalled();
+			expect(view.displayErrorMessage).toHaveBeenCalled();
+		});
+
+		it('onClickSubmitButton() successfully validates on submission', function () {
+			view.textarea.val('i am a test message');
+			view.submitButton.trigger('click');
+			expect(view.clearErrorMessages).toHaveBeenCalled();
+			expect(view.triggerSubmitForm).toHaveBeenCalled();
+		});
+
+		it('when emptying the form the flear file attacment is called', function () {
+			$(view.view).find('button[type="reset"]').trigger('click');
+			expect(view.onClearFileAttachment).toHaveBeenCalled();
+		});
 
     it('triggers the keydown event (which causes a submit through ctrlKey)', function () {
         var e = $.Event('keydown');

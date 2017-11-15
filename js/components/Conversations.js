@@ -47,7 +47,7 @@ function ConversationView(model, partial) {
     this.view = partial;
     this.textarea = $(this.view).find('textarea');
     this.form = $(this.view).find('form');
-	this.errorsContainer = $(this.view).find('.Form-errors');
+		this.errorsContainer = $(this.view).find('.Form-errors');
     this.filePicker = $(this.view).find('input[type="file"]');
     this.submitButton = $(this.view).find('button[type="submit"]');
     this.resetButton = $(this.view).find('button[type="reset"]');
@@ -135,19 +135,19 @@ ConversationView.prototype = {
      *
      */
     bindEventListeners: function() {
-		this.form.off('click');
-		this.filePicker.off('change');
-		this.textarea.off('focus');
-		this.textarea.off('keydown');
-		this.resetButton.off('click');
-		this.submitButton.off('click');
+			this.form.off('click');
+			this.filePicker.off('change');
+			this.textarea.off('focus');
+			this.textarea.off('keydown');
+			this.resetButton.off('click');
+			this.submitButton.off('click');
 
-		this.form.on('submit', this.onSubmitForm.bind(this));
-		this.filePicker.on('change', this.onChangeFilepicker);
-		this.textarea.on('focus', this.onExpandForm.bind(this));
-		this.textarea.on('keydown', this.onKeyDown.bind(this));
-		this.resetButton.on('click', this.onClearFileAttachment.bind(this));
-		this.submitButton.on('click', this.onClickSubmitButton.bind(this));
+			this.form.on('submit', this.onSubmitForm.bind(this));
+			this.filePicker.on('change', this.onChangeFilepicker);
+			this.textarea.on('focus', this.onExpandForm.bind(this));
+			this.textarea.on('keydown', this.onKeyDown.bind(this));
+			this.resetButton.on('click', this.onClearFileAttachment.bind(this));
+			this.submitButton.on('click', this.onClickSubmitButton.bind(this));
     },
 
     /**
@@ -204,9 +204,9 @@ ConversationView.prototype = {
      * the form to show the attachment.
      */
     emptyForm: function() {
-		this.textarea.val(null);
-		this.onClearFileAttachment();
-		this.onContractForm();
+			this.textarea.val(null);
+			this.onClearFileAttachment();
+			this.onContractForm();
     },
     /**
      * Loop through items and build a template,
@@ -237,13 +237,20 @@ ConversationView.prototype = {
     },
 
     /**
-	* When a user clicks the 'clear attachment' link after adding an
-	* attachment it should trigger this and clear the value.
+		* When a user clicks the 'clear attachment' link after adding an
+		* attachment it should trigger this and clear the value.
     */
-    onClearFileAttachment: function() {
-		this.filePicker.val(null);
-		$('.js-conversationForm .js-clearableFileInput').empty();
-		$('.js-conversationForm .js-clearableFileInput-trigger').hide();
+    onClearFileAttachment: function(event) {
+			if(event) {
+				// the purpose of this task was to clear the file attachment
+				// to do this a button[type='reset'] was used, which default
+				// behaviour is to clear all items in a form, this prevents
+				// clearing the users pre written message
+				event.preventDefault();
+			}
+			this.filePicker.val(null);
+			$(this.view).find('.js-conversationForm .js-clearableFileInput').empty();
+			$(this.view).find('.js-conversationForm .js-clearableFileInput-trigger').hide();
     },
 
     /**
@@ -278,10 +285,10 @@ ConversationView.prototype = {
 	clearErrorMessages: function() {
 		this.errorsContainer.empty();
 	},
-    /**
-     * Submit form over ajax
-     */
-    onClickSubmitButton: function(ev) {
+	/**
+	* Submit form over ajax
+	*/
+	onClickSubmitButton: function(ev) {
 		this.clearErrorMessages();
 		var textAreaValid = this.textarea.val().length > 0;
 		var filePickerValid = this.filePicker.val().length > 0;
@@ -290,8 +297,8 @@ ConversationView.prototype = {
 			this.displayErrorMessage();
 			return false;
 		}
-        this.triggerSubmitForm(ev.currentTarget.form);
-    },
+		this.triggerSubmitForm(ev.currentTarget.form);
+	},
 	/**
 	* When the form has either lost focus or has completed hide revert the form
 	* back to its contracted state
