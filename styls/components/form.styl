@@ -196,16 +196,19 @@
   overflow: hidden;
   position: relative;
   width: 150px !important;
-
-  & input {
-    cursor: pointer !important;
-    height: 20px;
-    margin: 0;
-    opacity: 0;
-    padding: 0;
+  & label {
+    color: var(--color-coral);
     position: absolute;
-    right: 0;
-    top: 0;
+    font-weight: normal;
+    text-decoration: underline;
+    cursor: pointer;
+    &:hover {
+      color: var(--color-coral-light);
+      text-decoration: none;
+    }
+  }
+  & input {
+    display: none;
   }
 }
 
