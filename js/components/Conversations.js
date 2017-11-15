@@ -248,11 +248,17 @@ ConversationView.prototype = {
      * When user clicks our filepicker and chooses a file, take 
      * the filename and place in an element next to the picker.
      */
-    onChangeFilepicker: function(ev) {
+    onChangeFilepicker: function (ev) {
         var $relevantStatus = $(ev.target).parent().next('.js-uploadFile-name').first(),
+            summaryString;
+        if ($(ev.target).val()){
             summaryString = "File selected: " + $(ev.target).val().split('\\').pop();
-        $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
-        $relevantStatus.html(summaryString);
+            $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
+            $relevantStatus.html(summaryString);
+        } else {
+            $relevantStatus.removeClass('Form-item--fileInputWrapper--clear');
+            $relevantStatus.html('');
+        }
         this.validateForm();
     },
 
