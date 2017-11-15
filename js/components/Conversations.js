@@ -118,7 +118,8 @@ ConversationView.prototype = {
      * 
      * - onSubmitForm() stops sync form submit
      * - onExpandForm() shows the attachment field
-     * - onKeyDown() determines if use has used form submit shortcuts
+     * - onKeyDown() determines if user has used form submit shortcuts while focused on the textarea
+     * - validateForm() toggles the submit button between disabled/enabled if the textarea contains a message
      * - onClickSubmitButton() submits our form over AJAX
      * - onChangeFilePicker() gives user UI feedback on which file they picked
      *
@@ -132,7 +133,13 @@ ConversationView.prototype = {
             .on('focus', '#' + this.identifier +' .js-conversationForm textarea', this.onExpandForm.bind(this));
         $(document)
             .off('keydown', '#' + this.identifier +' .js-conversationForm textarea')
-            .on('keydown', '#' + this.identifier +' .js-conversationForm textarea', this.onKeyDown.bind(this));
+            .on('keydown', '#' + this.identifier + ' .js-conversationForm textarea', this.onKeyDown.bind(this));
+        $(document)
+            .off('keyup', '#' + this.identifier +' .js-conversationForm textarea')
+            .on('keyup', '#' + this.identifier + ' .js-conversationForm textarea', this.validateForm.bind(this));
+        $(document)
+            .off('change', '#' + this.identifier +' .js-conversationForm textarea')
+            .on('change', '#' + this.identifier +' .js-conversationForm textarea', this.validateForm.bind(this));
         $(document)
             .off('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]')
             .on('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]', this.onClickSubmitButton.bind(this));
@@ -273,6 +280,18 @@ ConversationView.prototype = {
         if ((keyCode === 10 || keyCode === 13) && (ev.ctrlKey || ev.metaKey)) {
             ev.target.blur();
             return this.triggerSubmitForm(ev.target.form);
+        }
+    },
+    /**
+     * When user types into textarea, or pastes from the clipboard
+     * then we update the submitButtons enabled/disabled state if the textarea contains a message
+     * @param ev (MouseEvent)
+     */
+    validateForm: function(ev) {
+        if ((ev.target) && (typeof ev.target.value === "string") && (ev.target.value.length > 0)) {
+            $(this.submitButton).removeClass("is-disabled");
+        } else {
+            $(this.submitButton).addClass("is-disabled");
         }
     },
     /**
