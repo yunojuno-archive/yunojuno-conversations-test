@@ -1,17 +1,26 @@
 var gulp = require('gulp'),
     karmaServer = require('karma').Server;
 
+gulp.task( 'dev_watch', [ 'scripts', 'css' ], function() {
+    gulp.watch(['./js/*.js', './js/**/*.js']).on('change', function () {
+        gulp.start('scripts');
+    });
+    gulp.watch(['./styls/*.styl', './styls/**/*.styl']).on('change', function () {
+        gulp.start('css');
+    });
+});
+
+var babelify = require('babelify'),
+    browserify = require('browserify'),
+    buffer = require('vinyl-buffer'),
+    rename = require('gulp-rename'),
+    source = require('vinyl-source-stream'),
+    sourcemaps = require('gulp-sourcemaps'),
+    streamify = require('gulp-streamify'),
+    uglify = require('gulp-uglify');
+
 gulp.task('scripts', function browserify_components() {
     // Compile our core.components.
-
-    var babelify = require('babelify'),
-        browserify = require('browserify'),
-        buffer = require('vinyl-buffer'),
-        rename = require('gulp-rename'),
-        source = require('vinyl-source-stream'),
-        sourcemaps = require('gulp-sourcemaps'),
-        streamify = require('gulp-streamify'),
-        uglify = require('gulp-uglify');
 
     return browserify({
             entries: ['js/core.js'],
@@ -37,14 +46,14 @@ gulp.task('scripts', function browserify_components() {
         .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('css', function (done) {
+var args = require('yargs').argv,
+    postcss = require('gulp-postcss'),
+    sourcemaps = require('gulp-sourcemaps'),
+    minifyCss = require('gulp-minify-css'),
+    rename = require('gulp-rename'),
+    stylus = require('gulp-stylus');
 
-    var args = require('yargs').argv;
-    var postcss = require('gulp-postcss');
-    var sourcemaps = require('gulp-sourcemaps');
-    var minifyCss = require('gulp-minify-css');
-    var rename = require('gulp-rename');
-    var stylus = require('gulp-stylus');
+gulp.task('css', function (done) {
 
     var processors = [
         //require('postcss-import')(),
