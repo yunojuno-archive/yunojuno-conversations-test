@@ -261,7 +261,7 @@ describe('Test conversations (load, event binds and submission calls)', function
       expect(view.triggerSubmitForm).toHaveBeenCalled();
     });
 
-    it('when emptying the form the flear file attacment is called', function () {
+    it('when emptying the form onClearFileAttachment() is called', function () {
       $(view.view).find('button[type="reset"]').trigger('click');
       expect(view.onClearFileAttachment).toHaveBeenCalled();
     });
