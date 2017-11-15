@@ -206,6 +206,8 @@ ConversationView.prototype = {
         this.textarea.val('');
         this.form.find('input[type=file]').val('');
         $(this.view).removeClass('expand');
+        $(this.submitButton).addClass("is-disabled");
+        $(this.submitButton).blur();
     },
 
     /**
@@ -417,12 +419,6 @@ ConversationController.prototype = {
 
         // If IE9 remove attachment
         this._view.detectAndRemoveAttachment();
-
-        // disable the submit button again because form is reset
-        $(this._view.submitButton).addClass("is-disabled");
-
-        // unfocus the submit button now that the form is reset
-        $(this._view.submitButton).blur();
 
         // also set an alert based on the results
         if (feedbackMessage) {
