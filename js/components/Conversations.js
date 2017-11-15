@@ -49,6 +49,7 @@ function ConversationView(model, partial) {
     this.identifier = gen_uuid();
     this.textarea = $(this.view).find('textarea');
     this.form = $(this.view).find('form');
+    this.attachment = $(this.view).find('input[type="file"]');
     this.submitButton = $(this.view).find('button[type="submit"]');
 
     var messages = JSON.parse(localStorage.getItem('messages'));
@@ -145,7 +146,7 @@ ConversationView.prototype = {
             .on('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]', this.onClickSubmitButton.bind(this));
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
-            .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+            .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker.bind(this));
     },
 
     /**
@@ -240,7 +241,7 @@ ConversationView.prototype = {
      * attachment it should trigger this and clear the value.
      */
     onClearFileAttachment: function() {
-
+        this.validateForm();
     },
 
     /**
@@ -248,10 +249,11 @@ ConversationView.prototype = {
      * the filename and place in an element next to the picker.
      */
     onChangeFilepicker: function(ev) {
-        var $relevantStatus = $(this).parent().next('.js-uploadFile-name').first(),
-            summaryString = "File selected: " + $(this).val().split('\\').pop();
+        var $relevantStatus = $(ev.target).parent().next('.js-uploadFile-name').first(),
+            summaryString = "File selected: " + $(ev.target).val().split('\\').pop();
         $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
         $relevantStatus.html(summaryString);
+        this.validateForm();
     },
 
     /**
@@ -287,8 +289,8 @@ ConversationView.prototype = {
      * then we update the submitButtons enabled/disabled state if the textarea contains a message
      * @param ev (MouseEvent)
      */
-    validateForm: function(ev) {
-        if ((ev.target) && (typeof ev.target.value === "string") && (ev.target.value.length > 0)) {
+    validateForm: function () {
+        if ((this.textarea.val()) || (this.attachment.val())) {
             $(this.submitButton).removeClass("is-disabled");
         } else {
             $(this.submitButton).addClass("is-disabled");

@@ -56,7 +56,7 @@ var Conversations = require('../components/Conversations.js'),
                     </div>
                 </div>
                 <div class="Form-button">
-                    <button class="Button Button--primary js-spinnerButton" type="submit">
+                    <button class="Button Button--primary is-disabled js-spinnerButton" type="submit">
                         <span class="Button-inner">
                             Send message
                         </span>
