@@ -366,7 +366,7 @@ ConversationController.prototype = {
             data.attachment = conversationForm.elements.attachment.value.split('\\').pop();
         }
 
-        // Validate message
+        // check if message data exists, check if maxlength attribute is honoured
         if ((typeof data.message !== "string") ||
             (data.message.length === 0) ||
             (data.message.length > Number(conversationForm.elements.message.getAttribute("maxlength")))) {
@@ -382,6 +382,7 @@ ConversationController.prototype = {
                 'feedback_message': false
             }
         });
+        
 
         var messages = JSON.parse(localStorage.getItem('messages'));
 
@@ -416,6 +417,12 @@ ConversationController.prototype = {
 
         // If IE9 remove attachment
         this._view.detectAndRemoveAttachment();
+
+        // disable the submit button again because form is reset
+        $(this._view.submitButton).addClass("is-disabled");
+
+        // unfocus the submit button now that the form is reset
+        $(this._view.submitButton).blur();
 
         // also set an alert based on the results
         if (feedbackMessage) {
