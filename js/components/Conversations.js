@@ -50,7 +50,9 @@ function ConversationView(model, partial) {
     this.textarea = $(this.view).find('textarea');
     this.form = $(this.view).find('form');
     this.attachment = $(this.view).find('input[type="file"]');
+    this.clearButton = $(this.view).find('.js-clearableFileInput-trigger');
     this.submitButton = $(this.view).find('button[type="submit"]');
+    this.uploadFileWrapper = $(this.view).find('.js-uploadFile-wrapper');
 
     var messages = JSON.parse(localStorage.getItem('messages'));
 
@@ -126,40 +128,26 @@ ConversationView.prototype = {
      *
      */
     bindEventListeners: function() {
-        $(document)
-            .off('submit', '#' + this.identifier +' .js-conversationForm')
-            .on('submit', '#' + this.identifier +' .js-conversationForm', this.onSubmitForm.bind(this));
-        $(document)
-            .off('focus', '#' + this.identifier +' .js-conversationForm textarea')
-            .on('focus', '#' + this.identifier +' .js-conversationForm textarea', this.onExpandForm.bind(this));
-        $(document)
-            .off('keydown', '#' + this.identifier +' .js-conversationForm textarea')
-            .on('keydown', '#' + this.identifier + ' .js-conversationForm textarea', this.onKeyDown.bind(this));
-        $(document)
-            .off('keyup', '#' + this.identifier +' .js-conversationForm textarea')
-            .on('keyup', '#' + this.identifier + ' .js-conversationForm textarea', this.validateForm.bind(this));
-        $(document)
-            .off('change', '#' + this.identifier +' .js-conversationForm textarea')
-            .on('change', '#' + this.identifier +' .js-conversationForm textarea', this.validateForm.bind(this));
-        $(document)
-            .off('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]')
-            .on('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]', this.onClickSubmitButton.bind(this));
-        $(document)
-            .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
-            .on('change', '#' + this.identifier + ' .js-conversationForm input[type="file"]', this.onChangeFilepicker.bind(this));
-        $(document)
-            .off('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger')
-            .on('click', '#' + this.identifier + ' .js-conversationForm .js-clearableFileInput-trigger', this.onClearFileAttachment.bind(this));
-        $(document)
-            .off('transitionend', '#' + this.identifier +' .js-conversationForm .js-uploadFile-wrapper')
-            .on('transitionend', '#' + this.identifier + ' .js-conversationForm .js-uploadFile-wrapper', function (ev) {
-                console.log("'File attachment' wrapper animated");
-                if ($(this).css("opacity") === "1"){
-                    console.log("--------FADED IN--------");
-                } else {
-                    console.log("--------FADED OUT--------");
-                }
-            });
+        $(this.identifier).off('submit').on('submit', this.onSubmitForm.bind(this));
+        $(this.textarea).off('focus').on('focus', this.onExpandForm.bind(this));
+        $(this.textarea).off('keydown').on('keydown', this.onKeyDown.bind(this));
+        $(this.textarea).off('keyup').on('keyup', this.validateForm.bind(this));
+        $(this.textarea).off('change').on('change', this.validateForm.bind(this));
+        $(this.submitButton).off('click').on('click', this.onClickSubmitButton.bind(this));
+        $(this.attachment).off('change').on('change', this.onChangeFilepicker.bind(this));
+        $(this.clearButton).off('click').on('click', this.onClearFileAttachment.bind(this));
+
+        //example of transitionend event
+        
+        
+        this.uploadFileWrapper.off('transitionend').on('transitionend', function (ev) {
+            console.log("'File attachment' wrapper animated");
+            if ($(this).css("opacity") === "1"){
+                console.log("--------FADED IN--------");
+            } else {
+                console.log("--------FADED OUT--------");
+            }
+        });
     },
 
     /**
@@ -219,6 +207,11 @@ ConversationView.prototype = {
         this.textarea.val('');
         $(this.view).removeClass('expand');
         this.onClearFileAttachment();
+        
+        //transition is not supported, so trigger transitionend event
+        if(!this.checkCSSTransformSupported()) {
+            this.uploadFileWrapper.trigger('transitionend');
+        }
     },
 
     /**
@@ -290,10 +283,22 @@ ConversationView.prototype = {
     /**
      * Submit form over ajax
      */
-    onClickSubmitButton: function(ev) {
-        // TODO - Add validation to form.
+    onClickSubmitButton: function (ev) {
+        ev.preventDefault();
         return this.triggerSubmitForm(ev.currentTarget.form);
     },
+    
+    checkCSSTransformSupported: function() {
+        if (('WebkitTransform' in document.body.style) || 
+            ('MozTransform' in document.body.style) || 
+            ('OTransform' in document.body.style) || 
+            ('transform' in document.body.style)) {
+            return true;
+        } else {
+            return false; 
+       }
+    },
+    
     /**
      * Clicking on textarea adds class of expand which shows the controls
      * and expands the textarea.
@@ -301,6 +306,11 @@ ConversationView.prototype = {
      */
     onExpandForm: function() {
         $(this.view).addClass('expand');
+
+        //transition is not supported, so trigger transitionend event
+        if(!this.checkCSSTransformSupported()) {
+            this.uploadFileWrapper.trigger('transitionend');
+        }
     },
 
     /**
@@ -394,7 +404,7 @@ ConversationController.prototype = {
             data.attachment = conversationForm.elements.attachment.value.split('\\').pop();
         }
 
-        // if message data and attachment data don't exist, or the message length is too long, don't continue
+        // if message data and attachment data don't exist, or the message length is too long, don't submit
         if (((!data.message) && (!data.attachment)) ||
             ((!data.message) && (data.message.length > Number(conversationForm.elements.message.getAttribute("maxlength"))))) {
             return;
