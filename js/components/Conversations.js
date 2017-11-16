@@ -45,11 +45,12 @@ ConversationModel.prototype = {
 
 function ConversationView(model, partial) {
     // Set accessors for the partial.
-    this.view = partial;
+    this.view = $(partial);
     this.identifier = gen_uuid();
-    this.textarea = $(this.view).find('textarea');
     this.form = $(this.view).find('form');
+    this.textarea = $(this.view).find('textarea');
     this.attachment = $(this.view).find('input[type="file"]');
+    this.relevantStatus = $(this.view).find('.js-clearableFileInput');
     this.clearButton = $(this.view).find('.js-clearableFileInput-trigger');
     this.submitButton = $(this.view).find('button[type="submit"]');
     this.uploadFileWrapper = $(this.view).find('.js-uploadFile-wrapper');
@@ -202,13 +203,13 @@ ConversationView.prototype = {
      * the form to show the attachment.
      */
     emptyForm: function() {
-        this.textarea.val('');
+        $(this.textarea).val('');
         $(this.view).removeClass('expand');
         this.onClearFileAttachment();
         
-        //transition is not supported, so trigger transitionend event
+        //if transition is not supported, trigger transitionend event
         if(!this.checkCSSTransformSupported()) {
-            this.uploadFileWrapper.trigger('transitionend');
+            $(this.uploadFileWrapper).trigger('transitionend');
         }
     },
 
@@ -227,8 +228,7 @@ ConversationView.prototype = {
             }
             html += this.buildTemplate(items[i].avatar, items[i].message, items[i].date, attachment);
         }
-
-        document.getElementsByClassName('js-conversationBody')[0].innerHTML = html;
+        $('.js-conversationBody', document).html(html);
     },
 
     /**
@@ -245,12 +245,10 @@ ConversationView.prototype = {
      * attachment it should trigger this and clear the value.
      */
     onClearFileAttachment: function (ev) {
-        var $relevantStatus = $(this.attachment).parent().next('.js-clearableFileInput').first(),
-            $clearButton = $relevantStatus.next('div').find('.js-clearableFileInput-trigger').first();
-        $relevantStatus.removeClass('Form-item--fileInputWrapper--clear');
-        $relevantStatus.html('');
+        $(this.relevantStatus).removeClass('Form-item--fileInputWrapper--clear');
+        $(this.relevantStatus).html('');
         $(this.attachment).val('');
-        $clearButton.hide();
+        $(this.clearButton).hide();
         this.validateForm();
         if (ev){
             ev.preventDefault();
@@ -262,16 +260,12 @@ ConversationView.prototype = {
      * the filename and place in an element next to the picker.
      */
     onChangeFilepicker: function (ev) {
-        var $relevantStatus,
-            $clearButton, 
-            summaryString;
-        if ($(ev.target).val()) {
-            $relevantStatus = $(ev.target).parent().next('.js-uploadFile-name').first();
-            $clearButton = $relevantStatus.next('div').find('.js-clearableFileInput-trigger').first();
-            summaryString = "File selected: " + $(ev.target).val().split('\\').pop();
-            $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
-            $relevantStatus.html(summaryString);
-            $clearButton.show();
+        var summaryString;
+        if ($(this.attachment).val()) {
+            summaryString = "File selected: " + $(this.attachment).val().split('\\').pop();
+            $(this.relevantStatus).addClass('Form-item--fileInputWrapper--clear');
+            $(this.relevantStatus).html(summaryString);
+            $(this.clearButton).show();
             this.validateForm();
         } else {
             this.onClearFileAttachment();
@@ -309,9 +303,9 @@ ConversationView.prototype = {
     onExpandForm: function() {
         $(this.view).addClass('expand');
 
-        //transition is not supported, so trigger transitionend event
+        //if transition is not supported, trigger transitionend event
         if(!this.checkCSSTransformSupported()) {
-            this.uploadFileWrapper.trigger('transitionend');
+            $(this.uploadFileWrapper).trigger('transitionend');
         }
     },
 
@@ -334,7 +328,7 @@ ConversationView.prototype = {
      * @param ev (MouseEvent)
      */
     validateForm: function () {
-        if ((this.textarea.val()) || (this.attachment.val())) {
+        if (($(this.textarea).val()) || ($(this.attachment).val())) {
             $(this.submitButton).removeClass("is-disabled");
         } else {
             $(this.submitButton).addClass("is-disabled");
