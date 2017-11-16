@@ -285,6 +285,11 @@ ConversationView.prototype = {
         return this.triggerSubmitForm(ev.currentTarget.form);
     },
     
+    /**
+     * Checks browser support of the css transform property,
+     * used to establish if the javascript transitionend event
+     * will not be trigger and thus if a fallback is required
+     */
     checkCSSTransformSupported: function() {
         if (('WebkitTransform' in document.body.style) || 
             ('MozTransform' in document.body.style) || 
