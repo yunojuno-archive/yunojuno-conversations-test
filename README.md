@@ -2,6 +2,12 @@
 
 I've implemented all the features requested, tidied up some bits (for example I've attempted to standardize the use of jQuery selectors by assigning as properties on the view object, all selectors used more than once. Also, I've attempted to clean up the 'attach file' button, fI've made sure it's not clickable when it's opacity is set to 0. And also the cursor:pointer; state only covered half of the button so instead of overlaying the file input over the ancor tag, I added a label to the file input and made it visually respond/look like an ancor tag)
 
+I've added a transitionend event to the view/attach file expand transition and also a fallback in case CSS transition is not supported - in this case the even is trigger manually.
+
+Added clear button.
+
+Added form validation - submit button is disabled if form is invalid (needs either attachment, message or both)
+
 I'm quite happy with how the Component has turned out, but feel like the Unit test side of things went less well.
 
 Unit testing: this is my first real look at Unit testing. I get the basics of it after this code test, it seems really nice - and useful! However, I made the mistake of deciding to leave the Unit testing until last, and after I'd made various changes to the Conversation component, trying to add tests and debugging for the new features proved a little difficult.
