@@ -46,7 +46,7 @@ var Conversations = require('../components/Conversations.js'),
                         <textarea class="js-activateMessage" cols="40" id="id_message" maxlength="2000" name="message" placeholder="Click here to add a message or attach a file..."></textarea>
                     </div>
                 </div>
-                <div class="Form-item-wrapper--controlGroup">
+                <div class="Form-item-wrapper--controlGroup js-uploadFile-wrapper">
                     <div class="Form-item-wrapper">
                         <div class="Form-item--fileInputWrapper">
                             <label for="id_attachment" class="js-uploadFile-trigger">Add an attachment</label>

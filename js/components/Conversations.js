@@ -149,7 +149,17 @@ ConversationView.prototype = {
             .on('change', '#' + this.identifier + ' .js-conversationForm input[type="file"]', this.onChangeFilepicker.bind(this));
         $(document)
             .off('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger')
-            .on('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger', this.onClearFileAttachment.bind(this));
+            .on('click', '#' + this.identifier + ' .js-conversationForm .js-clearableFileInput-trigger', this.onClearFileAttachment.bind(this));
+        $(document)
+            .off('transitionend', '#' + this.identifier +' .js-conversationForm .js-uploadFile-wrapper')
+            .on('transitionend', '#' + this.identifier + ' .js-conversationForm .js-uploadFile-wrapper', function (ev) {
+                console.log("'File attachment' wrapper animated");
+                if ($(this).css("opacity") === "1"){
+                    console.log("--------FADED IN--------");
+                } else {
+                    console.log("--------FADED OUT--------");
+                }
+            });
     },
 
     /**
