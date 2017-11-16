@@ -128,7 +128,7 @@ ConversationView.prototype = {
      *
      */
     bindEventListeners: function() {
-        $(this.identifier).off('submit').on('submit', this.onSubmitForm.bind(this));
+        $(this.form).off('submit').on('submit', this.onSubmitForm.bind(this));
         $(this.textarea).off('focus').on('focus', this.onExpandForm.bind(this));
         $(this.textarea).off('keydown').on('keydown', this.onKeyDown.bind(this));
         $(this.textarea).off('keyup').on('keyup', this.validateForm.bind(this));
@@ -138,8 +138,6 @@ ConversationView.prototype = {
         $(this.clearButton).off('click').on('click', this.onClearFileAttachment.bind(this));
 
         //example of transitionend event
-        
-        
         this.uploadFileWrapper.off('transitionend').on('transitionend', function (ev) {
             console.log("'File attachment' wrapper animated");
             if ($(this).css("opacity") === "1"){
@@ -284,7 +282,6 @@ ConversationView.prototype = {
      * Submit form over ajax
      */
     onClickSubmitButton: function (ev) {
-        ev.preventDefault();
         return this.triggerSubmitForm(ev.currentTarget.form);
     },
     
