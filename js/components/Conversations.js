@@ -396,7 +396,7 @@ ConversationController.prototype = {
 
         // if message data and attachment data don't exist, or the message length is too long, don't continue
         if (((!data.message) && (!data.attachment)) ||
-            (data.message.length > Number(conversationForm.elements.message.getAttribute("maxlength")))) {
+            ((!data.message) && (data.message.length > Number(conversationForm.elements.message.getAttribute("maxlength"))))) {
             return;
         }
 
