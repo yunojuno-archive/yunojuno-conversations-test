@@ -45,11 +45,15 @@ ConversationModel.prototype = {
 
 function ConversationView(model, partial) {
     // Set accessors for the partial.
-    this.view = partial;
+    this.view = $(partial);
     this.identifier = gen_uuid();
-    this.textarea = $(this.view).find('textarea');
     this.form = $(this.view).find('form');
+    this.textarea = $(this.view).find('textarea');
+    this.attachment = $(this.view).find('input[type="file"]');
+    this.relevantStatus = $(this.view).find('.js-clearableFileInput');
+    this.clearButton = $(this.view).find('.js-clearableFileInput-trigger');
     this.submitButton = $(this.view).find('button[type="submit"]');
+    this.uploadFileWrapper = $(this.view).find('.js-uploadFile-wrapper');
 
     var messages = JSON.parse(localStorage.getItem('messages'));
 
@@ -118,27 +122,33 @@ ConversationView.prototype = {
      * 
      * - onSubmitForm() stops sync form submit
      * - onExpandForm() shows the attachment field
-     * - onKeyDown() determines if use has used form submit shortcuts
+     * - onKeyDown() determines if user has used form submit shortcuts while focused on the textarea
+     * - validateForm() toggles the submit button between disabled/enabled if the textarea contains a message
      * - onClickSubmitButton() submits our form over AJAX
      * - onChangeFilePicker() gives user UI feedback on which file they picked
      *
      */
     bindEventListeners: function() {
-        $(document)
-            .off('submit', '#' + this.identifier +' .js-conversationForm')
-            .on('submit', '#' + this.identifier +' .js-conversationForm', this.onSubmitForm.bind(this));
-        $(document)
-            .off('focus', '#' + this.identifier +' .js-conversationForm textarea')
-            .on('focus', '#' + this.identifier +' .js-conversationForm textarea', this.onExpandForm.bind(this));
-        $(document)
-            .off('keydown', '#' + this.identifier +' .js-conversationForm textarea')
-            .on('keydown', '#' + this.identifier +' .js-conversationForm textarea', this.onKeyDown.bind(this));
-        $(document)
-            .off('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]')
-            .on('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]', this.onClickSubmitButton.bind(this));
-        $(document)
-            .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
-            .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+        $(this.form).off('submit').on('submit', this.onSubmitForm.bind(this));
+        $(this.textarea).off('focus').on('focus', this.onExpandForm.bind(this));
+        $(this.textarea).off('keydown').on('keydown', this.onKeyDown.bind(this));
+        $(this.textarea).off('keyup').on('keyup', this.validateForm.bind(this));
+        $(this.textarea).off('change').on('change', this.validateForm.bind(this));
+        $(this.submitButton).off('click').on('click', this.onClickSubmitButton.bind(this));
+        $(this.attachment).off('change').on('change', function () {
+            this.onChangeFilepicker.call(this, $(this.attachment).val());
+        }.bind(this));
+        $(this.clearButton).off('click').on('click', this.onClearFileAttachment.bind(this));
+
+        //example of transitionend event
+        this.uploadFileWrapper.off('transitionend').on('transitionend', function (ev) {
+            console.log("'File attachment' wrapper animated");
+            if ($(this).css("opacity") === "1"){
+                console.log("--------FADED IN--------");
+            } else {
+                console.log("--------FADED OUT--------");
+            }
+        });
     },
 
     /**
@@ -195,9 +205,14 @@ ConversationView.prototype = {
      * the form to show the attachment.
      */
     emptyForm: function() {
-        this.textarea.val('');
-        this.form.find('input[type=file]').val('');
+        $(this.textarea).val('');
         $(this.view).removeClass('expand');
+        this.onClearFileAttachment();
+        
+        //if transition is not supported, trigger transitionend event
+        if(!this.checkCSSTransformSupported()) {
+            $(this.uploadFileWrapper).trigger('transitionend');
+        }
     },
 
     /**
@@ -215,8 +230,7 @@ ConversationView.prototype = {
             }
             html += this.buildTemplate(items[i].avatar, items[i].message, items[i].date, attachment);
         }
-
-        document.getElementsByClassName('js-conversationBody')[0].innerHTML = html;
+        $('.js-conversationBody', document).html(html);
     },
 
     /**
@@ -230,30 +244,59 @@ ConversationView.prototype = {
 
     /**
      * When a user clicks the 'clear attachment' link after adding an
-     * attachment it should trigger this and clear the value.
+     * attachment it should trigger this method and clear the value.
      */
-    onClearFileAttachment: function() {
-
+    onClearFileAttachment: function (ev) {
+        $(this.relevantStatus).removeClass('Form-item--fileInputWrapper--clear');
+        $(this.relevantStatus).html('');
+        $(this.attachment).val('');
+        $(this.clearButton).hide();
+        this.validateForm();
+        if (ev){
+            ev.preventDefault();
+        }
     },
 
     /**
      * When user clicks our filepicker and chooses a file, take 
      * the filename and place in an element next to the picker.
      */
-    onChangeFilepicker: function(ev) {
-        var $relevantStatus = $(this).parent().next('.js-uploadFile-name').first(),
-            summaryString = "File selected: " + $(this).val().split('\\').pop();
-        $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
-        $relevantStatus.html(summaryString);
+    onChangeFilepicker: function (filepath) {
+        var summaryString;
+        if ((typeof filepath === "string") && (filepath)) {
+            summaryString = "File selected: " + filepath.split('\\').pop().split('/').pop();
+            $(this.relevantStatus).addClass('Form-item--fileInputWrapper--clear');
+            $(this.relevantStatus).html(summaryString);
+            $(this.clearButton).show();
+            this.validateForm();
+        } else {
+            this.onClearFileAttachment();
+        }
     },
 
     /**
      * Submit form over ajax
      */
-    onClickSubmitButton: function(ev) {
-        // TODO - Add validation to form.
+    onClickSubmitButton: function (ev) {
         return this.triggerSubmitForm(ev.currentTarget.form);
     },
+    
+    /**
+     * Checks browser support of the css transform property,
+     * used to establish if the javascript transitionend event
+     * will not be trigger and thus if a fallback is required
+     */
+    checkCSSTransformSupported: function() {
+        if (('WebkitTransform' in document.body.style) || 
+            ('MozTransform' in document.body.style) || 
+            ('OTransform' in document.body.style) || 
+            ('transform' in document.body.style)) {
+            return true;
+        } else {
+            return false; 
+       }
+    },
+    
     /**
      * Clicking on textarea adds class of expand which shows the controls
      * and expands the textarea.
@@ -261,6 +304,11 @@ ConversationView.prototype = {
      */
     onExpandForm: function() {
         $(this.view).addClass('expand');
+
+        //if transition is not supported, trigger transitionend event
+        if(!this.checkCSSTransformSupported()) {
+            $(this.uploadFileWrapper).trigger('transitionend');
+        }
     },
 
     /**
@@ -275,6 +323,21 @@ ConversationView.prototype = {
             return this.triggerSubmitForm(ev.target.form);
         }
     },
+
+    /**
+     * When user types into textarea, pastes from the clipboard, or adds and attachment file
+     * then we update the submitButtons enabled/disabled state if the textarea contains a message
+     * @param ev (MouseEvent)
+     */
+    validateForm: function () {
+        if (($(this.textarea).val()) || ($(this.attachment).val())) {
+            $(this.submitButton).removeClass("is-disabled");
+        } else {
+            $(this.submitButton).addClass("is-disabled");
+            $(this.submitButton).blur();
+        }
+    },
+
     /**
      *  Catch to deny standard POST
      */
@@ -339,6 +402,11 @@ ConversationController.prototype = {
             data.attachment = conversationForm.elements.attachment.value.split('\\').pop();
         }
 
+        // if message data and attachment data don't exist, or the message length is too long, don't submit
+        if (((!data.message) && (!data.attachment)) ||
+            ((!data.message) && (data.message.length > Number(conversationForm.elements.message.getAttribute("maxlength"))))) {
+            return;
+        }
 
         // Tell model to add item.
         this._model.addItem(data);
@@ -349,6 +417,7 @@ ConversationController.prototype = {
                 'feedback_message': false
             }
         });
+        
 
         var messages = JSON.parse(localStorage.getItem('messages'));
 

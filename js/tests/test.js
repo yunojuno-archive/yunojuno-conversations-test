@@ -46,17 +46,17 @@ var Conversations = require('../components/Conversations.js'),
                         <textarea class="js-activateMessage" cols="40" id="id_message" maxlength="2000" name="message" placeholder="Click here to add a message or attach a file..."></textarea>
                     </div>
                 </div>
-                <div class="Form-item-wrapper--controlGroup">
+                <div class="Form-item-wrapper--controlGroup js-uploadFile-wrapper">
                     <div class="Form-item-wrapper">
                         <div class="Form-item--fileInputWrapper">
-                            <a class="js-uploadFile-trigger" href="#">Add an attachment</a>
-                            <input class="js-uploadFile-trigger" id="id_attachment" name="attachment" type="file">
+                            <label for="id_attachment" class="js-uploadFile-trigger">Add an attachment</label>
+                            <input id="id_attachment" class="js-uploadFile-trigger" name="attachment" type="file">
                         </div>
                         <div class="Form-item--fileInputWrapper js-clearableFileInput Form-item--fileInputWrapper--status u-textMuted js-uploadFile-name"></div><div class="Form-item--fileInputWrapper Form-item--fileInputWrapper--status Form-item--fileInputWrapper--clear"><a href="#" class="js-clearableFileInput-trigger" style="display: none;"> Clear</a></div>
                     </div>
                 </div>
                 <div class="Form-button">
-                    <button class="Button Button--primary js-spinnerButton" type="submit">
+                    <button class="Button Button--primary is-disabled js-spinnerButton" type="submit">
                         <span class="Button-inner">
                             Send message
                         </span>
@@ -113,6 +113,7 @@ describe('Test conversations (load, event binds and submission calls)', function
         spyOn(view, 'onKeyDown').and.callThrough();
         spyOn(view, 'onSubmitForm').and.callThrough();
         spyOn(view, 'onChangeFilepicker').and.callThrough();
+        spyOn(view, 'onClearFileAttachment').and.callThrough();
         spyOn(view, 'onExpandForm').and.callThrough();
         spyOn(view, 'init').and.callThrough();
         spyOn(view, 'triggerSubmitForm').and.callThrough();
@@ -201,13 +202,19 @@ describe('Test conversations (load, event binds and submission calls)', function
         expect(view.onKeyDown).toHaveBeenCalled();
     });
 
-    // We can only trigger the change event, it is impossible to set a value.
+    // manually pass in the new file selcted, because it is impossible to set a value.
     // That would be a huge security hole in browsers.
     it('triggers the onchange event for filepicker', function () {
-        $(view.view).find('input[type="file"]').trigger('change');
-
+        view.onChangeFilepicker.call(view, "c:/fake/path/File_name.png");
         expect(view.onChangeFilepicker).toHaveBeenCalled();
-        expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');
+        expect($(view.relevantStatus).html()).toBe('File selected: File_name.png');
+    });
+
+    it('check that clear button is visible and works', function () {
+        expect($(view.clearButton).css('display')).toBe('inline');
+        $(view.clearButton).trigger('click');
+        expect(view.onClearFileAttachment).toHaveBeenCalled();
+        expect($(view.relevantStatus).html()).toBe('');
     });
 
     it('triggers the keydown event (which causes a submit through ctrlKey)', function () {
@@ -236,7 +243,6 @@ describe('Test conversations (load, event binds and submission calls)', function
 
     it('has added a class to the partial on textarea focus', function () {
         view.textarea.focus();
-
         expect($(view.view).attr('class')).toContain('expand');
     });
 
@@ -491,7 +497,7 @@ describe('Load conversations in a client which doesn\'t support ajax file upload
 	});
 
 	it('has added a class to the partial on textarea focus', function () {
-		view.textarea.focus();
+        view.textarea.focus();
 		expect($(view.view).attr('class')).toContain('expand');
 	});
 });
@@ -527,7 +533,7 @@ describe('Load conversations with empty localStorage', function () {
         view.textarea.trigger('focus');
 
         expect($(view.view).attr('class')).toContain('expand');
-
+        
         view.emptyForm();
         expect($(view.view).attr('class')).not.toContain('expand');
         expect(view.textarea.val()).toBe('');
