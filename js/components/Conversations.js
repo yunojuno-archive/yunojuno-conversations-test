@@ -146,7 +146,10 @@ ConversationView.prototype = {
             .on('click', '#' + this.identifier +' .js-conversationForm button[type="submit"]', this.onClickSubmitButton.bind(this));
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
-            .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker.bind(this));
+            .on('change', '#' + this.identifier + ' .js-conversationForm input[type="file"]', this.onChangeFilepicker.bind(this));
+        $(document)
+            .off('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger')
+            .on('click', '#' + this.identifier +' .js-conversationForm .js-clearableFileInput-trigger', this.onClearFileAttachment.bind(this));
     },
 
     /**
@@ -204,10 +207,8 @@ ConversationView.prototype = {
      */
     emptyForm: function() {
         this.textarea.val('');
-        this.form.find('input[type=file]').val('');
         $(this.view).removeClass('expand');
-        $(this.submitButton).addClass("is-disabled");
-        $(this.submitButton).blur();
+        this.onClearFileAttachment();
     },
 
     /**
@@ -242,8 +243,17 @@ ConversationView.prototype = {
      * When a user clicks the 'clear attachment' link after adding an
      * attachment it should trigger this and clear the value.
      */
-    onClearFileAttachment: function() {
+    onClearFileAttachment: function (ev) {
+        var $relevantStatus = $(this.attachment).parent().next('.js-clearableFileInput').first(),
+            $clearButton = $relevantStatus.next('div').find('.js-clearableFileInput-trigger').first();
+        $relevantStatus.removeClass('Form-item--fileInputWrapper--clear');
+        $relevantStatus.html('');
+        $(this.attachment).val('');
+        $clearButton.hide();
         this.validateForm();
+        if (ev){
+            ev.preventDefault();
+        }
     },
 
     /**
@@ -251,18 +261,20 @@ ConversationView.prototype = {
      * the filename and place in an element next to the picker.
      */
     onChangeFilepicker: function (ev) {
-        var $relevantStatus = $(ev.target).parent().next('.js-uploadFile-name').first(),
+        var $relevantStatus,
+            $clearButton, 
             summaryString;
-        if ($(ev.target).val()){
+        if ($(ev.target).val()) {
+            $relevantStatus = $(ev.target).parent().next('.js-uploadFile-name').first();
+            $clearButton = $relevantStatus.next('div').find('.js-clearableFileInput-trigger').first();
             summaryString = "File selected: " + $(ev.target).val().split('\\').pop();
             $relevantStatus.addClass('Form-item--fileInputWrapper--clear');
             $relevantStatus.html(summaryString);
+            $clearButton.show();
+            this.validateForm();
         } else {
-            $relevantStatus.removeClass('Form-item--fileInputWrapper--clear');
-            $relevantStatus.html('');
-            $(ev.target).val();
+            this.onClearFileAttachment();
         }
-        this.validateForm();
     },
 
     /**
@@ -293,8 +305,9 @@ ConversationView.prototype = {
             return this.triggerSubmitForm(ev.target.form);
         }
     },
+
     /**
-     * When user types into textarea, or pastes from the clipboard
+     * When user types into textarea, pastes from the clipboard, or adds and attachment file
      * then we update the submitButtons enabled/disabled state if the textarea contains a message
      * @param ev (MouseEvent)
      */
@@ -303,8 +316,10 @@ ConversationView.prototype = {
             $(this.submitButton).removeClass("is-disabled");
         } else {
             $(this.submitButton).addClass("is-disabled");
+            $(this.submitButton).blur();
         }
     },
+
     /**
      *  Catch to deny standard POST
      */
