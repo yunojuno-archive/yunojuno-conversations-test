@@ -113,6 +113,7 @@ describe('Test conversations (load, event binds and submission calls)', function
         spyOn(view, 'onKeyDown').and.callThrough();
         spyOn(view, 'onSubmitForm').and.callThrough();
         spyOn(view, 'onChangeFilepicker').and.callThrough();
+        spyOn(view, 'onClearFileAttachment').and.callThrough();
         spyOn(view, 'onExpandForm').and.callThrough();
         spyOn(view, 'init').and.callThrough();
         spyOn(view, 'triggerSubmitForm').and.callThrough();
@@ -201,14 +202,19 @@ describe('Test conversations (load, event binds and submission calls)', function
         expect(view.onKeyDown).toHaveBeenCalled();
     });
 
-    // We can only trigger the change event, it is impossible to set a value.
+    // manually pass in the new file selcted, because it is impossible to set a value.
     // That would be a huge security hole in browsers.
     it('triggers the onchange event for filepicker', function () {
-        $(view.view).find('input[type="file"]').trigger('change');
-
+        view.onChangeFilepicker.call(view, "c:/fake/path/File_name.png");
         expect(view.onChangeFilepicker).toHaveBeenCalled();
-        // commented out since onChangeFilepicker method is now checking value of file before updating js-uploadFile-name html 
-        // expect($(view.view).find('.js-uploadFile-name').html()).toBe('File selected: ');
+        expect($(view.relevantStatus).html()).toBe('File selected: File_name.png');
+    });
+
+    it('check that clear button is visible and works', function () {
+        expect($(view.clearButton).css('display')).toBe('inline');
+        $(view.clearButton).trigger('click');
+        expect(view.onClearFileAttachment).toHaveBeenCalled();
+        expect($(view.relevantStatus).html()).toBe('');
     });
 
     it('triggers the keydown event (which causes a submit through ctrlKey)', function () {

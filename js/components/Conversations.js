@@ -135,7 +135,9 @@ ConversationView.prototype = {
         $(this.textarea).off('keyup').on('keyup', this.validateForm.bind(this));
         $(this.textarea).off('change').on('change', this.validateForm.bind(this));
         $(this.submitButton).off('click').on('click', this.onClickSubmitButton.bind(this));
-        $(this.attachment).off('change').on('change', this.onChangeFilepicker.bind(this));
+        $(this.attachment).off('change').on('change', function () {
+            this.onChangeFilepicker.call(this, $(this.attachment).val());
+        }.bind(this));
         $(this.clearButton).off('click').on('click', this.onClearFileAttachment.bind(this));
 
         //example of transitionend event
@@ -242,7 +244,7 @@ ConversationView.prototype = {
 
     /**
      * When a user clicks the 'clear attachment' link after adding an
-     * attachment it should trigger this and clear the value.
+     * attachment it should trigger this method and clear the value.
      */
     onClearFileAttachment: function (ev) {
         $(this.relevantStatus).removeClass('Form-item--fileInputWrapper--clear');
@@ -259,10 +261,10 @@ ConversationView.prototype = {
      * When user clicks our filepicker and chooses a file, take 
      * the filename and place in an element next to the picker.
      */
-    onChangeFilepicker: function (ev) {
+    onChangeFilepicker: function (filepath) {
         var summaryString;
-        if ($(this.attachment).val()) {
-            summaryString = "File selected: " + $(this.attachment).val().split('\\').pop();
+        if ((typeof filepath === "string") && (filepath)) {
+            summaryString = "File selected: " + filepath.split('\\').pop().split('/').pop();
             $(this.relevantStatus).addClass('Form-item--fileInputWrapper--clear');
             $(this.relevantStatus).html(summaryString);
             $(this.clearButton).show();
