@@ -45,6 +45,9 @@ var Conversations = require('../components/Conversations.js'),
                     <div class="Form-item">
                         <textarea class="js-activateMessage" cols="40" id="id_message" maxlength="2000" name="message" placeholder="Click here to add a message or attach a file..."></textarea>
                     </div>
+                    <div class="Form-errors Form-errorsItem is-hidden" id="id_message_validation_error">
+                        Please enter a message before send
+                    </div>
                 </div>
                 <div class="Form-item-wrapper--controlGroup">
                     <div class="Form-item-wrapper">
@@ -59,6 +62,11 @@ var Conversations = require('../components/Conversations.js'),
                     <button class="Button Button--primary js-spinnerButton" type="submit">
                         <span class="Button-inner">
                             Send message
+                        </span>
+                    </button>
+                    <button class="Button Button--secondary js-spinnerButton" type="button" id="id_clear_attachment">
+                        <span class="Button-inner">
+                            Clear attachment
                         </span>
                     </button>
                 </div>
@@ -112,12 +120,14 @@ describe('Test conversations (load, event binds and submission calls)', function
         spyOn(view, 'onClickSubmitButton').and.callThrough();
         spyOn(view, 'onKeyDown').and.callThrough();
         spyOn(view, 'onSubmitForm').and.callThrough();
+        spyOn(view, 'onClearFileAttachment').and.callThrough();
         spyOn(view, 'onChangeFilepicker').and.callThrough();
         spyOn(view, 'onExpandForm').and.callThrough();
         spyOn(view, 'init').and.callThrough();
         spyOn(view, 'triggerSubmitForm').and.callThrough();
         spyOn(view, 'emptyForm').and.callThrough();
         spyOn(view, 'detectAndRemoveAttachment').and.callThrough();
+        spyOn(view, 'validateForm').and.callThrough();
 
         callableFunc.eventViewCallback = function () {
         };
@@ -186,6 +196,12 @@ describe('Test conversations (load, event binds and submission calls)', function
         expect(view.onClickSubmitButton).toHaveBeenCalled();
     });
 
+    it('expects clicking button to trigger onClearFileAttachment', function () {
+        $(view.form).find('button#id_clear_attachment').trigger('click');
+
+        expect(view.onClearFileAttachment).toHaveBeenCalled(); //onClearFileAttachment
+    });
+
     it('triggers the submitForm spy', function () {
         view.form.submit();
         expect(view.onSubmitForm).toHaveBeenCalled();
@@ -247,13 +263,42 @@ describe('Test conversations (load, event binds and submission calls)', function
         var e = $.Event('keydown');
         e.keyCode = 10; // Enter
         e.ctrlKey = true;
-
+        view.textarea.val('test message');
         view.textarea.trigger(e);
 
         expect(view.onKeyDown).toHaveBeenCalled();
         expect(view.triggerSubmitForm).toHaveBeenCalled();
+        expect(view.validateForm).toHaveBeenCalled();
         expect(callableFunc.eventViewCallback).toHaveBeenCalled();
         expect(controller.sendMessage).toHaveBeenCalled();
+    });
+
+    it('triggers clear attachment', function () {
+        // Set spy to also callthrough.
+        view.triggerSubmitForm.calls.reset(); // Reset Mock calls.
+
+        // We can't set the value for the file field, so let's simple change it to text
+        $(view.form[0]).find('#id_attachment').attr('type', 'text');
+        $(view.form[0]).find('#id_attachment').val('new input value');
+
+        $(view.form).find('button#id_clear_attachment').trigger('click');
+
+        expect($(view.form).find('button#id_clear_attachment').val()).toBe('');
+    });
+
+    it('simulated validation error', function () {
+        // Set spy to also callthrough.
+        view.triggerSubmitForm.calls.reset(); // Reset Mock calls.
+
+        var e = $.Event('keydown');
+        e.keyCode = 10; // Enter
+        e.ctrlKey = true;
+        view.textarea.val('');
+        view.textarea.trigger(e);
+
+        expect(view.onKeyDown).toHaveBeenCalled();
+        expect(view.triggerSubmitForm).toHaveBeenCalled();
+        expect(view.validateForm).toHaveBeenCalled();
     });
 
     it('simulates a built template without an attachment', function () {
@@ -552,6 +597,7 @@ describe('Load conversations with empty localStorage', function () {
         view = new Conversations.ConversationView(model, $conversationObj);
         controller = new Conversations.ConversationController(model, view, false);
         spyOn(controller, 'sendMessage').and.callThrough(); // Stop it calling through
+        spyOn(view, 'validateForm').and.callThrough(); // Stop it calling through
         controller.init();
 
     });
@@ -576,6 +622,7 @@ describe('Load conversations with empty localStorage', function () {
 
         view.triggerSubmitForm(fakeFormValues);
 
+        expect(view.validateForm).toHaveBeenCalled();
         expect(controller.sendMessage).toHaveBeenCalled();
         expect(model.getItems().length).toBe(13);
         expect(model.getItem(0).attachment).toBe('unmovable_black_knight.pdf');

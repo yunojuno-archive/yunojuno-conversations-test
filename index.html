@@ -151,6 +151,9 @@
                                                 <div class="Form-item">
                                                     <textarea class="js-activateMessage" cols="40" id="id_message" maxlength="2000" name="message" placeholder="Click here to add a message or attach a file..."></textarea>
                                                 </div>
+                                                <div class="Form-errors Form-errorsItem is-hidden" id="id_message_validation_error">
+                                                    Please enter a message before send
+                                                </div>
                                             </div>
                                             <div class="Form-item-wrapper--controlGroup">
                                                 <div class="Form-item-wrapper">
@@ -165,6 +168,11 @@
                                                 <button class="Button Button--primary js-spinnerButton" type="submit">
                                                     <span class="Button-inner">
                                                         Send message
+                                                    </span>
+                                                </button>
+                                                <button class="Button Button--secondary js-spinnerButton" type="button" id="id_clear_attachment">
+                                                    <span class="Button-inner">
+                                                        Clear attachment
                                                     </span>
                                                 </button>
                                             </div>
