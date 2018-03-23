@@ -121,7 +121,7 @@ ConversationView.prototype = {
      * - onKeyDown() determines if use has used form submit shortcuts
      * - onClickSubmitButton() submits our form over AJAX
      * - onChangeFilePicker() gives user UI feedback on which file they picked
-     *
+     * - onClearFileAttachment() clears attachment from message
      */
     bindEventListeners: function() {
         $(document)
@@ -139,6 +139,9 @@ ConversationView.prototype = {
         $(document)
             .off('change', '#' + this.identifier +' .js-conversationForm input[type="file"]')
             .on('change', '#' + this.identifier +' .js-conversationForm input[type="file"]', this.onChangeFilepicker);
+        $(document)
+            .off('click', '#' + this.identifier +' .js-conversationForm button#id_clear_attachment')
+            .on('click', '#' + this.identifier +' .js-conversationForm button#id_clear_attachment', this.onClearFileAttachment.bind(this));
     },
 
     /**
@@ -232,8 +235,12 @@ ConversationView.prototype = {
      * When a user clicks the 'clear attachment' link after adding an
      * attachment it should trigger this and clear the value.
      */
-    onClearFileAttachment: function() {
+    onClearFileAttachment: function(event) {
+      var form = $(event.currentTarget).closest('.js-conversationForm').first(),
+          fileInput = $(form).find('input[type=file]').first();
 
+      $(fileInput).val('');
+      $('.Form-item--fileInputWrapper--clear').html('');
     },
 
     /**
@@ -287,7 +294,51 @@ ConversationView.prototype = {
      * Notify the controller event to store our message in localStorage.
      */
     triggerSubmitForm: function(form) {
-        this.eventSubmitMessage.notify(form);
+        if (this.validateForm(form)) {
+          this.eventSubmitMessage.notify(form);
+        }
+    },
+
+    validateForm: function (form) {
+      var minLength = 3,
+          maxLength = 2000,
+          validationMinLengthText = 'Please enter at least {{ minLength }} characters.',
+          validationMaxLengthText = 'Please enter at least {{ maxLength }} characters.',
+          isValid = true,
+          message = form.elements.message.value,
+          validation_elem = $(form).find('#id_message_validation_error');
+
+      validationMinLengthText = validationMinLengthText.replace('{{ minLength }}', minLength.toString());
+      validationMaxLengthText = validationMaxLengthText.replace('{{ maxLength }}', maxLength.toString());
+
+      if (message.length < minLength) {
+          $(form).addClass('is-invalid');
+          validation_elem.text(validationMinLengthText);
+          validation_elem.removeClass('is-hidden');
+          isValid = false;
+      }
+
+      if (message.maxLength >= maxLength) {
+        $(form).addClass('is-invalid');
+        validation_elem.text(validationMaxLengthText);
+        validation_elem.removeClass('is-hidden');
+        isValid = false;
+      }
+
+      if (isValid) {
+          $(form).removeClass('is-invalid');
+          validation_elem.addClass('is-hidden');
+          validation_elem.text('');
+      } else {
+          $(form).addClass('Conversation-form--shake');
+
+          setTimeout(function() {
+              $(form).removeClass('Conversation-form--shake');
+              console.log('Animation ready');
+          }, 1000)
+      }
+
+      return isValid;
     }
 };
 

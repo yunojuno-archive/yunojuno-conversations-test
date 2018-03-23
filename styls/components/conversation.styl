@@ -9,6 +9,24 @@
 .Conversation {
   border-top: var(--border-width-thinnest) solid var(--color-grey-dark);
   padding: 2em 5em;
+
+  .Conversation-form {
+    .Button--secondary {
+      display: block;
+      padding: 0;
+      width: 100%;
+      margin-top: 1em;
+
+      .Button-inner {
+        padding: 0 30px;
+      }
+
+      @media (--viewport-lg) {
+        display: inline-block;
+        width: auto;
+      }
+    }
+  }
 }
 
 .Conversation--noBorder {
@@ -36,4 +54,40 @@
 .Conversation--blackBook {
   border-top: 0;
   padding-top: 0;
+}
+
+
+/**
+ * Shake animation for conversation form
+ * used to pay user attention to validation errors
+ *
+ */
+
+.Conversation-form--shake {
+  animation: shake 1s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+}
+
+
+/**
+ * Animation keyframes
+ *
+ */
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-0.5em, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(1em, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-2em, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(2em, 0, 0);
+  }
 }
